@@ -1,9 +1,13 @@
 # GitHub publishing checklist
 
-## Before making the repository public
+## Public release status
 
-- [ ] Confirm that the internship employer permits public release.
-- [ ] Confirm that the dataset and generated samples may be shown publicly.
+The repository owner has authorized public visibility. The current public release intentionally excludes the dataset and model weights. Keep the checklist below for future changes and any open-source license decision.
+
+## Before adding new public artifacts
+
+- [x] Confirm that the project may be shown publicly.
+- [x] Confirm that the current code, metrics, plots, manifests, and generated samples may be shown publicly.
 - [ ] Confirm whether the model weights may be redistributed.
 - [ ] Review the repository for internal names, paths, logs, and credentials.
 - [ ] Choose a license only after ownership is clear.
@@ -22,11 +26,10 @@
 ```powershell
 gh auth login
 cd "$SNAPSHOT_DIR"
-git commit -m "Freeze initial DCGAN interview snapshot"
-git branch -M main
-gh repo create dcgan-anime-face-lab --private --source=. --remote=origin --push
-git tag -a v0.1-snapshot -m "Initial interview snapshot"
-git push origin v0.1-snapshot
+gh auth status
+git switch main
+git pull --ff-only origin main
+git push origin main
 ```
 
-Change `--private` to `--public` only after the IP and dataset review is complete. Never paste a personal access token into chat; authenticate locally with `gh auth login`. The repository already exists; future updates should use a feature branch and pull request rather than rerunning repository creation.
+The repository already exists and has been switched to public visibility. Never paste a personal access token into chat; authenticate locally with `gh auth login`. Future updates should use a feature branch and pull request rather than rerunning repository creation.

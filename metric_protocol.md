@@ -15,6 +15,12 @@ FID was introduced as a distribution-level comparison using features from a pret
 | `LPIPS_legacy_AlexNet_feature_distance` | Historical AlexNet feature MSE proxy | Do not call this calibrated LPIPS |
 | `Diversity`, `Laplacian_Variance`, `Edge_Density` | Project-defined auxiliary diagnostics | Use as supporting evidence, not as a replacement for distributional evaluation |
 
+## Data-quality protocol added after the original snapshot
+
+The Kaggle input audit found 21,551 image paths, 17,029 unique SHA-256 contents, 3,626 exact-duplicate groups, 4,522 redundant copies, and zero bad files. `B1_Formal_CleanUnique_17K` trains the Exp11 recipe on one path per exact content and reports legacy project FID `45.07`.
+
+This B1 value must not be plotted as a direct architecture improvement over the historical Exp11 `38.88`: the training pool changed. It is a formal data-cleaning baseline for the planned SDXL mixture study. The audit record and manifest are under `03_metrics_and_logs/phase6_data_audit/`.
+
 ## Known limitations
 
 1. Historical real samples are primarily drawn from the training distribution rather than a strict unseen holdout.

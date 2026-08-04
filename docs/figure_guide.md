@@ -4,6 +4,7 @@
 
 - `04_visual_assets/interview_results_roadmap.svg` is the headline milestone view. It only includes the staged results used in the README narrative.
 - `04_visual_assets/clip_control_sweep.svg` shows the Phase 5 matched continuation control and the distinction between legacy FID and CLIP MMD².
+- `04_visual_assets/qualitative_samples_compact.png` is the README-facing four-stage sample contact sheet, including the new B1 exact-unique baseline.
 - `tools/build_interview_figures.py` regenerates both files from `results_summary.csv` using the Python standard library.
 
 ## Archival figures

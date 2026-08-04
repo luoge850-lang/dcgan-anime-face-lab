@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2 - 2026-08-04
+
+- Added the Kaggle data-quality audit: 21,551 paths, 17,029 unique contents, 3,626 exact-duplicate groups, 4,522 redundant copies, and zero bad files.
+- Added the B1 formal clean-unique baseline with sanitized entry point, manifest, metrics, loss log, and sample grid.
+- Added the SDXL extension boundary and explicitly marked the pilot, cleaning, M20, M50, and unified evaluation as unfinished.
+- Replaced the long README sample stack with one compact four-stage qualitative figure.
+- Prepared the repository for public visibility while keeping the dataset, weights, and open-source license decision separate.
+
 ## v0.1 - 2026-08-04
 
 - Frozen the selected DCGAN, Generator-strengthening, and CLIP experiment evidence.
@@ -12,7 +20,7 @@
 - Reframed the repository as a Kaggle research snapshot rather than a local reproduction claim.
 - Added English project-story, runtime, and reproduction-boundary documentation.
 
-## Planned v0.2
+## Future work
 
 - Add a unified local `train`, `evaluate`, and `sample` CLI.
 - Add a fixed holdout manifest and standardized FID beside the legacy metric.

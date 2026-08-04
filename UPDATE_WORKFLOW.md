@@ -10,8 +10,8 @@ Keep all exploratory scripts, raw logs, datasets, checkpoints, and unfinished hy
 
 When an experiment is complete and approved for publication:
 
-1. Copy only the final script/config into `02_selected_experiments/`.
-2. Copy its metrics JSON and small CSV logs into `03_metrics_and_logs/`.
+1. Copy only the final script/config into the appropriate curated entry-point directory.
+2. Copy its metrics JSON, manifest digest, and small CSV logs into `03_metrics_and_logs/`.
 3. Add one representative sample grid or comparison plot to `04_visual_assets/`.
 4. Add one row to `results_summary.csv`.
 5. Update the limitations or status section in `README.md`.

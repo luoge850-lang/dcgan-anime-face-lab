@@ -4,6 +4,8 @@
 
 Built and audited a resource-constrained PyTorch DCGAN experiment suite for 64x64 anime-face synthesis, using controlled ablations to separate the effects of discriminator stabilization, generator capacity, data scale, DiffAugment, EMA, and CLIP feature matching.
 
+The follow-up data audit found 21,551 image paths but only 17,029 unique SHA-256 contents. A formal B1 baseline now uses the exact-unique pool, making data quality a documented experimental variable rather than an invisible assumption.
+
 ## Research narrative
 
 The project began with a conventional DCGAN baseline. Rather than adding increasingly complex generator blocks without controls, the experiments separated three questions:
@@ -17,6 +19,8 @@ The strongest project-level improvement came from combining a stronger generator
 ## Honest resume wording
 
 > Conducted controlled PyTorch DCGAN ablations under Kaggle GPU constraints across discriminator stabilization, generator capacity, dataset scale, DiffAugment, EMA, and CLIP feature-distribution matching; reduced the project’s legacy FID from 49.17 to 38.88 with DiffAugment + EMA and used matched continuation controls to quantify the smaller, metric-dependent effect of CLIP-MMD regularization.
+
+> Audited 21,551 Kaggle image paths with SHA-256 exact deduplication, identified 17,029 unique contents and 4,522 redundant copies, and established a clean-unique B1 baseline (legacy project FID 45.07) before the planned SDXL-mixture study.
 
 ## Questions an interviewer may ask
 

@@ -1,0 +1,6 @@
+{
+  "manifest_source": "<KAGGLE_OUTPUT>/B1_Formal_CleanUnique_17K/input_audit/original_unique_manifest.csv",
+  "relative_path_count": 17029,
+  "relative_path_sha256": "5161f8bf8e388de20beb2f6837dd954abc425711894715128507f2201d63b01b",
+  "semantics": "one path per SHA-256 content"
+}

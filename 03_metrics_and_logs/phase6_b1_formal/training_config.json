@@ -1,0 +1,31 @@
+{
+  "experiment": "B1_Formal_CleanUnique_17K",
+  "base": "Exp11 recipe (Width3x, SN-Hinge, DiffAugment, EMA) on the exact-deduplicated original Anime Faces pool",
+  "components": [
+    "DiffAugment (color,translation,cutout) on real/fake/G path",
+    "EMA on G (decay=0.9999)"
+  ],
+  "seed": 42,
+  "epochs": 200,
+  "batch_size": 32,
+  "dataset_limit": null,
+  "dataset_count": 17029,
+  "dataset_manifest": "<KAGGLE_OUTPUT>/B1_Formal_CleanUnique_17K/input_audit/original_unique_manifest.csv",
+  "dataset_manifest_semantics": "one path per SHA-256 content",
+  "dataset_manifest_sha256": "5161f8bf8e388de20beb2f6837dd954abc425711894715128507f2201d63b01b",
+  "noise_dim": 128,
+  "lr": 0.0001,
+  "betas": [
+    0.5,
+    0.99
+  ],
+  "image_size": 64,
+  "diffaugment_translation_ratio": 0.125,
+  "diffaugment_cutout_ratio": 0.35,
+  "diffaugment_translation_padding": "replicate",
+  "clip_handoff": {
+    "generator": "generator_ema_final.pth (direct Generator state_dict)",
+    "discriminator": "discriminator_final.pth",
+    "full_resume": "checkpoint_final.pth"
+  }
+}

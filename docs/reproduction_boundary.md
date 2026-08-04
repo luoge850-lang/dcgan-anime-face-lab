@@ -4,6 +4,8 @@
 
 This repository is a curated record of a Kaggle-based internship experiment. It preserves selected scripts, metrics, plots, sample grids, and checksums so a reviewer can inspect the reasoning and compare milestones.
 
+The latest curated evidence adds a read-only dataset audit and the completed `B1_Formal_CleanUnique_17K` baseline. The audit found 21,551 paths, 17,029 unique SHA-256 contents, 3,626 exact-duplicate groups, 4,522 redundant copies, and zero bad files. The B1 result is legacy project FID 45.07 on the exact-unique pool.
+
 ## What it is not yet
 
 It is not a local one-command training package. The historical runs depend on:
@@ -16,6 +18,8 @@ It is not a local one-command training package. The historical runs depend on:
 
 The active internship workspace contains additional unfinished experiments and remains the source of truth for new work. This snapshot should not be treated as a copy of the full active workspace.
 
+The SDXL pilot, candidate cleaning, M20/M50 mixtures, and unified Clean-FID/Coverage evaluation are not complete in this release and are not claimed as results.
+
 ## Responsible historical reproduction
 
 1. Confirm that the dataset, generated samples, and model weights can be used for the intended audience.
@@ -25,6 +29,8 @@ The active internship workspace contains additional unfinished experiments and r
 5. Record seed, dataset-limit, image count, batch size, epoch count, runtime, GPU, and feature-extractor versions.
 6. Recompute the legacy metric without overwriting the frozen value.
 7. Add a standardized holdout evaluation before making generalization claims.
+
+For the new B1 baseline, use `ANIME_FACES_DATASET` to point the sanitized Kaggle entry point at the mounted dataset. Use the included unique-content manifest when available, and record the manifest digest `5161f8bf8e388de20beb2f6837dd954abc425711894715128507f2201d63b01b`.
 
 ## Planned local reproduction release
 

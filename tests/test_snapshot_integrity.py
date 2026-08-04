@@ -33,9 +33,30 @@ class SnapshotIntegrityTests(unittest.TestCase):
 
     def test_readme_targets_exist(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        for target in ("04_visual_assets/interview_results_roadmap.svg", "04_visual_assets/clip_control_sweep.svg", "results_summary.csv"):
+        for target in (
+            "04_visual_assets/interview_results_roadmap.svg",
+            "04_visual_assets/clip_control_sweep.svg",
+            "04_visual_assets/qualitative_samples_compact.png",
+            "results_summary.csv",
+            "docs/data_quality_and_sdxl_extension.md",
+        ):
             self.assertIn(target, readme)
-            self.assertTrue((ROOT / target).exists(), target)
+            if target.endswith(".md"):
+                self.assertTrue((ROOT / target).exists(), target)
+            else:
+                self.assertTrue((ROOT / target).exists(), target)
+
+    def test_data_audit_and_b1_evidence(self):
+        with (ROOT / "03_metrics_and_logs/phase6_data_audit/audit_summary.json").open(encoding="utf-8") as handle:
+            audit = json.load(handle)
+        self.assertEqual(audit["image_count_before_dedup"], 21551)
+        self.assertEqual(audit["unique_sha256_count"], 17029)
+        self.assertEqual(audit["bad_file_count"], 0)
+
+        with (ROOT / "03_metrics_and_logs/phase6_b1_formal/metrics.json").open(encoding="utf-8") as handle:
+            metrics = json.load(handle)
+        self.assertEqual(metrics["dataset_size"], 17029)
+        self.assertAlmostEqual(metrics["FID"], 45.07, places=2)
 
 
 if __name__ == "__main__":

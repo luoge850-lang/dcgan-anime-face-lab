@@ -13,5 +13,6 @@ The snapshot keeps representative experiments that make the project story unders
 - `phase3_10_g_width3x_20k_laplacian`: controlled negative result against the best data-scale baseline.
 - `01_public_core/final_exp11_diffaug_ema.py`: current frozen DiffAugment + EMA baseline.
 - `clip_E0` through `clip_C4`: formal control and CLIP lambda sweep.
+- `phase6_audit_original_dataset.py` and `phase6_b1_formal_clean_unique_17k.py`: data-quality audit and formal exact-unique B1 baseline from the active Kaggle workspace.
 
 The remaining historical metrics are retained under `03_metrics_and_logs` for traceability, but their full training scripts are not part of the public-facing core.

@@ -12,3 +12,4 @@ phase5,C1_clip_L001,CLIP MMD lambda 0.01,20000,33.411419,0.042657375,phase5_matc
 phase5,C2_clip_L0025,CLIP MMD lambda 0.025,20000,33.668703,0.042298019,phase5_matched_continuation,metrics_only_no_script_in_snapshot,intermediate CLIP setting
 phase5,C3_clip_L005,CLIP MMD lambda 0.05,20000,33.471816,0.041855961,phase5_matched_continuation,02_selected_experiments/clip_C3_lambda_005.py,better CLIP distribution metric
 phase5,C4_clip_L010,CLIP MMD lambda 0.10,20000,33.623147,0.040990949,phase5_matched_continuation,02_selected_experiments/clip_C4_lambda_010.py,lowest CLIP MMD in local sweep
+phase6,B1_Formal_CleanUnique_17K,Exp11 recipe on SHA-256 exact-deduplicated original contents,17029,45.07,,phase6_clean_unique_17k_legacy,01_public_core/phase6_b1_formal_clean_unique_17k.py,formal M0 data-quality baseline; not directly comparable to path-based 20K rows
