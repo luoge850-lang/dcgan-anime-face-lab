@@ -7,6 +7,10 @@
 - Added representative source scripts, JSON/CSV evidence, and selected model artifacts.
 - Added SHA-256 checksums for the copied model files.
 - Kept the active internship research workspace separate from this snapshot.
+- Replaced the stale headline charts with data-driven SVG figures and added a reproducible figure builder.
+- Added explicit comparison scopes and entry points to `results_summary.csv`.
+- Reframed the repository as a Kaggle research snapshot rather than a local reproduction claim.
+- Added English project-story, runtime, and reproduction-boundary documentation.
 
 ## Planned v0.2
 

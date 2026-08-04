@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1240 520">
+<title id="title">CLIP controlled continuation sweep</title>
+<desc id="desc">Side-by-side bars compare legacy FID and CLIP feature MMD squared for an evaluation control, a no-CLIP continuation control, and four CLIP regularization strengths.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="620.0" y="38" font-family="Arial, sans-serif" font-size="22px" text-anchor="middle" font-weight="700" fill="#0f172a">Matched 50-epoch continuation: metric trade-off, not a single winner</text>
+<text x="317.5" y="70" font-family="Arial, sans-serif" font-size="17px" text-anchor="middle" font-weight="700" fill="#0f172a">Legacy FID</text>
+<text x="80" y="450" font-family="Arial, sans-serif" font-size="12px" text-anchor="start" font-weight="400" fill="#64748b">lower is better</text>
+<line x1="80" y1="90" x2="80" y2="405" stroke="#334155" stroke-width="1.5"/>
+<line x1="80" y1="405" x2="555" y2="405" stroke="#334155" stroke-width="1.5"/>
+<line x1="80" y1="405.0" x2="555" y2="405.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="70" y="409.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">30.00</text>
+<line x1="80" y1="326.25" x2="555" y2="326.25" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="70" y="330.25" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">32.50</text>
+<line x1="80" y1="247.5" x2="555" y2="247.5" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="70" y="251.5" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">35.00</text>
+<line x1="80" y1="168.75" x2="555" y2="168.75" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="70" y="172.75" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">37.50</text>
+<line x1="80" y1="90.0" x2="555" y2="90.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="70" y="94.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">40.00</text>
+<rect x="96.6" y="159.5" width="45.9" height="245.5" rx="4" fill="#64748b"/>
+<text x="119.58333333333333" y="151.54163649999992" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">37.79</text>
+<text x="119.58333333333333" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">E0</text>
+<text x="119.58333333333333" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">eval</text>
+<rect x="175.8" y="285.8" width="45.9" height="119.2" rx="4" fill="#475569"/>
+<text x="198.75000000000003" y="277.78528900000003" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">33.78</text>
+<text x="198.75000000000003" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C0</text>
+<text x="198.75000000000003" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=0</text>
+<rect x="255.0" y="297.5" width="45.9" height="107.5" rx="4" fill="#ea580c"/>
+<text x="277.9166666666667" y="289.54030149999994" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">33.41</text>
+<text x="277.9166666666667" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C1</text>
+<text x="277.9166666666667" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=.01</text>
+<rect x="334.1" y="289.4" width="45.9" height="115.6" rx="4" fill="#f59e0b"/>
+<text x="357.0833333333333" y="281.4358555" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">33.67</text>
+<text x="357.0833333333333" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C2</text>
+<text x="357.0833333333333" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=.025</text>
+<rect x="413.3" y="295.6" width="45.9" height="109.4" rx="4" fill="#f59e0b"/>
+<text x="436.25" y="287.6377960000001" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">33.47</text>
+<text x="436.25" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C3</text>
+<text x="436.25" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=.05</text>
+<rect x="492.5" y="290.9" width="45.9" height="114.1" rx="4" fill="#16a34a"/>
+<text x="515.4166666666667" y="282.8708694999999" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">33.62</text>
+<text x="515.4166666666667" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C4</text>
+<text x="515.4166666666667" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=.10</text>
+<text x="917.5" y="70" font-family="Arial, sans-serif" font-size="17px" text-anchor="middle" font-weight="700" fill="#0f172a">CLIP feature MMD² (unbiased)</text>
+<text x="680" y="450" font-family="Arial, sans-serif" font-size="12px" text-anchor="start" font-weight="400" fill="#64748b">lower is better</text>
+<line x1="680" y1="90" x2="680" y2="405" stroke="#334155" stroke-width="1.5"/>
+<line x1="680" y1="405" x2="1155" y2="405" stroke="#334155" stroke-width="1.5"/>
+<line x1="680" y1="405.0" x2="1155" y2="405.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="670" y="409.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">0.04000</text>
+<line x1="680" y1="326.2499999999999" x2="1155" y2="326.2499999999999" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="670" y="330.2499999999999" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">0.04113</text>
+<line x1="680" y1="247.50000000000026" x2="1155" y2="247.50000000000026" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="670" y="251.50000000000026" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">0.04225</text>
+<line x1="680" y1="168.7500000000001" x2="1155" y2="168.7500000000001" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="670" y="172.7500000000001" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">0.04337</text>
+<line x1="680" y1="90.0" x2="1155" y2="90.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="670" y="94.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">0.04450</text>
+<rect x="700.0" y="206.8" width="55.1" height="198.2" rx="4" fill="#475569"/>
+<text x="727.5" y="198.7609099999998" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">0.04283</text>
+<text x="727.5" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C0</text>
+<text x="727.5" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=0</text>
+<rect x="795.0" y="219.0" width="55.1" height="186.0" rx="4" fill="#ea580c"/>
+<text x="822.5" y="210.98375000000013" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">0.04266</text>
+<text x="822.5" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C1</text>
+<text x="822.5" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=.01</text>
+<rect x="890.0" y="244.1" width="55.1" height="160.9" rx="4" fill="#f59e0b"/>
+<text x="917.5" y="236.13867000000002" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">0.04230</text>
+<text x="917.5" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C2</text>
+<text x="917.5" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=.025</text>
+<rect x="985.0" y="275.1" width="55.1" height="129.9" rx="4" fill="#f59e0b"/>
+<text x="1012.5" y="267.0827300000002" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">0.04186</text>
+<text x="1012.5" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C3</text>
+<text x="1012.5" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=.05</text>
+<rect x="1080.0" y="335.6" width="55.1" height="69.4" rx="4" fill="#16a34a"/>
+<text x="1107.5" y="327.6335700000001" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">0.04099</text>
+<text x="1107.5" y="427" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">C4</text>
+<text x="1107.5" y="442" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="500" fill="#0f172a">λ=.10</text>
+<text x="620.0" y="495" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="400" fill="#64748b">C0 is the no-CLIP control; C4 minimizes CLIP MMD² while C1 has the lowest FID in this local sweep.</text>
+</svg>

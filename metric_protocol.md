@@ -1,22 +1,36 @@
 # Metric Protocol and Interpretation
 
-## Is the existing FID calculation wrong?
+## Evidence level
 
-Not necessarily. The implementation is useful as a consistent internal metric: it extracts Inception-v3 features, estimates real/fake means and covariances, and applies the FID formula. The key issue is protocol comparability, not that every historical number is numerically invalid.
+The frozen values are useful for longitudinal comparison inside this project. They are not published benchmark values. The repository preserves the historical protocol so that the internship experiments remain auditable, while explicitly separating future standardized evaluation from legacy numbers.
 
-## Limitations of the frozen values
+FID was introduced as a distribution-level comparison using features from a pretrained image classifier ([Heusel et al., 2017](https://arxiv.org/abs/1706.08500)). Later work shows that finite sample size can bias FID estimates ([Binkowski et al., 2018](https://arxiv.org/abs/1911.07023)) and that low-level resizing choices can materially affect GAN evaluation ([Parmar et al., 2021](https://arxiv.org/abs/2104.11222)). Those limitations are directly relevant to this snapshot.
 
-1. The pipeline is the project's legacy torchvision Inception-v3 protocol.
-2. Preprocessing and feature extraction are not guaranteed to match clean-fid or torch-fidelity defaults.
-3. Historical real images are largely drawn from the training distribution; they are not a strict unseen holdout.
-4. Fake images are sampled stochastically, so a single evaluation has sampling noise.
-5. Dataset size and training protocol change across phases, so cross-phase comparisons must follow the experiment table rather than only the final number.
-6. The historical LPIPS field in some files is an AlexNet feature-distance proxy, not calibrated LPIPS.
+## Frozen protocols
 
-## How to use the results
+| Field | Frozen definition | Safe interpretation |
+|---|---|---|
+| `fid_legacy_project` | torchvision Inception-v3 pool3 features; project preprocessing; 10K real + 10K fake | Compare experiments only when dataset size, model choice, preprocessing, and evaluation path are held constant |
+| `clip_mmd2_unbiased` | Frozen OpenCLIP ViT-B/32 image features; multi-scale RBF MMD²; 2K evaluation features | Compare the matched Phase 5 continuation sweep; do not treat it as FID |
+| `LPIPS_legacy_AlexNet_feature_distance` | Historical AlexNet feature MSE proxy | Do not call this calibrated LPIPS |
+| `Diversity`, `Laplacian_Variance`, `Edge_Density` | Project-defined auxiliary diagnostics | Use as supporting evidence, not as a replacement for distributional evaluation |
 
-- Keep the existing values unchanged for project continuity.
-- Label them `fid_legacy_project` in public reports.
-- Do not compare them directly with published clean-fid numbers.
-- For future work, add `fid_standardized` beside the legacy metric instead of overwriting old results.
-- Add a fixed holdout split, multiple seeds, and nearest-neighbor checks before making generalization claims.
+## Known limitations
+
+1. Historical real samples are primarily drawn from the training distribution rather than a strict unseen holdout.
+2. Dataset size and training protocol change across phases, so the result table is organized by comparison scope rather than sorted as one universal leaderboard.
+3. Fake samples are stochastic; a single 10K draw does not provide an uncertainty interval.
+4. The legacy pipeline is not guaranteed to match clean-fid, torch-fidelity, or another implementation.
+5. Most historical results use one seed, so small changes should not be described as causal without matched controls and replication.
+
+## Required next protocol
+
+Future experiments should add these fields without overwriting the legacy values:
+
+- `fid_standardized` with a documented implementation and preprocessing;
+- a fixed train/holdout manifest and SHA-256 digest;
+- real and fake sample counts;
+- at least three seeds with mean and standard deviation;
+- bootstrap or repeated-draw uncertainty for evaluation metrics;
+- nearest-neighbor image grids and a memorization check;
+- model, dataset-manifest, and code-commit identifiers.

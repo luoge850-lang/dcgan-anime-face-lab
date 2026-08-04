@@ -10,6 +10,18 @@ __pycache__/
 *.pth
 *.pt
 *.ckpt
+*.safetensors
+*.bin
+*.onnx
+*.zip
+*.tar
+*.tar.gz
+*.npy
+*.npz
+
+# Local-only experiment caches and checkpoints
+checkpoints/
+caches/
 
 # Local and platform-specific output
 /kaggle/

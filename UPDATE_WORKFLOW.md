@@ -19,6 +19,19 @@ When an experiment is complete and approved for publication:
 7. Review data, IP, secrets, and binary-file rules.
 8. Commit the curated change and create a tag when it represents a stable milestone.
 
+Use a feature branch for each completed experiment:
+
+```powershell
+git switch -c experiment/exp12-holdout-evaluation
+git add 02_selected_experiments 03_metrics_and_logs 04_visual_assets results_summary.csv README.md
+git commit -m "experiment: add holdout evaluation"
+git push -u origin experiment/exp12-holdout-evaluation
+```
+
+Do not force-push or move `v0.1-snapshot`. It is the immutable reference for
+the current interview discussion. Keep new claims tied to a code commit,
+configuration, dataset-manifest hash, and metric protocol.
+
 Suggested commit messages:
 
 ```text

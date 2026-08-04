@@ -1,90 +1,126 @@
-# Resource-Constrained DCGAN for Anime Face Generation
+# Resource-Constrained DCGAN for Anime-Face Generation
 
 ![Status: ongoing research](https://img.shields.io/badge/status-ongoing%20research-orange)
 ![PyTorch](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
+![Kaggle](https://img.shields.io/badge/runtime-Kaggle%20GPU-20beff)
 ![Resolution](https://img.shields.io/badge/output-64x64-blue)
 ![Snapshot](https://img.shields.io/badge/snapshot-v0.1-lightgrey)
 
-This folder is a frozen, interview- and GitHub-oriented snapshot of an ongoing DCGAN project. It is a curated copy of selected code, metrics, visual evidence, and model artifacts as of 2026-08-04. The active research workspace remains separate and must continue to be treated as the source of truth for new experiments.
+> This repository is a curated, frozen snapshot of an ongoing DCGAN internship project. The experiments were run in Kaggle, while the active research workspace remains separate. The snapshot is designed for technical review and interview discussion; it is not yet a claim of a locally reproducible or state-of-the-art generator.
 
-This is intentionally a work-in-progress research engineering repository, not a claim of state-of-the-art image generation. The public-facing goal is to make the experimental reasoning, evaluation assumptions, and engineering trade-offs easy to inspect.
+## Reviewer summary
 
-## Project focus
+The project studies unconditional 64x64 anime-face generation with PyTorch under limited GPU and batch-size constraints. The main research question was which changes improve the adversarial game most reliably:
 
-The project studies 64x64 anime-face generation with PyTorch under limited Kaggle GPU resources. The experiments cover:
-
-- standard DCGAN and SNGAN-style discriminator stabilization;
-- Hinge loss and spectral normalization;
-- Generator capacity scaling;
-- data-size scaling from 10K to 20K images;
+- discriminator stabilization with spectral normalization and Hinge loss;
+- generator capacity scaling;
+- data scaling from 10K to 20K images;
 - DiffAugment and exponential moving average (EMA);
 - CLIP image-feature distribution matching with an MMD objective.
 
-## Selected evidence
+The strongest project-level lesson is that data scale and adversarial stabilization were more reliable than repeatedly adding generator modules. The CLIP sweep is preserved as a controlled continuation study, not as proof that CLIP caused the entire downstream FID reduction.
 
-| Milestone | Project-protocol FID |
-|---|---:|
-| Initial baseline | 109.40 |
-| SN + Hinge discriminator | 96.25 |
-| Generator Width x3 | 59.00 |
-| Width x3 with 20K images | 49.17 |
-| DiffAugment + EMA | 38.88 |
-| CLIP MMD, lambda=0.01 | 33.4114 |
+## Results at a glance
 
-## Visual overview
+| Stage | Change | Data | Legacy project FID |
+|---|---|---:|---:|
+| Phase 2 | Initial baseline | 8K | 109.40 |
+| Phase 2 | Discriminator SN + Hinge | 8K | 96.25 |
+| Phase 3 | Generator Width x3 | 10K | 59.00 |
+| Phase 3 | Width x3 with 20K images | 20K | 49.17 |
+| Phase 3 | DiffAugment + EMA | 20K | 38.88 |
+| Phase 5 | No-CLIP continuation control | 20K | 33.78 |
+| Phase 5 | CLIP MMD, lambda=0.01 | 20K | 33.41 |
 
-### Generated samples
+The complete curated table, entry points, and comparison scopes are in [`results_summary.csv`](results_summary.csv). The two headline figures below are generated from that table by [`tools/build_interview_figures.py`](tools/build_interview_figures.py).
 
-| Milestone | Samples |
+![DCGAN experiment roadmap](04_visual_assets/interview_results_roadmap.svg)
+
+![Matched CLIP continuation sweep](04_visual_assets/clip_control_sweep.svg)
+
+### Qualitative samples
+
+| Milestone | Generated sample grid |
 |---|---|
 | Width x3 | ![Width x3 samples](04_visual_assets/milestone_03_width3x_epoch200.png) |
 | 20K images | ![20K samples](04_visual_assets/milestone_09_20k_epoch200.png) |
 | DiffAugment + EMA | ![DiffAugment and EMA samples](04_visual_assets/milestone_11_diffaug_ema_epoch200.png) |
 
-### Evaluation overview
+## How to interpret the metrics
 
-![FID ranking](04_visual_assets/fid_ranking_all.png)
+The headline field is named `fid_legacy_project` to prevent it from being confused with a standardized benchmark. It uses the historical torchvision Inception-v3 pool3 pipeline with 10K real and 10K fake samples. Historical real samples are primarily drawn from the training distribution, not a strict unseen holdout, and fake sampling introduces evaluation noise.
 
-![Multi-metric comparison](04_visual_assets/multi_metric_comparison.png)
+FID is useful for longitudinal comparison when the protocol is held constant, but it is sensitive to feature-network, resizing, preprocessing, and finite-sample choices. The project therefore keeps old values unchanged and plans to add a separately named standardized FID beside them. See [`metric_protocol.md`](metric_protocol.md) for the exact boundary and the next evaluation plan.
 
-The visual results are 64x64 generated grids. They are useful for qualitative comparison, but they do not replace distributional evaluation or a holdout-set analysis.
+The historical `LPIPS` fields in older logs are AlexNet feature-distance proxies, not calibrated LPIPS. The CLIP sweep reports both FID and CLIP MMD because the two objectives do not select exactly the same checkpoint: C1 has the lowest local legacy FID, while C4 has the lowest CLIP MMD².
 
-## Important metric caveat
+## Reproduction boundary
 
-These FID values are valid for longitudinal comparison inside this project, but they are not presented as clean-fid or published benchmark values. The project uses a legacy torchvision Inception-v3 feature pipeline, and historical experiments primarily evaluate against the training image distribution rather than a strict unseen holdout set. Future experiments should preserve this protocol for continuity while adding a separately named standardized FID protocol.
+This is a Kaggle experiment archive, not a one-command local package yet.
 
-## Snapshot layout
+- Training was performed in Kaggle GPU notebooks/scripts.
+- The dataset is intentionally not included.
+- Model weights are kept outside Git history and remain local until redistribution rights are confirmed.
+- Several historical scripts retain Kaggle-oriented defaults and expect an attached dataset and, for CLIP experiments, an attached weights Dataset.
+- `requirements.txt` is a compatibility floor, not a lockfile.
+- Exact environment evidence captured during the CLIP runs is recorded in [`docs/runtime_and_dependencies.md`](docs/runtime_and_dependencies.md).
 
-- `01_public_core/`: baseline, final Exp11 code, and explanatory notes.
-- `02_selected_experiments/`: representative ablations, not every historical script.
-- `03_metrics_and_logs/`: JSON metrics and CSV logs only.
-- `04_visual_assets/`: selected samples and comparison figures.
-- `05_interview_materials/`: resume and interview framing notes.
-- `06_model_artifacts/`: local frozen weights; do not commit blindly to GitHub.
-- `99_source_map/`: source-to-snapshot mapping and freeze status.
-
-## Reproduction status
-
-The frozen experiment files are currently self-contained Kaggle-oriented scripts, reflecting the original internship workflow. They are preserved for provenance and review. A later public release should add a unified local CLI for training, evaluation, and sampling instead of requiring manual notebook copy/paste.
+Representative Kaggle entry points:
 
 ```text
-pip install -r requirements.txt
+02_selected_experiments/phase2_00_baseline.py
+01_public_core/final_exp11_diffaug_ema.py
+02_selected_experiments/clip_E0_formal_eval.py
+02_selected_experiments/clip_C1_lambda_001.py
 ```
 
-The dataset is not included. A future public release should document a permitted dataset source and a fixed train/holdout manifest.
+To reproduce a historical result responsibly, attach a permitted dataset, use the matching entry point and configuration, record the dataset manifest hash, and preserve the runtime metadata. The detailed checklist is in [`docs/reproduction_boundary.md`](docs/reproduction_boundary.md).
 
-## What I learned
+## Snapshot integrity checks
 
-- Increasing Generator capacity helped until the adversarial balance broke down.
-- Increasing data diversity produced a larger improvement than several more complex Generator variants.
-- DiffAugment and EMA improved the selected 20K baseline under the legacy project protocol.
-- Some residual, attention, and auxiliary-loss variants were negative results under the batch-size and GPU constraints.
-- FID is useful but incomplete; diversity, edge statistics, blur rate, CLIP feature distribution, and visual inspection are complementary.
+These checks validate the curated evidence without requiring a GPU or the private dataset:
 
-## Publication rule
+```powershell
+python -m unittest discover -s tests -v
+python tools/build_interview_figures.py
+```
 
-Do not upload raw datasets, private internship material, internal work logs, or all checkpoint files without verifying ownership and licensing. For a public GitHub repository, keep the code and small evidence files in Git, and distribute large weights through a release or model-hosting service with checksums.
+The first command is also run by GitHub Actions on pushes and pull requests.
 
-## License status
+## Repository map
 
-The license is intentionally pending until internship ownership, dataset licensing, and model-weight redistribution rights are confirmed. See `LICENSE_DECISION.md`.
+| Path | Purpose |
+|---|---|
+| `01_public_core/` | Baseline, final Exp11 code, and English experiment guides |
+| `02_selected_experiments/` | Representative ablations and the CLIP control/sweep scripts |
+| `03_metrics_and_logs/` | Curated JSON metrics and CSV logs |
+| `04_visual_assets/` | Canonical interview figures, sample grids, and archival charts |
+| `06_model_artifacts/` | Local-only model files and checksums; excluded by `.gitignore` |
+| `docs/` | Reproduction boundary, runtime evidence, and technical project story |
+| `tests/` | CPU-only snapshot integrity checks for JSON, CSV, SVG, and README references |
+| `tools/` | Standard-library figure builder for the canonical interview charts |
+| `99_source_map/` | Freeze scope and source-to-snapshot mapping |
+
+## What is intentionally not claimed
+
+- This is not a state-of-the-art image generator.
+- Legacy FID values are not directly comparable with published clean-fid or torch-fidelity numbers.
+- The current snapshot does not establish strict generalization without a holdout set.
+- A single seed and one evaluation draw are not enough for a causal claim about a small metric difference.
+- The public release license is pending internship ownership and dataset/weight redistribution review.
+
+## Next research and engineering milestones
+
+1. Add a fixed train/holdout manifest and standardized FID beside `fid_legacy_project`.
+2. Run at least three seeds and report mean, standard deviation, and evaluation sample counts.
+3. Add nearest-neighbor grids to check memorization against the training distribution.
+4. Extract shared model/data/metric modules and add a CPU shape smoke test.
+5. Publish only after employer, dataset, sample, and model-weight permissions are confirmed.
+
+## Publication status
+
+This repository is currently Private. Do not make it public until the checklist in [`PUBLISH_CHECKLIST.md`](PUBLISH_CHECKLIST.md) and the ownership decision in [`LICENSE_DECISION.md`](LICENSE_DECISION.md) are complete. Large binary artifacts should remain outside Git history; GitHub documents Releases and Git LFS as the appropriate mechanisms for large files.
+
+## Technical project story
+
+For an interview, frame the work as an experiment-design and evaluation project: stabilize the adversarial game, test capacity and data scale under a fixed resource budget, preserve negative results, and treat metric disagreement as a research finding. The concise technical version is in [`docs/project_story.md`](docs/project_story.md).

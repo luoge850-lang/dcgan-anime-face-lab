@@ -21,7 +21,7 @@
 
 ```powershell
 gh auth login
-cd "C:\Users\32875\OneDrive\Desktop\DCGAN_Interview_GitHub_Snapshot_2026-08-04"
+cd "$SNAPSHOT_DIR"
 git commit -m "Freeze initial DCGAN interview snapshot"
 git branch -M main
 gh repo create dcgan-anime-face-lab --private --source=. --remote=origin --push
@@ -29,4 +29,4 @@ git tag -a v0.1-snapshot -m "Initial interview snapshot"
 git push origin v0.1-snapshot
 ```
 
-Change `--private` to `--public` only after the IP and dataset review is complete. Never paste a personal access token into chat; authenticate locally with `gh auth login`.
+Change `--private` to `--public` only after the IP and dataset review is complete. Never paste a personal access token into chat; authenticate locally with `gh auth login`. The repository already exists; future updates should use a feature branch and pull request rather than rerunning repository creation.

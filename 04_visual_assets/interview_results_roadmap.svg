@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1240 570">
+<title id="title">DCGAN experiment roadmap</title>
+<desc id="desc">Legacy project FID decreases from the baseline through discriminator stabilization, generator scaling, data scaling, DiffAugment plus EMA, and a matched continuation control.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="620.0" y="42" font-family="Arial, sans-serif" font-size="23px" text-anchor="middle" font-weight="700" fill="#0f172a">DCGAN experiment roadmap: stabilization, scale, and controlled continuation</text>
+<text x="105" y="72" font-family="Arial, sans-serif" font-size="15px" text-anchor="start" font-weight="500" fill="#475569">Legacy project FID (lower is better)</text>
+<line x1="105" y1="95" x2="105" y2="455" stroke="#334155" stroke-width="1.5"/>
+<line x1="105" y1="455" x2="1185" y2="455" stroke="#334155" stroke-width="1.5"/>
+<line x1="105" y1="135.0" x2="1185" y2="135.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="91" y="140.0" font-family="Arial, sans-serif" font-size="13px" text-anchor="end" font-weight="400" fill="#64748b">40</text>
+<line x1="105" y1="215.0" x2="1185" y2="215.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="91" y="220.0" font-family="Arial, sans-serif" font-size="13px" text-anchor="end" font-weight="400" fill="#64748b">60</text>
+<line x1="105" y1="295.0" x2="1185" y2="295.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="91" y="300.0" font-family="Arial, sans-serif" font-size="13px" text-anchor="end" font-weight="400" fill="#64748b">80</text>
+<line x1="105" y1="375.0" x2="1185" y2="375.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="91" y="380.0" font-family="Arial, sans-serif" font-size="13px" text-anchor="end" font-weight="400" fill="#64748b">100</text>
+<line x1="105" y1="455.0" x2="1185" y2="455.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="91" y="460.0" font-family="Arial, sans-serif" font-size="13px" text-anchor="end" font-weight="400" fill="#64748b">120</text>
+<path d="M 105.0 412.6 L 285.0 360.0 L 465.0 211.0 L 645.0 171.7 L 825.0 130.5 L 1005.0 110.1 L 1185.0 108.6" fill="none" stroke="#94a3b8" stroke-width="3"/>
+<circle cx="105.0" cy="412.6" r="9" fill="#64748b" stroke="#ffffff" stroke-width="3"/>
+<text x="105.0" y="440.6" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="700" fill="#0f172a">109.40</text>
+<text x="105.0" y="483" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="500" fill="#0f172a">00 baseline</text>
+<circle cx="285.0" cy="360.0" r="9" fill="#0f766e" stroke="#ffffff" stroke-width="3"/>
+<text x="285.0" y="342.0" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="700" fill="#0f172a">96.25</text>
+<text x="285.0" y="483" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="500" fill="#0f172a">D SN+Hinge</text>
+<circle cx="465.0" cy="211.0" r="9" fill="#2563eb" stroke="#ffffff" stroke-width="3"/>
+<text x="465.0" y="193.0" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="700" fill="#0f172a">59.00</text>
+<text x="465.0" y="483" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="500" fill="#0f172a">G Width x3</text>
+<circle cx="645.0" cy="171.7" r="9" fill="#2563eb" stroke="#ffffff" stroke-width="3"/>
+<text x="645.0" y="153.68" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="700" fill="#0f172a">49.17</text>
+<text x="645.0" y="483" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="500" fill="#0f172a">20K data</text>
+<circle cx="825.0" cy="130.5" r="9" fill="#7c3aed" stroke="#ffffff" stroke-width="3"/>
+<text x="825.0" y="112.52000000000001" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="700" fill="#0f172a">38.88</text>
+<text x="825.0" y="483" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="500" fill="#0f172a">DiffAug + EMA</text>
+<circle cx="1005.0" cy="110.1" r="9" fill="#475569" stroke="#ffffff" stroke-width="3"/>
+<text x="1005.0" y="138.138376" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="700" fill="#0f172a">33.78</text>
+<text x="1005.0" y="483" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="500" fill="#0f172a">C0 control</text>
+<circle cx="1185.0" cy="108.6" r="9" fill="#ea580c" stroke="#ffffff" stroke-width="3"/>
+<text x="1185.0" y="90.64567600000001" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="700" fill="#0f172a">33.41</text>
+<text x="1185.0" y="483" font-family="Arial, sans-serif" font-size="13px" text-anchor="middle" font-weight="500" fill="#0f172a">C1 CLIP λ=.01</text>
+<text x="105" y="538" font-family="Arial, sans-serif" font-size="12px" text-anchor="start" font-weight="400" fill="#64748b">Same project protocol where indicated; legacy FID is not a clean-fid benchmark.</text>
+</svg>
