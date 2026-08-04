@@ -39,6 +39,7 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "04_visual_assets/qualitative_samples_compact.png",
             "results_summary.csv",
             "docs/data_quality_and_sdxl_extension.md",
+            "docs/experiment_process.md",
         ):
             self.assertIn(target, readme)
             if target.endswith(".md"):
@@ -57,6 +58,18 @@ class SnapshotIntegrityTests(unittest.TestCase):
             metrics = json.load(handle)
         self.assertEqual(metrics["dataset_size"], 17029)
         self.assertAlmostEqual(metrics["FID"], 45.07, places=2)
+
+    def test_full_process_sources_and_plain_baseline_are_present(self):
+        for folder in (
+            "phase1_early_tuning",
+            "phase2_module_tuning",
+            "phase3_generator_strengthening",
+            "phase5_clip_tuning",
+        ):
+            scripts = list((ROOT / "02_selected_experiments/full_process" / folder).glob("*.py"))
+            self.assertGreater(len(scripts), 0, folder)
+        self.assertTrue((ROOT / "04_visual_assets/phase2_baseline_no_modules_epoch200.png").exists())
+        self.assertTrue((ROOT / "02_selected_experiments/full_process/phase5_clip_tuning/clip_C2_lambda_0025.py").exists())
 
 
 if __name__ == "__main__":

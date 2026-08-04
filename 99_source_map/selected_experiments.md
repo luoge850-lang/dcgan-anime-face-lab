@@ -15,4 +15,6 @@ The snapshot keeps representative experiments that make the project story unders
 - `clip_E0` through `clip_C4`: formal control and CLIP lambda sweep.
 - `phase6_audit_original_dataset.py` and `phase6_b1_formal_clean_unique_17k.py`: data-quality audit and formal exact-unique B1 baseline from the active Kaggle workspace.
 
+The `02_selected_experiments/full_process/` archive adds the completed source families that were previously omitted from the interview-facing selection: Phase 1 early tuning, Phase 2 module tuning, Phase 3 generator strengthening, and the complete Phase 5 CLIP sweep including C2.
+
 The remaining historical metrics are retained under `03_metrics_and_logs` for traceability, but their full training scripts are not part of the public-facing core.

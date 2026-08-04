@@ -2,6 +2,10 @@
 
 ## v0.2 - 2026-08-04
 
+- Expanded the snapshot from a final-results selection into a full-process archive covering early tuning, augmentation, module tuning, generator strengthening, and CLIP tuning.
+- Added 43 normalized source scripts from the completed historical experiment families.
+- Corrected the qualitative sample narrative so the first baseline is the plain no-module DCGAN.
+- Added a nine-panel process sample sheet covering each major stage and the B1 data-quality baseline.
 - Added the Kaggle data-quality audit: 21,551 paths, 17,029 unique contents, 3,626 exact-duplicate groups, 4,522 redundant copies, and zero bad files.
 - Added the B1 formal clean-unique baseline with sanitized entry point, manifest, metrics, loss log, and sample grid.
 - Added the SDXL extension boundary and explicitly marked the pilot, cleaning, M20, M50, and unified evaluation as unfinished.

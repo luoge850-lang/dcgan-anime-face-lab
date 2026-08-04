@@ -22,6 +22,20 @@ The strongest project-level lesson is that data scale and adversarial stabilizat
 
 The follow-up data audit also found that 21,551 image paths contained only 17,029 unique SHA-256 contents. The new B1 formal baseline makes that data-quality issue explicit before the planned SDXL-mixture study.
 
+## Full experiment process
+
+This repository records the full progression, not only the final FID milestones:
+
+| Stage | What was tested | Evidence and source |
+|---|---|---|
+| Phase 1 | Epoch budget and early image augmentations | [`phase1_preliminary_tuning`](03_metrics_and_logs/phase1_preliminary_tuning/) · [`early tuning scripts`](02_selected_experiments/full_process/phase1_early_tuning/) |
+| Phase 2 | No-module baseline, attention/filter modules, SN, Hinge, and R1 | [`phase2_deep_tuning`](03_metrics_and_logs/phase2_deep_tuning/) · [`module scripts`](02_selected_experiments/full_process/phase2_module_tuning/) |
+| Phase 3 | Generator width, residual/attention variants, data scale, DiffAugment, and EMA | [`phase3_generator_strengthening`](03_metrics_and_logs/phase3_generator_strengthening/) · [`G scripts`](02_selected_experiments/full_process/phase3_generator_strengthening/) |
+| Phase 5 | Formal control and CLIP-MMD lambda sweep | [`phase5_clip`](03_metrics_and_logs/phase5_clip/) · [`CLIP scripts`](02_selected_experiments/full_process/phase5_clip_tuning/) |
+| Phase 6 | Exact-duplicate audit and clean-unique B1 baseline | [`data-quality record`](docs/data_quality_and_sdxl_extension.md) |
+
+The full process narrative, comparison boundaries, and negative-result interpretation are in [`docs/experiment_process.md`](docs/experiment_process.md). The Phase 2 `00_baseline` is the true plain DCGAN baseline: it has no added modules.
+
 ## Results at a glance
 
 | Stage | Change | Data | Legacy project FID |
@@ -43,10 +57,10 @@ The complete curated table, entry points, and comparison scopes are in [`results
 
 ### Qualitative samples
 
-One compact figure shows one fixed-noise sample grid for each selected milestone. B1 is the new exact-unique data baseline.
+One compact figure shows one sample grid for each major stage. The first Phase 2 baseline is explicitly the plain DCGAN with no added modules; it is not the later Width x3 model.
 
 <p align="center">
-  <img src="04_visual_assets/qualitative_samples_compact.png" alt="Four labeled sample grids: generator width x3, 20K images, DiffAugment plus EMA, and the 17,029-image exact-unique baseline" width="760">
+  <img src="04_visual_assets/qualitative_samples_compact.png" alt="Nine labeled sample grids covering early tuning, augmentation, the plain no-module baseline, SN-Hinge, generator width, data scale, DiffAugment plus EMA, CLIP, and the B1 unique-data baseline" width="760">
 </p>
 
 ### New data audit
@@ -109,9 +123,9 @@ The first command is also run by GitHub Actions on pushes and pull requests.
 | Path | Purpose |
 |---|---|
 | `01_public_core/` | Baseline, final Exp11 code, and English experiment guides |
-| `02_selected_experiments/` | Representative ablations and the CLIP control/sweep scripts |
+| `02_selected_experiments/` | Representative scripts plus the full-process source archive for Phases 1, 2, 3, and 5 |
 | `03_metrics_and_logs/` | Curated JSON metrics and CSV logs |
-| `04_visual_assets/` | Canonical interview figures, sample grids, and archival charts |
+| `04_visual_assets/` | Canonical interview figures, full-process sample grids, and archival charts |
 | `06_model_artifacts/` | Local-only model files and checksums; excluded by `.gitignore` |
 | `docs/` | Reproduction boundary, data audit, runtime evidence, and technical project story |
 | `tests/` | CPU-only snapshot integrity checks for JSON, CSV, SVG, and README references |
