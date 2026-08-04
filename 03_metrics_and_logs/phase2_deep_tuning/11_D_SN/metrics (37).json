@@ -1,0 +1,18 @@
+{
+  "experiment_name": "11_D_SN",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "technique": "Spectral Normalization in D (optimized: Conv+penLin only, lastLin free + Sigmoid) + BCE loss. Standard G. SN placement matched to 13_D_SN_Hinge findings.",
+  "FID": 99.19,
+  "LPIPS": 31.6087,
+  "Diversity": 28.7305,
+  "Laplacian_Variance": 9234.6,
+  "Edge_Density_Fake": 0.2783,
+  "Edge_Density_Real": 0.2692,
+  "Edge_Density_Ratio": 1.0341,
+  "final_G_loss": 1.6039,
+  "final_D_loss": 0.668,
+  "D_real": 0.763,
+  "D_fake": 0.2907,
+  "completed_at": "2026-07-22 05:58:52"
+}

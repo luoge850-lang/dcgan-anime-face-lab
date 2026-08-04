@@ -1,0 +1,480 @@
+"""
+================================================================================
+ G强化实验 09_G_Width3x_20K: 03 + 2万数据
+================================================================================
+ SCIENTIFIC QUESTION:
+   03 Widthx3 (FID=59) 在10K随机子集上训练. 如果将数据从10K扩到20K,
+   在batch=32不变的条件下, FID能降多少? 数据量是否是当前约束下G表达能力
+   的主要瓶颈?
+
+ MOTIVATION:
+   6个架构方向(深度/残差/注意力/BN-free/正则化/同域残差)全部失败或退化.
+   唯一持续有效的方向是加宽(96->79->59). 03很可能是batch=32+10K约束下
+   的Pareto最优架构.
+
+   43K全量数据训练时间过长(>9h). 10K->20K是数据量边际收益最大的区间,
+   且训练时间可控(~4-5h).
+
+ SINGLE VARIABLE vs 03:
+   仅改: DATASET_LIMIT 10,000 -> 20,000 (2x data)
+   不改: 架构(768->384->192->96->3), BNx4, ConvTx5, D(SN+Hinge),
+         batch=32, lr=1e-4, Adam(beta1=0.5,beta2=0.99), epoch=200, seed=42
+
+ TRAINING TIME ESTIMATE:
+   20K / 32 = ~625 steps/epoch x 200 epoch = ~125,000 steps
+   Kaggle T4: ~4-5 hours (well within 9h limit)
+
+ EXPECTED RESULT:
+   🟢 乐观(35%): FID 48~54. 数据量是主要瓶颈, 2x数据显著改善.
+   🟡 中性(50%): FID 54~59. 数据量有帮助但边际效果有限.
+   🔴 悲观(15%): FID 59~63. 数据量不是瓶颈 — 架构本身已达上限.
+
+ REFERENCE:
+   Karras et al.(CVPR 2020) -- Analyzing and Improving Image Quality of StyleGAN
+     Sec 3.2: training set size vs FID relationship
+   Zhao et al.(NeurIPS 2020) -- DiffAugment: data augmentation for GANs
+     Small dataset setting: 10K-50K range benefits significantly from more data
+================================================================================
+"""
+import os, csv, json, random, gc
+from pathlib import Path; from datetime import datetime
+import numpy as np; import pandas as pd
+import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
+from PIL import Image, ImageFilter; import cv2
+import torch, torch.nn as nn, torch.nn.functional as F
+from torchvision import transforms, models; from torchvision.utils import make_grid
+from torch.utils.data import Dataset, DataLoader; from scipy import linalg
+
+EXPERIMENT_NAME = "09_G_Width3x_20K"
+OUTPUT_DIR = "/kaggle/working/dcgan_output"
+DATASET_PATH = "/kaggle/input/gananime-lite"
+DATASET_LIMIT = 20000       # [CHANGE] 2x data vs 03 (10K -> 20K)
+IMAGE_SIZE = 64
+BATCH_SIZE = 32
+NOISE_DIM = 128
+LR = 1e-4
+BETAS = (0.5, 0.99)
+SEED = 42
+EPOCHS = 200
+SAMPLE_INTERVAL = 50
+N_FID = 10000
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+EXP_DIR = os.path.join(OUTPUT_DIR, EXPERIMENT_NAME)
+
+import time as _time
+def _download_with_retry(model_fn, name):
+    for attempt in range(5):
+        try: return model_fn()
+        except Exception as e:
+            if attempt < 4:
+                wait = 2 ** attempt * 5
+                print(f"  {name} retry in {wait}s...")
+                _time.sleep(wait)
+            else: raise e
+
+print("Pre-loading models...")
+try:
+    _inc = _download_with_retry(
+        lambda: models.inception_v3(weights=models.Inception_V3_Weights.DEFAULT, transform_input=False),
+        "InceptionV3")
+    del _inc; gc.collect()
+    print("  InceptionV3: OK")
+except: print("  InceptionV3: FAILED")
+try:
+    _anet = _download_with_retry(
+        lambda: models.alexnet(weights=models.AlexNet_Weights.DEFAULT),
+        "AlexNet")
+    del _anet; gc.collect()
+    print("  AlexNet: OK")
+except: print("  AlexNet: FAILED")
+print()
+
+def set_all_seeds(seed=SEED):
+    random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
+    if torch.cuda.is_available(): torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+def find_all_images(root_dir):
+    exts = {".png", ".jpg", ".jpeg"}
+    files = []
+    if not os.path.exists(root_dir): return files
+    for dp, _, fn in os.walk(root_dir):
+        for f in fn:
+            if Path(f).suffix.lower() in exts:
+                files.append(os.path.join(dp, f))
+    return sorted(files)
+
+def load_dataset():
+    if os.path.exists(DATASET_PATH):
+        imgs = find_all_images(DATASET_PATH)
+        if imgs: print(f"Dataset: {DATASET_PATH} ({len(imgs)} images)"); return DATASET_PATH, imgs
+    print("Scanning /kaggle/input/ ...")
+    for sub in sorted(os.listdir("/kaggle/input")):
+        sp = os.path.join("/kaggle/input", sub)
+        if os.path.isdir(sp):
+            imgs = find_all_images(sp)
+            if imgs: print(f"Dataset: {sp} ({len(imgs)} images)"); return sp, imgs
+    raise FileNotFoundError("No dataset found.")
+
+class AnimeDataset(Dataset):
+    def __init__(self, paths, transform=None):
+        self.paths = paths; self.tf = transform
+    def __len__(self): return len(self.paths)
+    def __getitem__(self, i):
+        for _ in range(10):
+            try: img = Image.open(self.paths[i]).convert("RGB"); return self.tf(img) if self.tf else img
+            except (OSError, IOError): i = random.randint(0, len(self.paths) - 1)
+        raise RuntimeError("Failed to load any image after 10 retries")
+
+def save_image_grid(tensor, fp, nrow=8):
+    grid = make_grid(tensor, nrow=nrow, normalize=True, value_range=(-1, 1))
+    ndarr = grid.mul(255).clamp(0, 255).permute(1, 2, 0).to("cpu", torch.uint8).numpy()
+    Image.fromarray(ndarr).save(fp)
+
+class EdgeSharpen:
+    def __init__(self, prob=0.2, alpha=0.3): self.prob, self.alpha = prob, alpha
+    def __call__(self, img):
+        if random.random() < self.prob:
+            arr = np.array(img, dtype=np.float32) / 255.0
+            blurred = np.array(img.filter(ImageFilter.GaussianBlur(radius=1.5)), dtype=np.float32) / 255.0
+            sharp = arr + self.alpha * (arr - blurred)
+            return Image.fromarray(np.clip(sharp * 255, 0, 255).astype(np.uint8))
+        return img
+
+def get_transform():
+    return transforms.Compose([
+        transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
+        transforms.RandomHorizontalFlip(p=0.5),
+        EdgeSharpen(prob=0.2),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    ])
+
+# =============================================================================
+# Generator -- bit-for-bit =03 Widthx3
+#   ConvTranspose + BN + ReLU x5. NO changes.
+# =============================================================================
+class Generator(nn.Module):
+    def __init__(self, nd=NOISE_DIM):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.ConvTranspose2d(nd, 768, 4), nn.BatchNorm2d(768), nn.ReLU(),
+            nn.ConvTranspose2d(768, 384, 4, 2, 1), nn.BatchNorm2d(384), nn.ReLU(),
+            nn.ConvTranspose2d(384, 192, 4, 2, 1), nn.BatchNorm2d(192), nn.ReLU(),
+            nn.ConvTranspose2d(192, 96, 4, 2, 1), nn.BatchNorm2d(96), nn.ReLU(),
+            nn.ConvTranspose2d(96, 3, 4, 2, 1), nn.Tanh()
+        )
+        self.apply(self._init)
+    def _init(self, m):
+        if isinstance(m, (nn.Conv2d, nn.ConvTranspose2d)):
+            nn.init.orthogonal_(m.weight)
+            if m.bias is not None: nn.init.constant_(m.bias, 0)
+    def forward(self, x): return self.net(x)
+
+# =============================================================================
+# Discriminator -- SN+Hinge, bit-for-bit =03
+# =============================================================================
+class Discriminator(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.utils.spectral_norm(nn.Conv2d(3, 32, 3, 2, 1)), nn.LeakyReLU(0.2),
+            nn.utils.spectral_norm(nn.Conv2d(32, 64, 3, 2, 1)), nn.LeakyReLU(0.2),
+            nn.utils.spectral_norm(nn.Conv2d(64, 128, 3, 2, 1)), nn.LeakyReLU(0.2),
+            nn.utils.spectral_norm(nn.Conv2d(128, 256, 3, 2, 1)), nn.LeakyReLU(0.2),
+            nn.Flatten(),
+            nn.utils.spectral_norm(nn.Linear(4 * 4 * 256, 256)), nn.LeakyReLU(0.2),
+            nn.Linear(256, 1)
+        )
+    def forward(self, x): return self.net(x).view(-1)
+
+
+class FIDCalculator:
+    def __init__(self, device):
+        self.device = device
+        inc = models.inception_v3(weights=models.Inception_V3_Weights.DEFAULT, transform_input=False)
+        inc.fc = nn.Identity(); inc.eval(); self.inc = inc.to(device)
+        for p in self.inc.parameters(): p.requires_grad = False
+
+    @torch.no_grad()
+    def _feat(self, imgs):
+        imgs = (imgs + 1) / 2.0
+        imgs = F.interpolate(imgs, size=(299, 299), mode="bilinear", align_corners=False)
+        imgs = (imgs - 0.5) / 0.5
+        return self.inc(imgs).cpu().numpy()
+
+    @torch.no_grad()
+    def compute_fid(self, G, real_loader, n=10000):
+        G.eval(); rf, ff = [], []; c = 0
+        for imgs in real_loader:
+            rf.append(self._feat(imgs.to(self.device))); c += imgs.size(0)
+            if c >= n: break
+        rf = np.concatenate(rf, axis=0)[:n]; g = 0
+        while g < n:
+            bs = min(64, n - g)
+            noise = torch.randn(bs, NOISE_DIM, 1, 1, device=self.device)
+            ff.append(self._feat(G(noise))); g += bs
+        ff = np.concatenate(ff, axis=0)[:n]
+        mr = np.mean(rf, axis=0); sr = np.cov(rf, rowvar=False)
+        mf = np.mean(ff, axis=0); sf = np.cov(ff, rowvar=False)
+        d = mr - mf; cm = linalg.sqrtm(sr.dot(sf))
+        if np.iscomplexobj(cm): cm = cm.real
+        G.train(); return float(d.dot(d) + np.trace(sr + sf - 2 * cm))
+
+
+class LPIPSCalculator:
+    def __init__(self, device):
+        self.device = device
+        anet = models.alexnet(weights=models.AlexNet_Weights.DEFAULT); anet.eval()
+        self.layers = nn.ModuleList([
+            anet.features[:3], anet.features[:6], anet.features[:9],
+            anet.features[:12], anet.features
+        ]).to(device)
+        for p in self.layers.parameters(): p.requires_grad = False
+
+    def _norm(self, x):
+        m = torch.tensor([0.485, 0.456, 0.406], device=self.device).view(1, 3, 1, 1)
+        s = torch.tensor([0.229, 0.224, 0.225], device=self.device).view(1, 3, 1, 1)
+        return (x - m) / s
+
+    @torch.no_grad()
+    def compute_lpips(self, a, b):
+        a, b = self._norm(a), self._norm(b); total = 0.0
+        for L in self.layers: f1, f2 = L(a), L(b); total += (f1 - f2).pow(2).mean(dim=[1, 2, 3])
+        return (total / len(self.layers)).cpu().numpy()
+
+
+@torch.no_grad()
+def compute_diversity(G, lpips_calc, ns=500):
+    G.eval(); imgs = []; g = 0
+    while g < ns:
+        bs = min(32, ns - g)
+        noise = torch.randn(bs, NOISE_DIM, 1, 1, device=DEVICE)
+        imgs.append((G(noise) + 1) / 2.0); g += bs
+    imgs = torch.cat(imgs, dim=0)[:ns]; npairs = 2000
+    i1 = torch.randint(0, ns, (npairs,)); i2 = torch.randint(0, ns, (npairs,))
+    scores = []
+    for i in range(0, npairs, 50):
+        e = min(i + 50, npairs)
+        scores.extend(lpips_calc.compute_lpips(imgs[i1[i:e]].to(DEVICE), imgs[i2[i:e]].to(DEVICE)))
+    G.train(); return float(np.mean(scores))
+
+
+def compute_laplacian_variance(imgs):
+    vars_ = []
+    for img in imgs:
+        arr = (img.permute(1, 2, 0).cpu().numpy() * 255).astype(np.uint8)
+        gray = cv2.cvtColor(arr, cv2.COLOR_RGB2GRAY)
+        vars_.append(cv2.Laplacian(gray, cv2.CV_64F).var())
+    return float(np.mean(vars_))
+
+
+def compute_edge_density(imgs, real_imgs=None):
+    densities = []
+    for img in imgs:
+        arr = (img.permute(1, 2, 0).cpu().numpy() * 255).astype(np.uint8)
+        gray = cv2.cvtColor(arr, cv2.COLOR_RGB2GRAY)
+        edges = cv2.Canny(gray, 50, 150); densities.append((edges > 0).mean())
+    fake_density = float(np.mean(densities))
+    if real_imgs is not None:
+        real_densities = []
+        for img in real_imgs:
+            arr = (img.permute(1, 2, 0).cpu().numpy() * 255).astype(np.uint8)
+            gray = cv2.cvtColor(arr, cv2.COLOR_RGB2GRAY)
+            edges = cv2.Canny(gray, 50, 150); real_densities.append((edges > 0).mean())
+        real_density = float(np.mean(real_densities))
+        ratio = fake_density / max(real_density, 1e-8)
+        return fake_density, real_density, ratio
+    return fake_density, None, None
+
+
+def main():
+    set_all_seeds(SEED); os.makedirs(EXP_DIR, exist_ok=True)
+
+    dataset_path, image_paths = load_dataset()
+    if DATASET_LIMIT and len(image_paths) > DATASET_LIMIT:
+        set_all_seeds(SEED); image_paths = random.sample(image_paths, DATASET_LIMIT)
+        print(f"Subsampled to {DATASET_LIMIT} images (seed={SEED})")
+    actual_dataset_size = len(image_paths)
+
+    set_all_seeds(SEED)
+    fixed_noise = torch.randn(64, NOISE_DIM, 1, 1, device=DEVICE)
+
+    ds = AnimeDataset(image_paths, transform=get_transform())
+    dl = DataLoader(ds, batch_size=BATCH_SIZE, shuffle=True, drop_last=True, num_workers=2)
+
+    # Verify
+    g_tmp = Generator(); d_tmp = Discriminator()
+    gp = sum(p.numel() for p in g_tmp.parameters())
+    dp = sum(p.numel() for p in d_tmp.parameters())
+    bn_count = sum(1 for m in g_tmp.modules() if isinstance(m, nn.BatchNorm2d))
+    del g_tmp, d_tmp
+
+    steps_per_epoch = len(dl)
+
+    print(f"\n{'='*60}")
+    print(f"  {EXPERIMENT_NAME}")
+    print(f"  09: 03 Widthx3 + FULL Dataset (43K)")
+    print(f"  {'─'*50}")
+    print(f"  G: {gp:,} params (=03)  |  D: {dp:,} params (=03)")
+    print(f"  BN: {bn_count} (=03)  |  ConvTranspose: 5 (=03)")
+    print(f"  Architecture: SAME as 03 (768->384->192->96->3)")
+    print(f"  D: SN+Hinge (=03)")
+    print(f"  Batch: {BATCH_SIZE} | lr: {LR} | Epochs: {EPOCHS} | Seed: {SEED}")
+    print(f"  Data: {actual_dataset_size:,} images (03 had 10,000)")
+    print(f"  Steps/epoch: {steps_per_epoch:,}")
+    print(f"  Total steps: {steps_per_epoch * EPOCHS:,}")
+    print(f"  ONLY CHANGE from 03: DATASET_LIMIT None (all data)")
+    print(f"{'='*60}\n")
+
+    G = Generator().to(DEVICE); D = Discriminator().to(DEVICE)
+    g_opt = torch.optim.Adam(G.parameters(), lr=LR, betas=BETAS)
+    d_opt = torch.optim.Adam(D.parameters(), lr=LR, betas=BETAS)
+
+    csv_f = open(os.path.join(EXP_DIR, "loss.csv"), "w", newline="")
+    w = csv.writer(csv_f)
+    w.writerow(["epoch", "D_loss", "G_loss", "D_real", "D_fake"])
+    fdl, fgl, fdr, fdf = 0.0, 0.0, 0.0, 0.0
+
+    print("Training ...\n")
+    for ep in range(1, EPOCHS + 1):
+        for img in dl:
+            real = img.to(DEVICE); bs = real.size(0)
+            noise = torch.randn(bs, NOISE_DIM, 1, 1, device=DEVICE)
+            with torch.no_grad(): fake = G(noise)
+            d_real = D(real); d_fake = D(fake)
+            d_loss = F.relu(1.0 - d_real).mean() + F.relu(1.0 + d_fake).mean()
+            d_opt.zero_grad(); d_loss.backward(); d_opt.step()
+
+            noise = torch.randn(bs, NOISE_DIM, 1, 1, device=DEVICE)
+            g_loss = -D(G(noise)).mean()
+            g_opt.zero_grad(); g_loss.backward(); g_opt.step()
+
+        dl_v = d_loss.item(); gl_v = g_loss.item()
+        dr_v = d_real.mean().item(); df_v = d_fake.mean().item()
+        w.writerow([ep, dl_v, gl_v, dr_v, df_v])
+        fdl, fgl, fdr, fdf = dl_v, gl_v, dr_v, df_v
+
+        print(f"Epoch [{ep:3d}/{EPOCHS}]  D:{dl_v:.4f}  G:{gl_v:.4f}  "
+              f"DR:{dr_v:+.2f}  DF:{df_v:+.2f}")
+
+        if ep % SAMPLE_INTERVAL == 0:
+            G.eval(); samples = G(fixed_noise); G.train()
+            save_image_grid(samples, os.path.join(EXP_DIR, f"epoch_{ep:03d}.png"))
+            torch.save(G.state_dict(), os.path.join(EXP_DIR, f"generator_epoch_{ep:03d}.pth"))
+
+    csv_f.close()
+    torch.save(G.state_dict(), os.path.join(EXP_DIR, "generator_final.pth"))
+    torch.save(D.state_dict(), os.path.join(EXP_DIR, "discriminator_final.pth"))
+    save_image_grid(next(iter(dl))[:64], os.path.join(EXP_DIR, "real_images.png"))
+
+    # Loss curves
+    df = pd.read_csv(os.path.join(EXP_DIR, "loss.csv"))
+    fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+    axes[0].plot(df["epoch"], df["G_loss"], color="#e74c3c", lw=1.5)
+    axes[0].set(xlabel="Epoch", ylabel="Loss", title="Generator Loss (Hinge)"); axes[0].grid(True, alpha=0.3)
+    axes[1].plot(df["epoch"], df["D_loss"], color="#3498db", lw=1.5)
+    axes[1].axhline(2.0, color="red", ls="--", alpha=0.3, label="Collapse (D_loss=2.0)")
+    axes[1].set(xlabel="Epoch", ylabel="Loss", title="Discriminator Loss (Hinge)")
+    axes[1].legend(fontsize=7); axes[1].grid(True, alpha=0.3)
+    axes[2].plot(df["epoch"], df["D_real"], color="#2ecc71", lw=1.5, label="D(Real)")
+    axes[2].plot(df["epoch"], df["D_fake"], color="#e67e22", lw=1.5, label="D(Fake)")
+    axes[2].axhline(0.0, color="gray", ls="--", alpha=0.4)
+    axes[2].set(xlabel="Epoch", ylabel="Mean Logit", title="D(Real) vs D(Fake)")
+    axes[2].legend(fontsize=8); axes[2].grid(True, alpha=0.3)
+    plt.tight_layout(); plt.savefig(os.path.join(EXP_DIR, "loss_curves.png"), dpi=150); plt.close()
+
+    # Metrics
+    print(f"\n{'='*60}\n  Computing Metrics for {EXPERIMENT_NAME}\n{'='*60}")
+    eval_tf = transforms.Compose([
+        transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    ])
+    eval_ds = AnimeDataset(image_paths, transform=eval_tf)
+    eval_dl = DataLoader(eval_ds, batch_size=64, shuffle=True, drop_last=True, num_workers=2)
+
+    print("FID ...")
+    try:
+        fid = FIDCalculator(DEVICE).compute_fid(G, eval_dl, n=N_FID)
+        print(f"  FID: {fid:.2f}")
+    except Exception as e:
+        fid = -1; print(f"  FID FAILED: {e}"); gc.collect()
+
+    if DEVICE.type == "cuda": torch.cuda.empty_cache()
+
+    print("LPIPS + Diversity + Laplacian + Edge Density ...")
+    lpips_calc = LPIPSCalculator(DEVICE); rb, fb = [], []; generated = 0
+    for imgs in eval_dl: rb.append((imgs.to(DEVICE) + 1) / 2.0)
+    rb = torch.cat(rb, dim=0)[:500]
+
+    with torch.no_grad():
+        while generated < 500:
+            bs = min(32, 500 - generated)
+            noise = torch.randn(bs, NOISE_DIM, 1, 1, device=DEVICE)
+            fb.append((G(noise) + 1) / 2.0); generated += bs
+    fb = torch.cat(fb, dim=0)[:500]
+
+    lpips_scores = []
+    for i in range(0, 500, 50):
+        lpips_scores.extend(lpips_calc.compute_lpips(
+            fb[i:min(i + 50, 500)], rb[i:min(i + 50, 500)]
+        ))
+    lpips_mean = float(np.mean(lpips_scores))
+    div = compute_diversity(G, lpips_calc, ns=300)
+    lap = compute_laplacian_variance(fb[:200])
+    fake_edge, real_edge, edge_ratio = compute_edge_density(fb[:200], rb[:200])
+    print(f"  LPIPS: {lpips_mean:.4f}  Diversity: {div:.4f}  "
+          f"LapVar: {lap:.2f}  EdgeRatio: {edge_ratio:.4f}")
+
+    del lpips_calc; gc.collect()
+    if DEVICE.type == "cuda": torch.cuda.empty_cache()
+
+    fid_delta_vs_03 = round(fid - 59.0, 2) if fid > 0 else None
+
+    metrics = {
+        "experiment_name": EXPERIMENT_NAME,
+        "type": "single_variable",
+        "base": "03 Widthx3 (FID=59.0, 10K data)",
+        "change": f"DATASET_LIMIT None -> {actual_dataset_size:,} images (all data, no subsampling)",
+        "epochs": EPOCHS,
+        "batch_size": BATCH_SIZE,
+        "dataset_size": actual_dataset_size,
+        "technique": (
+            "09: 03 Widthx3 architecture (BIT-FOR-BIT identical) "
+            "trained on full dataset instead of 10K random subset. "
+            f"Actual images: {actual_dataset_size:,}. "
+            "G: 768->384->192->96->3, BNx4, ConvTx5 (=03, unchanged). "
+            "D: SN+Hinge (=03, unchanged). "
+            "All hyperparams: batch=32, lr=1e-4, epoch=200, seed=42 (=03). "
+            "ONLY CHANGE: DATA QUANTITY. "
+            "Tests whether data diversity is the binding constraint "
+            "on G expressivity at FID=59."
+        ),
+        "FID": round(fid, 2),
+        "FID_delta_vs_03": fid_delta_vs_03,
+        "LPIPS": round(lpips_mean, 4),
+        "Diversity": round(div, 4),
+        "Laplacian_Variance": round(lap, 2),
+        "Edge_Density_Fake": round(fake_edge, 4),
+        "Edge_Density_Real": round(real_edge, 4),
+        "Edge_Density_Ratio": round(edge_ratio, 4),
+        "final_G_loss": round(fgl, 4),
+        "final_D_loss": round(fdl, 4),
+        "D_real": round(fdr, 4),
+        "D_fake": round(fdf, 4),
+        "G_params": gp,
+        "D_params": dp,
+        "steps_per_epoch": steps_per_epoch,
+        "total_training_steps": steps_per_epoch * EPOCHS,
+        "completed_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    with open(os.path.join(EXP_DIR, "metrics.json"), "w") as f:
+        json.dump(metrics, f, indent=2)
+
+    print(f"\n  Complete: {EXPERIMENT_NAME}  FID={fid:.2f}  vs 03(10K): {fid_delta_vs_03}")
+
+
+if __name__ == "__main__":
+    main()

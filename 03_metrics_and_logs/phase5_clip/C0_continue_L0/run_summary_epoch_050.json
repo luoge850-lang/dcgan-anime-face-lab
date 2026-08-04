@@ -1,0 +1,7 @@
+{
+  "experiment_name": "C0_continue_L0",
+  "finished_at": "2026-07-30T08:46:28.794510",
+  "total_wall_hours": 0.6416026851772222,
+  "target_epochs": 50,
+  "resume": null
+}

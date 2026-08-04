@@ -1,0 +1,15 @@
+{
+  "experiment_name": "exp1_epoch_100",
+  "experiment_group": "exp1_epoch_study",
+  "epochs": 100,
+  "dataset_size": 8000,
+  "FID": 136.78,
+  "LPIPS": 0.0043,
+  "Diversity": 0.004,
+  "Laplacian_Variance": 8578.28,
+  "final_G_loss": 1.3089,
+  "final_D_loss": 0.3721,
+  "D_real": 0.855,
+  "D_fake": 0.1332,
+  "completed_at": "2026-07-15 03:52:49"
+}

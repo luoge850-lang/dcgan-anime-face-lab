@@ -1,0 +1,18 @@
+{
+  "experiment_name": "19_D_SN_Hinge_R1",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "technique": "13_D_SN_Hinge + R1 gradient penalty (\u03b3=1.0). D_loss = Hinge + \u03b3\u00d70.5\u00d7||\u2207D(real)||\u00b2. StyleGAN2 standard regularization. D penalized for steep gradients near real data \u2192 smoother decision boundary \u2192 more stable G gradients. NO architecture change \u2014 G and D identical to D3.",
+  "FID": 89.92,
+  "LPIPS": 31.7171,
+  "Diversity": 30.6283,
+  "Laplacian_Variance": 9630.98,
+  "Edge_Density_Fake": 0.2769,
+  "Edge_Density_Real": 0.2692,
+  "Edge_Density_Ratio": 1.0286,
+  "final_G_loss": 0.8973,
+  "final_D_loss": 1.5873,
+  "D_real": 1.0579,
+  "D_fake": 0.1776,
+  "completed_at": "2026-07-22 07:08:39"
+}

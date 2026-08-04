@@ -1,0 +1,19 @@
+{
+  "experiment_name": "08_G_Laplacian",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "augmentation": "Flip(p=0.5)+EdgeSharpen(p=0.2)",
+  "technique": "Laplacian Pyramid Loss (levels=3, lambda=0.1)",
+  "FID": 98.67,
+  "LPIPS": 31.2609,
+  "Diversity": 28.1116,
+  "Laplacian_Variance": 8928.25,
+  "Edge_Density_Fake": 0.2925,
+  "Edge_Density_Real": 0.2694,
+  "Edge_Density_Ratio": 1.0857,
+  "final_G_loss": 3.8898,
+  "final_D_loss": 0.3494,
+  "D_real": 0.7927,
+  "D_fake": 0.0157,
+  "completed_at": "2026-07-20 01:34:26"
+}

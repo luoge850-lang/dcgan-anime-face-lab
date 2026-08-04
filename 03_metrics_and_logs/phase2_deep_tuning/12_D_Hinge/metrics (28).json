@@ -1,0 +1,18 @@
+{
+  "experiment_name": "12_D_Hinge",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "technique": "Hinge Loss (standard G/D, no SN)",
+  "FID": 129.16,
+  "LPIPS": 30.5496,
+  "Diversity": 24.8903,
+  "Laplacian_Variance": 7748.4,
+  "Edge_Density_Fake": 0.2948,
+  "Edge_Density_Real": 0.2677,
+  "Edge_Density_Ratio": 1.1015,
+  "final_G_loss": 2.8753,
+  "final_D_loss": 0.1163,
+  "D_real": 6.1187,
+  "D_fake": -2.0339,
+  "completed_at": "2026-07-20 07:21:27"
+}

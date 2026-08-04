@@ -1,0 +1,18 @@
+{
+  "experiment_name": "17_D_FFT_SN_Hinge",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "technique": "13_D_SN_Hinge + FFT frequency branch in D: parallel rfft2d\u2192magnitude\u2192log1p\u2192mini-Conv(1\u219216\u219232\u219264ch, ~23K params, NO SN). ADDITIVE fusion: spatial_head(256\u21921, identical to D3) + fft_head(64\u21921, ~65 params). logit = spatial_logit + freq_logit. Spatial path is bit-for-bit D3; freq starts at \u22480 (default init).",
+  "FID": 108.81,
+  "LPIPS": 31.1789,
+  "Diversity": 28.3151,
+  "Laplacian_Variance": 9636.85,
+  "Edge_Density_Fake": 0.2814,
+  "Edge_Density_Real": 0.2719,
+  "Edge_Density_Ratio": 1.0348,
+  "final_G_loss": 1.4371,
+  "final_D_loss": 0.7192,
+  "D_real": 1.4734,
+  "D_fake": -0.4228,
+  "completed_at": "2026-07-22 02:53:07"
+}

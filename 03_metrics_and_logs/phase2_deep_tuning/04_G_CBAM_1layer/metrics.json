@@ -1,0 +1,19 @@
+{
+  "experiment_name": "04_G_CBAM_1layer",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "augmentation": "Flip(p=0.5)+EdgeSharpen(p=0.2)",
+  "architecture": "Generator + 1-layer CBAM at L3 (64ch@16x16)",
+  "FID": 105.47,
+  "LPIPS": 30.8688,
+  "Diversity": 26.7,
+  "Laplacian_Variance": 9465.97,
+  "Edge_Density_Fake": 0.2941,
+  "Edge_Density_Real": 0.2695,
+  "Edge_Density_Ratio": 1.0914,
+  "final_G_loss": 4.3873,
+  "final_D_loss": 0.2764,
+  "D_real": 0.951,
+  "D_fake": 0.1378,
+  "completed_at": "2026-07-17 11:27:39"
+}

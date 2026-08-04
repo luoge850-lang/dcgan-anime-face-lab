@@ -1,0 +1,18 @@
+{
+  "experiment_name": "03_G_Width3x",
+  "epochs": 200,
+  "dataset_size": 10000,
+  "technique": "G Width\u00d73: 768\u2192384\u2192192\u219296, ~10M params (8:1 G:D). 5 ConvT+BN+ReLU, no Skip. Tests capacity marginal benefit beyond \u00d72.",
+  "FID": 59.0,
+  "LPIPS": 31.8286,
+  "Diversity": 31.1457,
+  "Laplacian_Variance": 9957.99,
+  "Edge_Density_Fake": 0.2737,
+  "Edge_Density_Real": 0.2731,
+  "Edge_Density_Ratio": 1.0023,
+  "final_G_loss": 0.5523,
+  "final_D_loss": 1.223,
+  "D_real": 0.3211,
+  "D_fake": -0.5764,
+  "completed_at": "2026-07-24 03:32:31"
+}

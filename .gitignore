@@ -1,0 +1,20 @@
+# Data and generated dumps
+data/
+datasets/
+fid_images/
+generated_images/
+__pycache__/
+*.pyc
+
+# Large model artifacts: publish through Releases or model hosting
+*.pth
+*.pt
+*.ckpt
+
+# Local and platform-specific output
+/kaggle/
+outputs/
+logs_runtime/
+.venv/
+.idea/
+.vscode/

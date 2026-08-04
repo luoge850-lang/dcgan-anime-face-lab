@@ -1,0 +1,14 @@
+{
+  "experiment_name": "00_baseline",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "augmentation": "Flip(p=0.5)+EdgeSharpen(p=0.2)",
+  "FID": 109.40,
+  "LPIPS": 30.4704,
+  "Diversity": 25.8967,
+  "Laplacian_Variance": 9099.61,
+  "Edge_Density_Fake": 0.2926,
+  "Edge_Density_Real": 0.2665,
+  "Edge_Density_Ratio": 1.0979,
+  "completed_at": "2026-07-16"
+}

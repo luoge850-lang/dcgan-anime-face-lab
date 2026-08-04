@@ -1,0 +1,15 @@
+{
+  "experiment_name": "exp2_denoise",
+  "experiment_group": "exp2_structure_split",
+  "epochs": 100,
+  "dataset_size": 8000,
+  "FID": 155.81,
+  "LPIPS": 29.8465,
+  "Diversity": 24.2186,
+  "Laplacian_Variance": 4449.12,
+  "final_G_loss": 2.2215,
+  "final_D_loss": 0.3951,
+  "D_real": 0.8829,
+  "D_fake": 0.1791,
+  "completed_at": "2026-07-15 07:55:10"
+}

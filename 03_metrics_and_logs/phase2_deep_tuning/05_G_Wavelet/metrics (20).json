@@ -1,0 +1,19 @@
+{
+  "experiment_name": "05_G_Wavelet",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "augmentation": "Flip(p=0.5)+EdgeSharpen(p=0.2)",
+  "technique": "Haar Wavelet Loss (lambda=0.1, LL=1.0 LH=0.5 HL=0.5 HH=0.25)",
+  "FID": 106.14,
+  "LPIPS": 30.3952,
+  "Diversity": 26.2084,
+  "Laplacian_Variance": 9056.53,
+  "Edge_Density_Fake": 0.2948,
+  "Edge_Density_Real": 0.2665,
+  "Edge_Density_Ratio": 1.1061,
+  "final_G_loss": 4.9859,
+  "final_D_loss": 0.3662,
+  "D_real": 0.8473,
+  "D_fake": 0.0648,
+  "completed_at": "2026-07-16 06:57:32"
+}

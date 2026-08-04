@@ -1,0 +1,18 @@
+{
+  "experiment_name": "01_G_Width2x",
+  "epochs": 200,
+  "dataset_size": 10000,
+  "technique": "G Width\u00d72: Generator channels doubled (512\u2192256\u2192128\u219264, 4\u00d7 params). D unchanged (SN+Hinge). Tests whether G capacity is the FID bottleneck.",
+  "FID": 78.75,
+  "LPIPS": 30.8647,
+  "Diversity": 29.3902,
+  "Laplacian_Variance": 9842.3,
+  "Edge_Density_Fake": 0.277,
+  "Edge_Density_Real": 0.2718,
+  "Edge_Density_Ratio": 1.0193,
+  "final_G_loss": 0.8865,
+  "final_D_loss": 0.921,
+  "D_real": 0.691,
+  "D_fake": -0.6417,
+  "completed_at": "2026-07-23 08:31:39"
+}

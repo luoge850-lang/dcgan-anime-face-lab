@@ -1,0 +1,19 @@
+{
+  "fid_legacy_inception_v3": 33.78459378302617,
+  "clip_mmd2_unbiased": 0.042831987142562866,
+  "clip_mmd2_biased": 0.04338309168815613,
+  "nearest_real_clip_cosine": 0.9629274010658264,
+  "fake_clip_feature_variance": 0.06648992002010345,
+  "real_clip_feature_variance": 0.10436150431632996,
+  "fake_clip_effective_rank": 50.788930833062125,
+  "real_clip_effective_rank": 62.28965381735584,
+  "blur_threshold_real_p10": 5372.177149367332,
+  "fake_blur_rate": 0.078,
+  "real_blur_rate_by_definition": 0.1,
+  "fake_laplacian_mean": 9161.697123823047,
+  "real_laplacian_mean": 8898.487767544151,
+  "fake_edge_density": 0.2668828125,
+  "real_edge_density": 0.27029443359375,
+  "edge_density_ratio": 0.9873781304025017,
+  "lpips_alex_diversity": 0.3069462180137634
+}

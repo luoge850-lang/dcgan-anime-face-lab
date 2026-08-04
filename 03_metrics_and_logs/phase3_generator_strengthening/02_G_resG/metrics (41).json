@@ -1,0 +1,18 @@
+{
+  "experiment_name": "02_G_ResG",
+  "epochs": 200,
+  "dataset_size": 10000,
+  "technique": "ResG v4 (min-diff): ConvTranspose+BN+ReLU (bit-for-bit = Baseline) + Skip Connection (Upsample+Conv1\u00d71). Only new variable is the Skip path.",
+  "FID": 95.6,
+  "LPIPS": 31.0896,
+  "Diversity": 29.7012,
+  "Laplacian_Variance": 8990.29,
+  "Edge_Density_Fake": 0.2762,
+  "Edge_Density_Real": 0.2703,
+  "Edge_Density_Ratio": 1.0219,
+  "final_G_loss": 1.4248,
+  "final_D_loss": 0.3436,
+  "D_real": 1.3791,
+  "D_fake": -0.9106,
+  "completed_at": "2026-07-24 02:16:13"
+}

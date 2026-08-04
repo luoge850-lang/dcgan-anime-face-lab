@@ -1,0 +1,21 @@
+{
+  "experiment_name": "06_G_Width3x_ResG_pre",
+  "epochs": 200,
+  "dataset_size": 10000,
+  "technique": "Pre-activation ResBlock G: BN\u2192ReLU\u2192ConvT(main) + Up\u2192Conv1\u00d71(skip from raw x). 5 stages, channels=768\u2192384\u2192192\u219296\u21923 (=03). Main upsampling=ConvTranspose (=03). +5% params vs 03 (3\u00d7Conv1\u00d71 skip projections). Only change from 03 = atomic block replaced (ConvT\u2192BN\u2192ReLU \u2192 pre-act ResBlock).",
+  "FID": 76.16,
+  "LPIPS": 31.5264,
+  "Diversity": 29.4066,
+  "Laplacian_Variance": 10046.27,
+  "Edge_Density_Fake": 0.2784,
+  "Edge_Density_Real": 0.2663,
+  "Edge_Density_Ratio": 1.0454,
+  "final_G_loss": -0.3498,
+  "final_D_loss": 1.5522,
+  "D_real": 0.0391,
+  "D_fake": -0.441,
+  "G_architecture": "Pre-activation ResBlock \u2014 BN\u2192ReLU\u2192ConvT+Skip(Up\u2192Conv1\u00d71)",
+  "G_params": 8164227,
+  "G_params_vs_03": "+389280",
+  "completed_at": "2026-07-27 07:04:13"
+}

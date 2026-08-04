@@ -1,0 +1,15 @@
+{
+  "experiment_name": "exp2_blur",
+  "experiment_group": "exp2_structure_split",
+  "epochs": 100,
+  "dataset_size": 8000,
+  "FID": 141.15,
+  "LPIPS": 29.5011,
+  "Diversity": 23.7647,
+  "Laplacian_Variance": 4153.6,
+  "final_G_loss": 2.093,
+  "final_D_loss": 0.2977,
+  "D_real": 0.861,
+  "D_fake": 0.096,
+  "completed_at": "2026-07-15 07:39:26"
+}

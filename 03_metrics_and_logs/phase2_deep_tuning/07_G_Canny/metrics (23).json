@@ -1,0 +1,11 @@
+{
+  "experiment_name": "07_G_Canny",
+  "epochs": 200,
+  "FID": 109.02,
+  "LPIPS": 30.7912,
+  "Diversity": 27.6279,
+  "Laplacian_Variance": 9654.09,
+  "Edge_Density_Fake": 0.2919,
+  "Edge_Density_Real": 0.2741,
+  "Edge_Density_Ratio": 1.0648
+}

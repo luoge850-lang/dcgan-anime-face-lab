@@ -1,0 +1,19 @@
+{
+  "experiment_name": "02_G_SENet_1layer",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "augmentation": "Flip(p=0.5)+EdgeSharpen(p=0.2)",
+  "architecture": "Generator + 1-layer SE Block at L3 (64ch@16x16)",
+  "FID": 96.76,
+  "LPIPS": 30.0739,
+  "Diversity": 25.5182,
+  "Laplacian_Variance": 8845.68,
+  "Edge_Density_Fake": 0.2892,
+  "Edge_Density_Real": 0.2709,
+  "Edge_Density_Ratio": 1.0679,
+  "final_G_loss": 3.5213,
+  "final_D_loss": 0.2884,
+  "D_real": 0.8428,
+  "D_fake": 0.0324,
+  "completed_at": "2026-07-17 07:11:23"
+}

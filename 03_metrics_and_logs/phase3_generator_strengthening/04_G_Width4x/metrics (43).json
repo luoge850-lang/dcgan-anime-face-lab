@@ -1,0 +1,18 @@
+{
+  "experiment_name": "04_G_Width4x",
+  "epochs": 200,
+  "dataset_size": 10000,
+  "technique": "G Width\u00d74: 1024\u2192512\u2192256\u2192128, ~18M params (15:1 G:D). 5 ConvT+BN+ReLU, no Skip. Terminal capacity test \u2014 \u00d74 is the last width experiment.",
+  "FID": 63.66,
+  "LPIPS": 32.0676,
+  "Diversity": 30.1681,
+  "Laplacian_Variance": 9851.63,
+  "Edge_Density_Fake": 0.2744,
+  "Edge_Density_Real": 0.2687,
+  "Edge_Density_Ratio": 1.0214,
+  "final_G_loss": 0.6506,
+  "final_D_loss": 1.417,
+  "D_real": 0.1189,
+  "D_fake": -0.4978,
+  "completed_at": "2026-07-24 07:28:54"
+}

@@ -1,0 +1,19 @@
+{
+  "experiment_name": "05_G_Width3x_R1",
+  "epochs": 200,
+  "dataset_size": 10000,
+  "technique": "Width\u00d73 + R1 Gradient Penalty (\u03b3=1.0). G/D architecture identical to 03. Only D_loss added: 0.5\u00d7||\u2207D(real)||\u00b2.",
+  "FID": 59.57,
+  "LPIPS": 33.7119,
+  "Diversity": 32.7201,
+  "Laplacian_Variance": 10593.55,
+  "Edge_Density_Fake": 0.2718,
+  "Edge_Density_Real": 0.2731,
+  "Edge_Density_Ratio": 0.9952,
+  "final_G_loss": 0.4536,
+  "final_D_loss": 1.5267,
+  "D_real": -0.0092,
+  "D_fake": -0.4841,
+  "R1_gamma": 1.0,
+  "completed_at": "2026-07-27 04:00:26"
+}

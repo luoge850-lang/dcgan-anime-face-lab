@@ -1,0 +1,7 @@
+{
+  "experiment_name": "C4_clip_L010",
+  "finished_at": "2026-07-31T07:06:05.928556",
+  "total_wall_hours": 1.1919775590152777,
+  "target_epochs": 50,
+  "resume": null
+}

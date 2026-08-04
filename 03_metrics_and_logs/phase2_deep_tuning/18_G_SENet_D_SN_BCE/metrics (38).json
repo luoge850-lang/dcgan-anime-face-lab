@@ -1,0 +1,18 @@
+{
+  "experiment_name": "18_G_SENet_D_SN_BCE",
+  "epochs": 200,
+  "dataset_size": 8000,
+  "technique": "Cross-network decoupling: G+SEBlock@L3(16\u00d716,64ch,r=16) + D+SN(4Conv+penLin4096\u2192256, lastLin256\u21921 FREE+Sigmoid) + BCE. SE works in G's internal channel space; SN works in D's internal Lipschitz space. Zero gradient interaction \u2014 true decoupling unlike 15/16/17.",
+  "FID": 96.02,
+  "LPIPS": 30.7149,
+  "Diversity": 29.3453,
+  "Laplacian_Variance": 9675.33,
+  "Edge_Density_Fake": 0.2766,
+  "Edge_Density_Real": 0.27,
+  "Edge_Density_Ratio": 1.0246,
+  "final_G_loss": 2.1053,
+  "final_D_loss": 0.7729,
+  "D_real": 0.7961,
+  "D_fake": 0.3932,
+  "completed_at": "2026-07-22 06:34:24"
+}
