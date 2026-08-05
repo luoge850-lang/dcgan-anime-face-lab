@@ -40,6 +40,8 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "results_summary.csv",
             "docs/data_quality_and_sdxl_extension.md",
             "docs/experiment_process.md",
+            "docs/baseline_map.md",
+            "docs/interview_playbook.md",
         ):
             self.assertIn(target, readme)
             if target.endswith(".md"):

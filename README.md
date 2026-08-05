@@ -28,13 +28,13 @@ This repository records the full progression, not only the final FID milestones:
 
 | Stage | What was tested | Evidence and source |
 |---|---|---|
-| Phase 1 | Epoch budget and early image augmentations | [`phase1_preliminary_tuning`](03_metrics_and_logs/phase1_preliminary_tuning/) · [`early tuning scripts`](02_selected_experiments/full_process/phase1_early_tuning/) |
-| Phase 2 | No-module baseline, attention/filter modules, SN, Hinge, and R1 | [`phase2_deep_tuning`](03_metrics_and_logs/phase2_deep_tuning/) · [`module scripts`](02_selected_experiments/full_process/phase2_module_tuning/) |
-| Phase 3 | Generator width, residual/attention variants, data scale, DiffAugment, and EMA | [`phase3_generator_strengthening`](03_metrics_and_logs/phase3_generator_strengthening/) · [`G scripts`](02_selected_experiments/full_process/phase3_generator_strengthening/) |
-| Phase 5 | Formal control and CLIP-MMD lambda sweep | [`phase5_clip`](03_metrics_and_logs/phase5_clip/) · [`CLIP scripts`](02_selected_experiments/full_process/phase5_clip_tuning/) |
+| Phase 1 | Epoch budget and early image augmentations | [`phase1_preliminary_tuning`](03_metrics_and_logs/phase1_preliminary_tuning/) ? [`early tuning scripts`](02_selected_experiments/full_process/phase1_early_tuning/) |
+| Phase 2 | No-module baseline, attention/filter modules, SN, Hinge, and R1 | [`phase2_deep_tuning`](03_metrics_and_logs/phase2_deep_tuning/) ? [`module scripts`](02_selected_experiments/full_process/phase2_module_tuning/) |
+| Phase 3 | Generator width, residual/attention variants, data scale, DiffAugment, and EMA | [`phase3_generator_strengthening`](03_metrics_and_logs/phase3_generator_strengthening/) ? [`G scripts`](02_selected_experiments/full_process/phase3_generator_strengthening/) |
+| Phase 5 | Formal control and CLIP-MMD lambda sweep | [`phase5_clip`](03_metrics_and_logs/phase5_clip/) ? [`CLIP scripts`](02_selected_experiments/full_process/phase5_clip_tuning/) |
 | Phase 6 | Exact-duplicate audit and clean-unique B1 baseline | [`data-quality record`](docs/data_quality_and_sdxl_extension.md) |
 
-The full process narrative, comparison boundaries, and negative-result interpretation are in [`docs/experiment_process.md`](docs/experiment_process.md). The Phase 2 `00_baseline` is the true plain DCGAN baseline: it has no added modules.
+The full process narrative, comparison boundaries, and negative-result interpretation are in [`docs/experiment_process.md`](docs/experiment_process.md). The Phase 2 `00_baseline` is the no-added-module architectural baseline: it has no attention, frequency, edge, or discriminator-regularization modules, while retaining the augmentation policy selected in Phase 1 (`RandomHorizontalFlip(p=0.5)` + `EdgeSharpen(p=0.2)`). It is therefore not a no-augmentation control. The baseline relationships are summarized in [`docs/baseline_map.md`](docs/baseline_map.md), and the interview/learning guide is in [`docs/interview_playbook.md`](docs/interview_playbook.md).
 
 ## Results at a glance
 
@@ -57,7 +57,7 @@ The complete curated table, entry points, and comparison scopes are in [`results
 
 ### Qualitative samples
 
-One compact figure shows one sample grid for each major stage. The first Phase 2 baseline is explicitly the plain DCGAN with no added modules; it is not the later Width x3 model.
+One compact figure shows one sample grid for each major stage. The first Phase 2 baseline is explicitly the no-added-module DCGAN architecture with the fixed Phase 1 augmentation policy; it is not the later Width x3 model.
 
 <p align="center">
   <img src="04_visual_assets/qualitative_samples_compact.png" alt="Nine labeled sample grids covering early tuning, augmentation, the plain no-module baseline, SN-Hinge, generator width, data scale, DiffAugment plus EMA, CLIP, and the B1 unique-data baseline" width="760">
@@ -81,7 +81,7 @@ The headline field is named `fid_legacy_project` to prevent it from being confus
 
 FID is useful for longitudinal comparison when the protocol is held constant, but it is sensitive to feature-network, resizing, preprocessing, and finite-sample choices. The project therefore keeps old values unchanged and plans to add a separately named standardized FID beside them. See [`metric_protocol.md`](metric_protocol.md) for the exact boundary and the next evaluation plan.
 
-The historical `LPIPS` fields in older logs are AlexNet feature-distance proxies, not calibrated LPIPS. The CLIP sweep reports both FID and CLIP MMD because the two objectives do not select exactly the same checkpoint: C1 has the lowest local legacy FID, while C4 has the lowest CLIP MMD².
+The historical `LPIPS` fields in older logs are AlexNet feature-distance proxies, not calibrated LPIPS. The CLIP sweep reports both FID and CLIP MMD because the two objectives do not select exactly the same checkpoint: C1 has the lowest local legacy FID, while C4 has the lowest CLIP MMD?.
 
 ## Reproduction boundary
 

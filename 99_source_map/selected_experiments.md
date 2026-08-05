@@ -18,3 +18,5 @@ The snapshot keeps representative experiments that make the project story unders
 The `02_selected_experiments/full_process/` archive adds the completed source families that were previously omitted from the interview-facing selection: Phase 1 early tuning, Phase 2 module tuning, Phase 3 generator strengthening, and the complete Phase 5 CLIP sweep including C2.
 
 The remaining historical metrics are retained under `03_metrics_and_logs` for traceability, but their full training scripts are not part of the public-facing core.
+
+The repository contains several baselines with different purposes. Use `docs/baseline_map.md` when presenting them; `00_baseline`, Exp11/B0, and B1 are not interchangeable checkpoints or data protocols.
