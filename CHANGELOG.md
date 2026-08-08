@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3 - 2026-08-08
+
+- Added the completed Phase 7 controlled SDXL replacement study at a fixed 4K fine-tuning budget.
+- Added A0/A10/A20/A30/A50 metrics, loss logs, source scripts, pilot review provenance, and representative sample grids.
+- Recorded the negative result: higher SDXL replacement ratios reduced FID and Coverage in the tested setup; the repository does not claim SDXL augmentation as an improvement.
+- Added a separate comparison scope so the 4K fine-tuning values are not mixed with the historical 20K Exp11 or 17K B1 results.
+- Kept the generated SDXL image pool, archives, checkpoints, and incomplete row-level manual annotations outside Git history.
+
 ## v0.2 - 2026-08-04
 
 - Expanded the snapshot from a final-results selection into a full-process archive covering early tuning, augmentation, module tuning, generator strengthening, and CLIP tuning.

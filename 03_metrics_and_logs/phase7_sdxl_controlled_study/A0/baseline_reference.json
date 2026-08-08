@@ -1,0 +1,16 @@
+{
+  "baseline_experiment": "FT_A0_4K_100E",
+  "baseline_n_original": 4000,
+  "baseline_epochs": 100,
+  "reference_FID": 37.91,
+  "reference_Coverage": 0.6687,
+  "reference_Diversity": 28.8269,
+  "reference_BlurRate": 0.125,
+  "reference_EdgeDensity": 0.2578,
+  "reference_LaplacianVar": 8811.88,
+  "reference_LPIPS_AlexFeat": 31.443,
+  "coverage_abort_threshold": 0.6019,
+  "coverage_warn_threshold": 0.6353,
+  "fid_improvement_min": 0.5,
+  "generated_at": "2026-08-07 06:37:39"
+}

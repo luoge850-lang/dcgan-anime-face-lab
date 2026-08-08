@@ -43,10 +43,27 @@ The later audit found 21,551 paths but only 17,029 unique SHA-256 contents. B1 i
 
 The SDXL pilot, candidate cleaning, M20/M50 mixtures, and unified evaluation are planned but are not completed results in this snapshot.
 
+## Stage 6 ? Controlled SDXL replacement study
+
+The follow-up controlled study tested whether a cleaned Animagine XL 4.0 pool could replace part of the original data during fine-tuning. All groups used the Exp11 architecture and checkpoint, a fixed 4,000-image training pool, 100 epochs, seed 42, DiffAugment, and EMA. The only intended intervention was the SDXL replacement ratio.
+
+| Group | Original | SDXL | Legacy FID | Coverage |
+|---|---:|---:|---:|---:|
+| A0 | 4,000 | 0 | 37.91 | 0.6687 |
+| A10 | 3,600 | 400 | 37.99 | 0.6525 |
+| A20 | 3,200 | 800 | 41.58 | 0.6108 |
+| A30 | 2,800 | 1,200 | 44.92 | 0.5423 |
+| A50 | 2,000 | 2,000 | 49.94 | 0.4397 |
+
+The controlled result is negative: higher SDXL ratios reduced both FID quality and feature coverage in this setup. A10 is approximately neutral in FID but already loses coverage, so the study does not support claiming that SDXL augmentation improved the DCGAN. This is a distinct 4K fine-tuning scope and must not be compared directly with the 20K Exp11 or 17K B1 values.
+
+The pilot review CSV is preserved as an audit template, but its row-level `manual_keep` fields are not treated as a complete public annotation record. The reported accepted-pool count is therefore provenance for the run, not evidence of a fully independently audited semantic label set.
+
 ## How to read the repository
 
 - `results_summary.csv` is the short interview-facing table.
 - `docs/baseline_map.md` explains the preliminary baseline, Phase 2 no-added-module baseline, Exp11/B0 frozen baseline, and B1 clean-unique data baseline; do not collapse them into one number.
+- `docs/sdxl_controlled_study.md` explains the Phase 7 4K fine-tuning scope and negative result.
 - `03_metrics_and_logs/` preserves the wider historical metric record.
 - `02_selected_experiments/full_process/` now contains the earlier source scripts, not only the final selected scripts.
 - `04_visual_assets/qualitative_samples_compact.png` shows one labeled sample grid per major milestone, with the no-module baseline explicitly labeled.

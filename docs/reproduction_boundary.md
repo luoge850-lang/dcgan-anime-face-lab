@@ -18,7 +18,9 @@ It is not a local one-command training package. The historical runs depend on:
 
 The active internship workspace contains additional unfinished experiments and remains the source of truth for new work. This snapshot should not be treated as a copy of the full active workspace.
 
-The SDXL pilot, candidate cleaning, M20/M50 mixtures, and unified Clean-FID/Coverage evaluation are not complete in this release and are not claimed as results.
+The Phase 7 controlled SDXL replacement study is now complete for the 4K fine-tuning scope: A0, A10, A20, A30, and A50 have recorded FID/Coverage and auxiliary metrics. It is not a claim that synthetic data improves the model; the result is negative at higher replacement ratios. The study uses the historical legacy FID and a project-defined Coverage diagnostic, not Clean-FID. The generated SDXL pool, zip archives, weights, and row-level semantic acceptance annotations remain outside Git history.
+
+The original pilot review CSV is preserved as a template, but blank `manual_keep` fields mean it should not be interpreted as a complete semantic annotation audit.
 
 ## Responsible historical reproduction
 

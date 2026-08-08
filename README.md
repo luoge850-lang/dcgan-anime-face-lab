@@ -4,7 +4,7 @@
 ![PyTorch](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
 ![Kaggle](https://img.shields.io/badge/runtime-Kaggle%20GPU-20beff)
 ![Resolution](https://img.shields.io/badge/output-64x64-blue)
-![Snapshot](https://img.shields.io/badge/snapshot-v0.2-lightgrey)
+![Snapshot](https://img.shields.io/badge/snapshot-v0.3-lightgrey)
 
 > This repository is a curated public snapshot of an ongoing DCGAN internship project. The experiments were run in Kaggle, while the active research workspace remains separate. The snapshot is designed for technical review and interview discussion; it is not a claim of a locally reproducible or state-of-the-art generator.
 
@@ -33,6 +33,7 @@ This repository records the full progression, not only the final FID milestones:
 | Phase 3 | Generator width, residual/attention variants, data scale, DiffAugment, and EMA | [`phase3_generator_strengthening`](03_metrics_and_logs/phase3_generator_strengthening/) ? [`G scripts`](02_selected_experiments/full_process/phase3_generator_strengthening/) |
 | Phase 5 | Formal control and CLIP-MMD lambda sweep | [`phase5_clip`](03_metrics_and_logs/phase5_clip/) ? [`CLIP scripts`](02_selected_experiments/full_process/phase5_clip_tuning/) |
 | Phase 6 | Exact-duplicate audit and clean-unique B1 baseline | [`data-quality record`](docs/data_quality_and_sdxl_extension.md) |
+| Phase 7 | Controlled SDXL replacement study at fixed 4K fine-tuning budget | [`SDXL study`](docs/sdxl_controlled_study.md) ? [`source scripts`](02_selected_experiments/full_process/phase7_sdxl_controlled_study/) |
 
 The full process narrative, comparison boundaries, and negative-result interpretation are in [`docs/experiment_process.md`](docs/experiment_process.md). The Phase 2 `00_baseline` is the no-added-module architectural baseline: it has no attention, frequency, edge, or discriminator-regularization modules, while retaining the augmentation policy selected in Phase 1 (`RandomHorizontalFlip(p=0.5)` + `EdgeSharpen(p=0.2)`). It is therefore not a no-augmentation control. The baseline relationships are summarized in [`docs/baseline_map.md`](docs/baseline_map.md), and the interview/learning guide is in [`docs/interview_playbook.md`](docs/interview_playbook.md).
 
@@ -50,6 +51,20 @@ The full process narrative, comparison boundaries, and negative-result interpret
 | Phase 6 | B1 exact-unique data-quality baseline | 17,029 unique | 45.07 |
 
 The complete curated table, entry points, and comparison scopes are in [`results_summary.csv`](results_summary.csv). The two headline figures below are generated from that table by [`tools/build_interview_figures.py`](tools/build_interview_figures.py).
+
+### Phase 7: controlled SDXL study
+
+The new SDXL experiment is a separate `phase7_4k_finetune` comparison scope. All five groups fine-tune from the same Exp11 checkpoint for 100 epochs with a fixed 4,000-image pool; only the original/SDXL replacement ratio changes.
+
+| Group | Original | SDXL | Legacy FID | Coverage | Interpretation |
+|---|---:|---:|---:|---:|---|
+| A0 | 4,000 | 0 | 37.91 | 0.6687 | 4K fine-tuning control |
+| A10 | 3,600 | 400 | 37.99 | 0.6525 | Approximately neutral FID, lower coverage |
+| A20 | 3,200 | 800 | 41.58 | 0.6108 | FID and coverage degrade |
+| A30 | 2,800 | 1,200 | 44.92 | 0.5423 | Coverage warning/abort region |
+| A50 | 2,000 | 2,000 | 49.94 | 0.4397 | Strong degradation and coverage collapse |
+
+The result is a completed negative finding: this SDXL pool should not be presented as an improvement to the current DCGAN recipe. These 4K fine-tuning values are not directly comparable with the 20K path-based Exp11 FID or the B1 clean-unique FID. See [`docs/sdxl_controlled_study.md`](docs/sdxl_controlled_study.md) for the protocol and evidence boundary.
 
 ![DCGAN experiment roadmap](04_visual_assets/interview_results_roadmap.svg)
 
@@ -123,9 +138,9 @@ The first command is also run by GitHub Actions on pushes and pull requests.
 | Path | Purpose |
 |---|---|
 | `01_public_core/` | Baseline, final Exp11 code, and English experiment guides |
-| `02_selected_experiments/` | Representative scripts plus the full-process source archive for Phases 1, 2, 3, and 5 |
-| `03_metrics_and_logs/` | Curated JSON metrics and CSV logs |
-| `04_visual_assets/` | Canonical interview figures, full-process sample grids, and archival charts |
+| `02_selected_experiments/` | Representative scripts plus the full-process source archive for Phases 1, 2, 3, 5, and 7 |
+| `03_metrics_and_logs/` | Curated JSON metrics and CSV logs, including the controlled SDXL study |
+| `04_visual_assets/` | Canonical interview figures, full-process sample grids, SDXL study samples, and archival charts |
 | `06_model_artifacts/` | Local-only model files and checksums; excluded by `.gitignore` |
 | `docs/` | Reproduction boundary, data audit, runtime evidence, and technical project story |
 | `tests/` | CPU-only snapshot integrity checks for JSON, CSV, SVG, and README references |
@@ -142,10 +157,10 @@ The first command is also run by GitHub Actions on pushes and pull requests.
 
 ## Next research and engineering milestones
 
-1. Generate and clean a small SDXL pilot with prompt/seed/model provenance.
-2. Run the planned M20 and M50 mixtures using B1 as the fixed M0 control.
-3. Add a unified Legacy FID, Clean-FID, coverage, blur, and diversity report.
-4. Add nearest-neighbor grids and, when compute permits, repeated seeds or uncertainty estimates.
+1. Preserve the Phase 7 negative result and decide whether a new, style-matched SDXL pool is justified.
+2. Add a unified Legacy FID, Clean-FID, coverage, blur, and diversity report.
+3. Add nearest-neighbor grids and, when compute permits, repeated seeds or uncertainty estimates.
+4. If synthetic-data work continues, freeze a row-level accepted manifest before any new mixture run.
 5. Keep the Kaggle-only boundary explicit and publish only permitted code, samples, manifests, and metrics.
 
 ## Publication status

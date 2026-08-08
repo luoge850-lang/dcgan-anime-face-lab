@@ -42,6 +42,7 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "docs/experiment_process.md",
             "docs/baseline_map.md",
             "docs/interview_playbook.md",
+            "docs/sdxl_controlled_study.md",
         ):
             self.assertIn(target, readme)
             if target.endswith(".md"):
@@ -72,6 +73,23 @@ class SnapshotIntegrityTests(unittest.TestCase):
             self.assertGreater(len(scripts), 0, folder)
         self.assertTrue((ROOT / "04_visual_assets/phase2_baseline_no_modules_epoch200.png").exists())
         self.assertTrue((ROOT / "02_selected_experiments/full_process/phase5_clip_tuning/clip_C2_lambda_0025.py").exists())
+
+    def test_sdxl_controlled_study_evidence_is_present(self):
+        scripts = list((ROOT / "02_selected_experiments/full_process/phase7_sdxl_controlled_study").rglob("*.py"))
+        self.assertGreaterEqual(len(scripts), 10)
+        for group, expected_fid, expected_coverage in (
+            ("A0", 37.91, 0.6687),
+            ("A10", 37.99, 0.6525),
+            ("A20", 41.58, 0.6108),
+            ("A30", 44.92, 0.5423),
+            ("A50", 49.94, 0.4397),
+        ):
+            with (ROOT / "03_metrics_and_logs/phase7_sdxl_controlled_study" / group / "metrics.json").open(encoding="utf-8") as handle:
+                metrics = json.load(handle)
+            self.assertAlmostEqual(metrics["FID"], expected_fid, places=2)
+            self.assertAlmostEqual(metrics["Coverage"], expected_coverage, places=4)
+            self.assertTrue((ROOT / "04_visual_assets" / f"sdxl_{group.lower()}_epoch100.png").exists())
+        self.assertTrue((ROOT / "04_visual_assets/sdxl_ratio_contact_sheet.png").exists())
 
 
 if __name__ == "__main__":

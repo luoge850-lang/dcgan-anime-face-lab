@@ -14,9 +14,12 @@ The snapshot keeps representative experiments that make the project story unders
 - `01_public_core/final_exp11_diffaug_ema.py`: current frozen DiffAugment + EMA baseline.
 - `clip_E0` through `clip_C4`: formal control and CLIP lambda sweep.
 - `phase6_audit_original_dataset.py` and `phase6_b1_formal_clean_unique_17k.py`: data-quality audit and formal exact-unique B1 baseline from the active Kaggle workspace.
+- `full_process/phase7_sdxl_controlled_study/`: completed fixed-budget SDXL replacement study, including A0/A10/A20/A30/A50 fine-tuning scripts and the unified evaluation script.
 
 The `02_selected_experiments/full_process/` archive adds the completed source families that were previously omitted from the interview-facing selection: Phase 1 early tuning, Phase 2 module tuning, Phase 3 generator strengthening, and the complete Phase 5 CLIP sweep including C2.
 
 The remaining historical metrics are retained under `03_metrics_and_logs` for traceability, but their full training scripts are not part of the public-facing core.
 
 The repository contains several baselines with different purposes. Use `docs/baseline_map.md` when presenting them; `00_baseline`, Exp11/B0, and B1 are not interchangeable checkpoints or data protocols.
+
+Phase 7 is a separate fine-tuning comparison scope. Its A0/A10/A20/A30/A50 results should be read together with `docs/sdxl_controlled_study.md`, not appended to the older 20K FID leaderboard.
