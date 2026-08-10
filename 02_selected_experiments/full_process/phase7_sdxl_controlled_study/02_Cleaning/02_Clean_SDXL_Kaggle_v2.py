@@ -1,15 +1,15 @@
 """
-SDXL ?? v2 ? ????? + ?? accepted/rejected
+SDXL 清洗 v2 — 单轮自动筛 + 显示 accepted/rejected
 ================================================================================
-Kaggle ????, ????????
+Kaggle 一键清洗, 无人工审核环节。
 
-?? (/kaggle/working/SDXL_Cleaned/):
-  accepted/     ? ??????? (?????)
-  rejected/     ? ?????? (???????)
+输出 (/kaggle/working/SDXL_Cleaned/):
+  accepted/     ← 通过清洗的图片 (可直接查看)
+  rejected/     ← 被淘汰的图片 (按原因分文件夹)
   accepted_manifest.csv
   rejected_manifest.csv
   cleaning_summary.json
-  cleaned_accepted.zip ? ????
+  cleaned_accepted.zip ← 下载这个
 """
 
 import csv, hashlib, json, os, random, shutil, time, zipfile
@@ -44,9 +44,9 @@ def laplacian_score(p):
     lap = p2[:-2, 1:-1] + p2[2:, 1:-1] + p2[1:-1, :-2] + p2[1:-1, 2:] - 4 * p2[1:-1, 1:-1]
     return float(lap.var())
 
-# ???????????????????????????????????????
-# Step 1: ??????
-# ???????????????????????????????????????
+# ═══════════════════════════════════════
+# Step 1: 发现输入图片
+# ═══════════════════════════════════════
 print("[1/4] Discovering images from /kaggle/input/ ...")
 candidates = []
 for zp in sorted(Path("/kaggle/input").rglob("*.zip")):
@@ -69,12 +69,12 @@ for i, p in enumerate(img_files, 1):
     candidates.append({"sample_id": f"S{i:05d}", "image_path": str(p),
                        "source": p.parent.name, "filename": p.name})
 
-# ???????????????????????????????????????
-# Step 2: ???? + ??
-# ???????????????????????????????????????
+# ═══════════════════════════════════════
+# Step 2: 自动校准 + 筛选
+# ═══════════════════════════════════════
 print("\n[2/4] Computing image hashes & scores ...")
 
-# ??????
+# 校准模糊阈值
 sample_n = min(len(candidates), 1000)
 lap_scores = []
 for r in candidates[:sample_n]:
@@ -95,13 +95,13 @@ for r in candidates:
         r["lap_score"] = round(laplacian_score(p), 2)
         r["file_size_kb"] = round(os.path.getsize(p) / 1024, 1)
 
-        # SHA-256 ??
+        # SHA-256 去重
         if r["sha256"] in seen_sha:
             flags.append(f"exact_dup:{seen_sha[r['sha256']]}")
         else:
             seen_sha[r["sha256"]] = r["sample_id"]
 
-        # aHash ???
+        # aHash 近重复
         if not flags:
             for prev_ah, prev_sid in seen_ahash:
                 if hamming_distance(r["ahash"], prev_ah) <= AHASH_THRESHOLD:
@@ -109,11 +109,11 @@ for r in candidates:
                     break
             seen_ahash.append((r["ahash"], r["sample_id"]))
 
-        # ??
+        # 模糊
         if r["lap_score"] < blur_threshold:
             flags.append("blur")
 
-        # ??/???
+        # 纯色/近空白
         arr = np.asarray(Image.open(p).convert("RGB"))
         if arr.std() < 3:
             flags.append("near_blank")
@@ -126,9 +126,9 @@ for r in candidates:
     r["status"] = "rejected" if flags else "accepted"
     (rejected if flags else accepted).append(r)
 
-# ???????????????????????????????????????
-# Step 3: ?????????
-# ???????????????????????????????????????
+# ═══════════════════════════════════════
+# Step 3: 保存结果到文件区域
+# ═══════════════════════════════════════
 print(f"\n[3/4] Saving results: {len(accepted)} accepted / {len(rejected)} rejected")
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -136,7 +136,7 @@ acc_dir = OUTPUT_DIR / "accepted"
 rej_dir = OUTPUT_DIR / "rejected"
 acc_dir.mkdir(exist_ok=True); rej_dir.mkdir(exist_ok=True)
 
-# ?? accepted
+# 保存 accepted
 accepted_rows = []
 for i, r in enumerate(accepted, 1):
     aid = f"A{i:04d}"
@@ -145,7 +145,7 @@ for i, r in enumerate(accepted, 1):
     accepted_rows.append({"accepted_id": aid, "source": r["filename"],
                           "lap_score": r["lap_score"], "sha256": r["sha256"]})
 
-# ??????????? rejected
+# 按淘汰原因分文件夹保存 rejected
 reject_categories = {"exact_dup": [], "near_dup": [], "blur": [], "near_blank": [], "read_error": [], "other": []}
 for r in rejected:
     f = r["flags"]
@@ -162,7 +162,7 @@ for cat, rows in reject_categories.items():
     cat_dir = rej_dir / cat
     cat_dir.mkdir(exist_ok=True)
     for i, r in enumerate(rows, 1):
-        dst = cat_dir / f"R{i:04d}_{r['filename']}"[:240]  # ??????
+        dst = cat_dir / f"R{i:04d}_{r['filename']}"[:240]  # 避免路径过长
         shutil.copy2(r["image_path"], dst)
         rejected_rows.append({"reject_reason": cat, "source": r["filename"],
                               "flags": r["flags"], "lap_score": r["lap_score"]})
@@ -189,9 +189,9 @@ with (OUTPUT_DIR / "cleaning_summary.json").open("w", encoding="utf-8") as f:
         "reject_breakdown": {k: len(v) for k, v in reject_categories.items()},
     }, f, ensure_ascii=False, indent=2)
 
-# ???????????????????????????????????????
-# Step 4: ?? accepted zip
-# ???????????????????????????????????????
+# ═══════════════════════════════════════
+# Step 4: 打包 accepted zip
+# ═══════════════════════════════════════
 print("\n[4/4] Packaging cleaned_accepted.zip ...")
 zip_path = Path("/kaggle/working/cleaned_accepted.zip")
 with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_STORED) as z:
@@ -208,10 +208,10 @@ print(f"    - near_dup:   {reject_categories['near_dup'].__len__()}")
 print(f"    - blur:       {reject_categories['blur'].__len__()}")
 print(f"    - near_blank: {reject_categories['near_blank'].__len__()}")
 print(f"    - read_error: {reject_categories['read_error'].__len__()}")
-print(f"  ?????????????????????????????????????????????")
+print(f"  ─────────────────────────────────────────────")
 print(f"  cleaned_accepted.zip: {size_mb:.1f} MB")
 print(f"{'='*60}")
-print(f"\n??????:")
-print(f"  SDXL_Cleaned/accepted/   ? ???????")
-print(f"  SDXL_Cleaned/rejected/   ? ???????????")
-print(f"  cleaned_accepted.zip     ? ??????????")
+print(f"\n文件区域查看:")
+print(f"  SDXL_Cleaned/accepted/   ← 通过清洗的图片")
+print(f"  SDXL_Cleaned/rejected/   ← 按原因分类的被淘汰图片")
+print(f"  cleaned_accepted.zip     ← 下载这个用于消融训练")

@@ -16,15 +16,15 @@ The project began with a conventional DCGAN baseline. Rather than adding increas
 2. Is the generator capacity or the amount of data the stronger bottleneck under a fixed GPU budget?
 3. Do DiffAugment, EMA, and CLIP feature-distribution matching improve the generator under matched controls?
 
-The strongest project-level improvement came from combining a stronger generator with more data and then adding DiffAugment plus EMA. The CLIP sweep was intentionally kept with a no-CLIP continuation control because a lower CLIP MMD? did not guarantee the lowest legacy FID.
+The strongest project-level improvement came from combining a stronger generator with more data and then adding DiffAugment plus EMA. The CLIP sweep was intentionally kept with a no-CLIP continuation control because a lower CLIP MMD did not guarantee the lowest legacy FID.
 
 ## Honest resume wording
 
-> Conducted controlled PyTorch DCGAN ablations under Kaggle GPU constraints across discriminator stabilization, generator capacity, dataset scale, DiffAugment, EMA, and CLIP feature-distribution matching; reduced the project?s legacy FID from 49.17 to 38.88 with DiffAugment + EMA and used matched continuation controls to quantify the smaller, metric-dependent effect of CLIP-MMD regularization.
+> Conducted controlled PyTorch DCGAN ablations under Kaggle GPU constraints across discriminator stabilization, generator capacity, dataset scale, DiffAugment, EMA, and CLIP feature-distribution matching; reduced the project’s legacy FID from 49.17 to 38.88 with DiffAugment + EMA and used matched continuation controls to quantify the smaller, metric-dependent effect of CLIP-MMD regularization.
 
 > Audited 21,551 Kaggle image paths with SHA-256 exact deduplication, identified 17,029 unique contents and 4,522 redundant copies, and established a clean-unique B1 baseline (legacy project FID 45.07) before the planned SDXL-mixture study.
 
-> Designed a fixed-budget SDXL replacement ablation (0?50% synthetic images) from the same Exp11 checkpoint; found that the tested synthetic pool did not improve FID or Coverage, and preserved the negative result as a stopping criterion for further data mixing.
+> Designed a fixed-budget SDXL replacement ablation (0–50% synthetic images) from the same Exp11 checkpoint; found that the tested synthetic pool did not improve FID or Coverage, and preserved the negative result as a stopping criterion for further data mixing.
 
 ## Questions an interviewer may ask
 

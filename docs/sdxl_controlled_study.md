@@ -11,10 +11,10 @@ This is a separate `phase7_4k_finetune` scope. Every group:
 - starts from the same Exp11 pretrained Generator and Discriminator checkpoint;
 - uses a fixed 4,000-image training pool;
 - fine-tunes for 100 epochs with seed 42, batch size 32, `lr=1e-4`, and Adam `(0.5, 0.99)`;
-- keeps Width?3 Generator, SN-Hinge Discriminator, DiffAugment, and EMA fixed;
+- keeps Width ×3 Generator, SN-Hinge Discriminator, DiffAugment, and EMA fixed;
 - changes only the original/SDXL replacement ratio.
 
-It is not directly comparable with the 20K path-based Exp11 run or the 17,029-unique-content B1 run. The 4K FID uses the project?s historical evaluation pipeline with a 4K evaluation pool, and Coverage is a project-defined Inception-feature diagnostic.
+It is not directly comparable with the 20K path-based Exp11 run or the 17,029-unique-content B1 run. The Phase 7 code uses up to 4K real and 5K fake Inception features because N_FID is 5000 while the fine-tuning pool contains 4K images; Coverage is a project-defined Inception-feature diagnostic.
 
 ## Results
 
@@ -32,7 +32,7 @@ It is not directly comparable with the 20K path-based Exp11 run or the 17,029-un
 
 ## Interpretation
 
-The result is negative for the tested synthetic pool. A0 is the best FID and Coverage control. A10 is approximately neutral in FID but already loses Coverage. A20 enters the Coverage warning region, while A30 and A50 cross the project?s Coverage abort threshold. The trend does not support claiming that adding more SDXL images improves the DCGAN.
+The result is negative for the tested synthetic pool. A0 is the best FID and Coverage control. A10 is approximately neutral in FID but already loses Coverage. A20 enters the Coverage warning region, while A30 and A50 cross the project’s Coverage abort threshold. The trend does not support claiming that adding more SDXL images improves the DCGAN.
 
 The appropriate interview conclusion is:
 
@@ -50,4 +50,4 @@ The appropriate interview conclusion is:
 
 ## Next decision
 
-Do not run more high-ratio mixtures solely to obtain a better-looking result. If synthetic-data work continues, first freeze a row-level accepted manifest, compare the accepted pool?s style/feature distribution with the original pool, and either redesign the SDXL generation process or document this negative result as the stopping point.
+Do not run more high-ratio mixtures solely to obtain a better-looking result. If synthetic-data work continues, first freeze a row-level accepted manifest, compare the accepted pool’s style/feature distribution with the original pool, and either redesign the SDXL generation process or document this negative result as the stopping point.

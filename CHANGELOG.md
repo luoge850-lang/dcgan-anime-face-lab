@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.4 - 2026-08-10
+
+- Rebuilt the public README around the complete experiment progression instead of a final-checkpoint narrative.
+- Added an objective one-month audit with safe resume bullets, interview framing, claim boundaries, and compute-efficient next steps.
+- Replaced corrupted question-mark characters in user-facing documentation and refreshed the Phase 7 source/protocol files from the latest local workspace.
+- Added the Phase 7 FID/Coverage trade-off SVG and verified that the public sample and pilot assets are linked from the README.
+- Documented the Phase 7 4K-real/5K-fake evaluation asymmetry and excluded the anomalous A0 discriminator logits from headline conclusions.
+- Added a planned generator export/deployment document, clearly marked as future work rather than measured evidence.
+
 ## v0.3 - 2026-08-08
 
 - Added the completed Phase 7 controlled SDXL replacement study at a fixed 4K fine-tuning budget.
@@ -16,7 +25,7 @@
 - Added a nine-panel process sample sheet covering each major stage and the B1 data-quality baseline.
 - Added the Kaggle data-quality audit: 21,551 paths, 17,029 unique contents, 3,626 exact-duplicate groups, 4,522 redundant copies, and zero bad files.
 - Added the B1 formal clean-unique baseline with sanitized entry point, manifest, metrics, loss log, and sample grid.
-- Added the SDXL extension boundary and explicitly marked the pilot, cleaning, M20, M50, and unified evaluation as unfinished.
+- Added the SDXL extension boundary and explicitly separated the completed 4K replacement study from future synthetic-data work.
 - Replaced the long README sample stack with one compact nine-panel qualitative process figure.
 - Prepared the repository for public visibility while keeping the dataset, weights, and open-source license decision separate.
 

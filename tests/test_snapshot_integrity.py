@@ -27,7 +27,7 @@ class SnapshotIntegrityTests(unittest.TestCase):
                 json.load(handle)
 
     def test_canonical_figures_are_valid_svg(self):
-        for name in ("interview_results_roadmap.svg", "clip_control_sweep.svg"):
+        for name in ("interview_results_roadmap.svg", "clip_control_sweep.svg", "sdxl_fid_coverage_tradeoff.svg"):
             root = ET.parse(ROOT / "04_visual_assets" / name).getroot()
             self.assertTrue(root.tag.endswith("svg"))
 
@@ -36,13 +36,17 @@ class SnapshotIntegrityTests(unittest.TestCase):
         for target in (
             "04_visual_assets/interview_results_roadmap.svg",
             "04_visual_assets/clip_control_sweep.svg",
+            "04_visual_assets/sdxl_fid_coverage_tradeoff.svg",
             "04_visual_assets/qualitative_samples_compact.png",
+            "04_visual_assets/sdxl_pilot_contact_sheet.jpg",
             "results_summary.csv",
             "docs/data_quality_and_sdxl_extension.md",
             "docs/experiment_process.md",
             "docs/baseline_map.md",
             "docs/interview_playbook.md",
             "docs/sdxl_controlled_study.md",
+            "docs/month1_audit_2026-08.md",
+            "docs/next_phase_deployment_plan.md",
         ):
             self.assertIn(target, readme)
             if target.endswith(".md"):

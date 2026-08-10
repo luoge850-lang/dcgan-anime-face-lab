@@ -1,25 +1,25 @@
 """
-FT-A10: Exp11 Fine-Tuning ? 90% ?? + 10% SDXL (3.6K+0.4K), 100 Epoch
+FT-A10: Exp11 Fine-Tuning — 90% 原图 + 10% SDXL (3.6K+0.4K), 100 Epoch
 ================================================================================
-Kaggle GPU (T4?2), Internet ON?
+Kaggle GPU (T4×2), Internet ON。
 
-??:
-  - Kaggle Input ??? Exp11 ?? (generator_ema_final.pth, discriminator_final.pth)
-  - Kaggle Input ??????? SDXL ?? (accepted_manifest.csv + accepted_64/)
-  - Kaggle Input ??? A0 ? baseline_reference.json (????)
-  - ?? Anime Faces ???? attached
+前提:
+  - Kaggle Input 已上传 Exp11 权重 (generator_ema_final.pth, discriminator_final.pth)
+  - Kaggle Input 已上传清洗后的 SDXL 图片 (accepted_manifest.csv + accepted_64/)
+  - Kaggle Input 已上传 A0 的 baseline_reference.json (早停参照)
+  - 原版 Anime Faces 数据集已 attached
 
-?? (???? /kaggle/input/):
-  - Exp11 ?? + SDXL ???? + A0 baseline_reference.json + ?????
+输入 (自动检测 /kaggle/input/):
+  - Exp11 权重 + SDXL 清洗图片 + A0 baseline_reference.json + 原版数据集
 
-?? (/kaggle/working/dcgan_output/FT_A10_4K_100E/):
+输出 (/kaggle/working/dcgan_output/FT_A10_4K_100E/):
   - generator_ema_final.pth, discriminator_final.pth
   - metrics.json, loss.csv, loss_curves.png, epoch_*.png
   - checkpoint_latest.pth
 
-??:
-  ?? Exp11 ? G+D ? ? 3600??+400SDXL ? fine-tune 100 epoch
-  DiffAugment + EMA ?????? 25 epoch ?? FID+Coverage??? A0 baseline ???
+设计:
+  加载 Exp11 的 G+D → 在 3600原图+400SDXL 上 fine-tune 100 epoch
+  DiffAugment + EMA 全程开启。每 25 epoch 评估 FID+Coverage，对照 A0 baseline 早停。
 """
 
 import os, csv, json, random, gc, hashlib, sys
@@ -32,15 +32,15 @@ from torchvision import transforms, models; from torchvision.utils import make_g
 from torch.utils.data import Dataset, DataLoader; from scipy import linalg
 from scipy.spatial import cKDTree
 
-# ???????????????????????????????????????????????????????????????
-# ??
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
+# 配置
+# ═══════════════════════════════════════════════════════════════
 EXPERIMENT_NAME = "FT_A10_4K_100E"
 OUTPUT_DIR      = "/kaggle/working/dcgan_output"
 EXP_DIR         = os.path.join(OUTPUT_DIR, EXPERIMENT_NAME)
 
-N_ORIG  = 3600    # ????
-N_SDXL  = 400     # SDXL ????
+N_ORIG  = 3600    # 原图数量
+N_SDXL  = 400     # SDXL 新图数量
 
 IMAGE_SIZE = 64; BATCH_SIZE = 32; NOISE_DIM = 128
 LR = 1e-4; BETAS = (0.5, 0.99); SEED = 42
@@ -57,9 +57,9 @@ print(f"Device: {DEVICE}")
 if DEVICE.type == "cuda":
     print(f"GPU: {torch.cuda.get_device_name(0)} | Memory: {torch.cuda.get_device_properties(0).total_memory/1e9:.1f}GB")
 
-# ???????????????????????????????????????????????????????????????
-# ????
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
+# 工具函数
+# ═══════════════════════════════════════════════════════════════
 def set_all_seeds(seed=SEED):
     random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
     if torch.cuda.is_available(): torch.cuda.manual_seed_all(seed)
@@ -86,9 +86,9 @@ def save_image_grid(tensor, fp, nrow=8):
     ndarr = grid.mul(255).clamp(0, 255).permute(1, 2, 0).to("cpu", torch.uint8).detach().numpy()
     Image.fromarray(ndarr).save(fp)
 
-# ???????????????????????????????????????????????????????????????
-# ???? + DiffAugment
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
+# 数据增强 + DiffAugment
+# ═══════════════════════════════════════════════════════════════
 class EdgeSharpen:
     def __init__(self, prob=0.2, alpha=0.3): self.prob, self.alpha = prob, alpha
     def __call__(self, img):
@@ -139,9 +139,9 @@ def diff_augment(x, policy=DIFFAUG_POLICY):
         elif item == "cutout": x = _rand_cutout(x)
     return x.contiguous()
 
-# ???????????????????????????????????????????????????????????????
-# ?? (= Exp11, ??)
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
+# 模型 (= Exp11, 不变)
+# ═══════════════════════════════════════════════════════════════
 class Generator(nn.Module):
     def __init__(self, nd=NOISE_DIM):
         super().__init__()
@@ -172,9 +172,9 @@ class Discriminator(nn.Module):
         )
     def forward(self, x): return self.net(x).view(-1)
 
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
 # EMA
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
 class EMA:
     def __init__(self, model, decay=EMA_DECAY):
         self.decay = decay; self.shadow = {}
@@ -198,9 +198,9 @@ class EMA:
     def state_dict(self): return {"decay": self.decay, "shadow": self.shadow}
     def load_state_dict(self, sd): self.decay = sd["decay"]; self.shadow = sd["shadow"]
 
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
 # FID Calculator
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
 class FIDCalculator:
     def __init__(self, device):
         self.device = device
@@ -228,9 +228,9 @@ class FIDCalculator:
         if np.iscomplexobj(cm): cm = cm.real
         G.train(); return float(d.dot(d) + np.trace(sr + sf - 2 * cm))
 
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
 # Coverage (k-NN Recall)
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
 def compute_coverage(rf: np.ndarray, ff: np.ndarray, k: int = 5) -> dict:
     tree_real = cKDTree(rf); dist_real, _ = tree_real.query(rf, k=k + 1)
     radii = dist_real[:, -1]; tree_fake = cKDTree(ff)
@@ -238,9 +238,9 @@ def compute_coverage(rf: np.ndarray, ff: np.ndarray, k: int = 5) -> dict:
     return {"coverage": float(covered.mean()), "mean_radius": float(radii.mean()),
             "mean_fake_dist": float(dist_fake.mean()), "k": k, "n_real": len(rf), "n_fake": len(ff)}
 
-# ???????????????????????????????????????????????????????????????
-# ??????
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
+# 图像质量指标
+# ═══════════════════════════════════════════════════════════════
 class LPIPSCalculator:
     def __init__(self, device):
         self.device = device
@@ -295,9 +295,9 @@ def compute_edge_density(imgs, real_imgs=None):
         rdf = float(np.mean(rd)); return fd, rdf, fd/max(rdf, 1e-8)
     return fd, None, None
 
-# ???????????????????????????????????????????????????????????????
-# ??? (? SDXL ??)
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
+# 数据集 (含 SDXL 混合)
+# ═══════════════════════════════════════════════════════════════
 class AnimeDataset(Dataset):
     def __init__(self, paths, transform=None): self.paths, self.tf = paths, transform
     def __len__(self): return len(self.paths)
@@ -335,8 +335,8 @@ def locate_exp11_weights() -> tuple[str, str]:
     return g_path, d_path
 
 def locate_sdxl_images() -> list:
-    """???????? SDXL ??"""
-    # ??1: ? accepted_manifest.csv
+    """自动检测清洗后的 SDXL 图片"""
+    # 方法1: 找 accepted_manifest.csv
     for dp, _, fn in os.walk("/kaggle/input"):
         for f in fn:
             if f == "accepted_manifest.csv":
@@ -348,7 +348,7 @@ def locate_sdxl_images() -> list:
                     if paths:
                         print(f"[data] SDXL: {len(paths)} images from {accepted_dir}")
                         return sorted(paths)
-                # ?? manifest ??????
+                # 尝试 manifest 中的相对路径
                 paths = []
                 with open(manifest_path, newline="", encoding="utf-8-sig") as mf:
                     for row in csv.DictReader(mf):
@@ -358,7 +358,7 @@ def locate_sdxl_images() -> list:
                 if paths:
                     print(f"[data] SDXL: {len(paths)} images from manifest")
                     return sorted(paths)
-    # ??2: ??? accepted_64 ??
+    # 方法2: 直接找 accepted_64 目录
     for dp, dirs, _ in os.walk("/kaggle/input"):
         for d in dirs:
             if d == "accepted_64":
@@ -366,7 +366,7 @@ def locate_sdxl_images() -> list:
                 if paths:
                     print(f"[data] SDXL: {len(paths)} images from {os.path.join(dp, d)}")
                     return sorted(paths)
-    # ??3: ?? "sdxl"/"clean" ?????? (???????????)
+    # 方法3: 搜含 "sdxl"/"clean" 关键词的目录 (适配用户自定义数据集名)
     for dp, dirs, _ in os.walk("/kaggle/input"):
         for d in dirs:
             dl = d.lower()
@@ -375,7 +375,7 @@ def locate_sdxl_images() -> list:
                 if paths:
                     print(f"[data] SDXL: {len(paths)} images from {os.path.join(dp, d)}")
                     return sorted(paths)
-    # ??4: ??? "sdxl"/"clean" ???? zip
+    # 方法4: 解压含 "sdxl"/"clean" 关键词的 zip
     for dp, _, fn in os.walk("/kaggle/input"):
         for f in fn:
             fl = f.lower()
@@ -388,11 +388,11 @@ def locate_sdxl_images() -> list:
                 if paths:
                     print(f"[data] SDXL: {len(paths)} images from zip {f}")
                     return sorted(paths)
-    raise FileNotFoundError("Cannot locate SDXL cleaned images. Upload as Kaggle Dataset ? "
+    raise FileNotFoundError("Cannot locate SDXL cleaned images. Upload as Kaggle Dataset — "
                            "folder name should contain 'sdxl' or 'clean', or use 'accepted_64'.")
 
 def locate_baseline_reference() -> dict | None:
-    """?? A0 ? baseline_reference.json (????)"""
+    """加载 A0 的 baseline_reference.json (早停参照)"""
     for dp, _, fn in os.walk("/kaggle/input"):
         for f in fn:
             if f == "baseline_reference.json":
@@ -403,7 +403,7 @@ def locate_baseline_reference() -> dict | None:
                       f"Coverage={ref.get('reference_Coverage','?')} "
                       f"abort<{ref.get('coverage_abort_threshold','?')}")
                 return ref
-    print("[ref] WARNING: baseline_reference.json not found ? early stopping disabled")
+    print("[ref] WARNING: baseline_reference.json not found — early stopping disabled")
     return None
 
 def prepare_original_paths(dataset_dir: str, n: int) -> list:
@@ -414,14 +414,14 @@ def prepare_original_paths(dataset_dir: str, n: int) -> list:
     for p in imgs:
         d = sha256_file(p)
         if d not in seen: seen.add(d); unique.append(p)
-    print(f"[data] SHA-256 dedup: {len(imgs)} ? {len(unique)} unique")
+    print(f"[data] SHA-256 dedup: {len(imgs)} → {len(unique)} unique")
     set_all_seeds(SEED)
     if len(unique) > n: unique = random.sample(unique, n)
     print(f"[data] Sampled {len(unique)} original images")
     return sorted(unique)
 
 def prepare_all_paths(dataset_dir: str) -> list:
-    """???? + SDXL ??"""
+    """混合原图 + SDXL 新图"""
     orig_paths = prepare_original_paths(dataset_dir, N_ORIG)
     sdxl_paths = locate_sdxl_images()
     if len(sdxl_paths) < N_SDXL:
@@ -435,9 +435,9 @@ def prepare_all_paths(dataset_dir: str) -> list:
     print(f"[data] Total: {len(all_paths)} ({len(orig_paths)} orig + {len(sdxl_selected)} SDXL)")
     return all_paths
 
-# ???????????????????????????????????????????????????????????????
-# ???
-# ???????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════
+# 主训练
+# ═══════════════════════════════════════════════════════════════
 def main():
     set_all_seeds(SEED); os.makedirs(EXP_DIR, exist_ok=True)
 
@@ -468,8 +468,8 @@ def main():
     bn = sum(1 for m in G.modules() if isinstance(m, nn.BatchNorm2d))
 
     print(f"\n{'='*60}")
-    print(f"  {EXPERIMENT_NAME} ? Fine-Tuning from Exp11")
-    print(f"  {'?'*50}")
+    print(f"  {EXPERIMENT_NAME} — Fine-Tuning from Exp11")
+    print(f"  {'─'*50}")
     print(f"  G: {gp:,} | D: {dp:,} | BN: {bn}")
     print(f"  Data: {len(all_paths):,} ({N_ORIG} orig + {N_SDXL} SDXL)")
     print(f"  Epochs: {EPOCHS} | Batch: {BATCH_SIZE} | LR: {LR}")
@@ -561,7 +561,7 @@ def main():
     eval_ds = AnimeDataset(all_paths, transform=eval_tf)
     eval_dl = DataLoader(eval_ds, batch_size=64, shuffle=True, drop_last=False, num_workers=2)
 
-    # ?? FID + Coverage (?? InceptionV3 ??) ??
+    # —— FID + Coverage (共用 InceptionV3 特征) ——
     print("Extracting InceptionV3 features (EMA) ...")
     fid_calc = FIDCalculator(DEVICE)
     train_sd = {k: v.clone() for k, v in G.state_dict().items()}; ema.apply_to(G)
@@ -647,20 +647,20 @@ def main():
     }
     with open(os.path.join(EXP_DIR, "metrics.json"), "w") as f: json.dump(metrics, f, indent=2)
 
-    # ?? ?? baseline_reference ??
+    # —— 对照 baseline_reference ——
     ref = locate_baseline_reference()
     if ref:
         print(f"\n  Baseline Comparison (A0 reference):")
         print(f"    FID:       {fid:.2f} vs A0 {ref['reference_FID']}  "
-              f"({'? better' if fid < ref['reference_FID'] else '? worse' if fid > ref['reference_FID'] else '? same'})")
+              f"({'✅ better' if fid < ref['reference_FID'] else '❌ worse' if fid > ref['reference_FID'] else '➡ same'})")
         cov_val = cov.get("coverage", -1)
         if cov_val >= 0:
             print(f"    Coverage:  {cov_val:.4f} vs A0 {ref['reference_Coverage']}  "
-                  f"({'?' if cov_val >= ref['coverage_warn_threshold'] else '? WARN' if cov_val >= ref['coverage_abort_threshold'] else '? ABORT LEVEL'})")
+                  f"({'✅' if cov_val >= ref['coverage_warn_threshold'] else '⚠ WARN' if cov_val >= ref['coverage_abort_threshold'] else '❌ ABORT LEVEL'})")
         print(f"    Diversity: {div:.4f} vs A0 {ref['reference_Diversity']}")
         print(f"    BlurRate:  {br:.4f} vs A0 {ref['reference_BlurRate']}")
     else:
-        print("\n  (No baseline_reference.json found ? skipping comparison)")
+        print("\n  (No baseline_reference.json found — skipping comparison)")
 
     df_loss = pd.read_csv(os.path.join(EXP_DIR, "loss.csv"))
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
@@ -676,7 +676,7 @@ def main():
     plt.tight_layout(); plt.savefig(os.path.join(EXP_DIR, "loss_curves.png"), dpi=150); plt.close()
 
     print(f"\n{'='*60}")
-    print(f"  {EXPERIMENT_NAME} DONE ? FID={fid:.2f} | LapVar={lap:.1f}")
+    print(f"  {EXPERIMENT_NAME} DONE — FID={fid:.2f} | LapVar={lap:.1f}")
     print(f"  Output: {EXP_DIR}")
     print(f"  Download: {EXPERIMENT_NAME}/ (Kaggle output tab)")
     print(f"{'='*60}")

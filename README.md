@@ -4,169 +4,147 @@
 ![PyTorch](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
 ![Kaggle](https://img.shields.io/badge/runtime-Kaggle%20GPU-20beff)
 ![Resolution](https://img.shields.io/badge/output-64x64-blue)
-![Snapshot](https://img.shields.io/badge/snapshot-v0.3-lightgrey)
+![Public snapshot](https://img.shields.io/badge/public%20snapshot-v0.4-lightgrey)
 
-> This repository is a curated public snapshot of an ongoing DCGAN internship project. The experiments were run in Kaggle, while the active research workspace remains separate. The snapshot is designed for technical review and interview discussion; it is not a claim of a locally reproducible or state-of-the-art generator.
+> A curated public snapshot of a one-month internship study on unconditional 64x64 anime-face generation. Training was performed in Kaggle; this repository is an auditable research archive and interview portfolio, not a one-command local package or a state-of-the-art claim.
 
-## Reviewer summary
+## Why this project is worth reviewing
 
-The project studies unconditional 64x64 anime-face generation with PyTorch under limited GPU and batch-size constraints. The main research question was which changes improve the adversarial game most reliably:
+The work is organized as a sequence of controlled questions rather than a single final checkpoint:
 
-- discriminator stabilization with spectral normalization and Hinge loss;
-- generator capacity scaling;
-- data scaling from 10K to 20K images;
-- DiffAugment and exponential moving average (EMA);
-- CLIP image-feature distribution matching with an MMD objective.
+1. How much training budget is practical, and which input augmentations are useful?
+2. Which generator/discriminator changes improve the adversarial game?
+3. Does generator capacity or data scale matter more under a fixed Kaggle budget?
+4. Do DiffAugment and EMA improve stability?
+5. Does frozen CLIP image-feature distribution matching help beyond a no-CLIP continuation control?
+6. Can a cleaned SDXL pool replace part of the original data without sacrificing coverage?
 
-The strongest project-level lesson is that data scale and adversarial stabilization were more reliable than repeatedly adding generator modules. The CLIP sweep is preserved as a controlled continuation study, not as proof that CLIP caused the entire downstream FID reduction.
+The strongest engineering/research skill demonstrated here is experimental reasoning under compute constraints: define a scope, keep a control, record negative results, and avoid comparing incompatible metric protocols.
 
-The follow-up data audit also found that 21,551 image paths contained only 17,029 unique SHA-256 contents. The new B1 formal baseline makes that data-quality issue explicit before the planned SDXL-mixture study.
+## Experiment progression
 
-## Full experiment process
-
-This repository records the full progression, not only the final FID milestones:
-
-| Stage | What was tested | Evidence and source |
+| Phase | Question | Representative evidence |
 |---|---|---|
-| Phase 1 | Epoch budget and early image augmentations | [`phase1_preliminary_tuning`](03_metrics_and_logs/phase1_preliminary_tuning/) ? [`early tuning scripts`](02_selected_experiments/full_process/phase1_early_tuning/) |
-| Phase 2 | No-module baseline, attention/filter modules, SN, Hinge, and R1 | [`phase2_deep_tuning`](03_metrics_and_logs/phase2_deep_tuning/) ? [`module scripts`](02_selected_experiments/full_process/phase2_module_tuning/) |
-| Phase 3 | Generator width, residual/attention variants, data scale, DiffAugment, and EMA | [`phase3_generator_strengthening`](03_metrics_and_logs/phase3_generator_strengthening/) ? [`G scripts`](02_selected_experiments/full_process/phase3_generator_strengthening/) |
-| Phase 5 | Formal control and CLIP-MMD lambda sweep | [`phase5_clip`](03_metrics_and_logs/phase5_clip/) ? [`CLIP scripts`](02_selected_experiments/full_process/phase5_clip_tuning/) |
-| Phase 6 | Exact-duplicate audit and clean-unique B1 baseline | [`data-quality record`](docs/data_quality_and_sdxl_extension.md) |
-| Phase 7 | Controlled SDXL replacement study at fixed 4K fine-tuning budget | [`SDXL study`](docs/sdxl_controlled_study.md) ? [`source scripts`](02_selected_experiments/full_process/phase7_sdxl_controlled_study/) |
+| 1. Early tuning | Epoch budget and image augmentations | [phase1 metrics](03_metrics_and_logs/phase1_preliminary_tuning/) and [full scripts](02_selected_experiments/full_process/phase1_early_tuning/) |
+| 2. Module/discriminator tuning | Attention, frequency/edge modules, SN, Hinge, and R1 | [phase2 metrics](03_metrics_and_logs/phase2_deep_tuning/) and [module scripts](02_selected_experiments/full_process/phase2_module_tuning/) |
+| 3. Generator/data strengthening | Width, residual variants, 10K to 20K data, DiffAugment, EMA | [phase3 metrics](03_metrics_and_logs/phase3_generator_strengthening/) and [G scripts](02_selected_experiments/full_process/phase3_generator_strengthening/) |
+| 5. CLIP continuation | Matched no-CLIP control and lambda sweep | [CLIP metrics](03_metrics_and_logs/phase5_clip/) and [CLIP scripts](02_selected_experiments/full_process/phase5_clip_tuning/) |
+| 6. Data audit | Exact duplicate detection and a clean-unique baseline | [data audit](docs/data_quality_and_sdxl_extension.md) |
+| 7. SDXL controlled study | Fixed 4K fine-tuning budget with 0-50% SDXL replacement | [protocol](docs/sdxl_controlled_study.md) and [source scripts](02_selected_experiments/full_process/phase7_sdxl_controlled_study/) |
 
-The full process narrative, comparison boundaries, and negative-result interpretation are in [`docs/experiment_process.md`](docs/experiment_process.md). The Phase 2 `00_baseline` is the no-added-module architectural baseline: it has no attention, frequency, edge, or discriminator-regularization modules, while retaining the augmentation policy selected in Phase 1 (`RandomHorizontalFlip(p=0.5)` + `EdgeSharpen(p=0.2)`). It is therefore not a no-augmentation control. The baseline relationships are summarized in [`docs/baseline_map.md`](docs/baseline_map.md), and the interview/learning guide is in [`docs/interview_playbook.md`](docs/interview_playbook.md).
+The Phase 2 00_baseline is explicitly the no-added-module architectural control. It retains the Phase 1 RandomHorizontalFlip(p=0.5) + EdgeSharpen(p=0.2) input policy, so it is not a no-augmentation control. See [baseline_map.md](docs/baseline_map.md).
 
 ## Results at a glance
 
-| Stage | Change | Data | Legacy project FID |
+The values below are only compared within their stated scope.
+
+| Scope | Change | Data | Legacy project FID |
 |---|---|---:|---:|
-| Phase 2 | Initial baseline | 8K | 109.40 |
-| Phase 2 | Discriminator SN + Hinge | 8K | 96.25 |
+| Phase 1 | 50 to 300 epoch study | 8K | 184.11 to 105.34 |
+| Phase 2 | No-added-module baseline | 8K | 109.40 |
+| Phase 2 | D spectral normalization + Hinge | 8K | 96.25 |
+| Phase 2 | D SN + Hinge + R1 | 8K | 89.92 |
 | Phase 3 | Generator Width x3 | 10K | 59.00 |
 | Phase 3 | Width x3 with 20K images | 20K | 49.17 |
-| Phase 3 | DiffAugment + EMA | 20K | 38.88 |
+| Phase 3 | Width x3 + DiffAugment + EMA | 20K | 38.88 |
 | Phase 5 | No-CLIP continuation control | 20K | 33.78 |
-| Phase 5 | CLIP MMD, lambda=0.01 | 20K | 33.41 |
-| Phase 6 | B1 exact-unique data-quality baseline | 17,029 unique | 45.07 |
+| Phase 5 | CLIP-MMD, lambda=0.01 | 20K | 33.41 |
+| Phase 6 | Exact-unique data-quality baseline | 17,029 unique | 45.07 |
 
-The complete curated table, entry points, and comparison scopes are in [`results_summary.csv`](results_summary.csv). The two headline figures below are generated from that table by [`tools/build_interview_figures.py`](tools/build_interview_figures.py).
+The controlled SDXL result is intentionally negative:
 
-### Phase 7: controlled SDXL study
+| Group | Original | SDXL | Legacy FID | Coverage |
+|---|---:|---:|---:|---:|
+| A0 | 4,000 | 0 | 37.91 | 0.6687 |
+| A10 | 3,600 | 400 | 37.99 | 0.6525 |
+| A20 | 3,200 | 800 | 41.58 | 0.6108 |
+| A30 | 2,800 | 1,200 | 44.92 | 0.5423 |
+| A50 | 2,000 | 2,000 | 49.94 | 0.4397 |
 
-The new SDXL experiment is a separate `phase7_4k_finetune` comparison scope. All five groups fine-tune from the same Exp11 checkpoint for 100 epochs with a fixed 4,000-image pool; only the original/SDXL replacement ratio changes.
+The tested SDXL pool did not improve FID or feature coverage. A10 is approximately neutral in FID but already loses coverage; higher ratios degrade both. This is a useful stopping result, not a failure to hide.
 
-| Group | Original | SDXL | Legacy FID | Coverage | Interpretation |
-|---|---:|---:|---:|---:|---|
-| A0 | 4,000 | 0 | 37.91 | 0.6687 | 4K fine-tuning control |
-| A10 | 3,600 | 400 | 37.99 | 0.6525 | Approximately neutral FID, lower coverage |
-| A20 | 3,200 | 800 | 41.58 | 0.6108 | FID and coverage degrade |
-| A30 | 2,800 | 1,200 | 44.92 | 0.5423 | Coverage warning/abort region |
-| A50 | 2,000 | 2,000 | 49.94 | 0.4397 | Strong degradation and coverage collapse |
+The complete provenance table is [results_summary.csv](results_summary.csv). The full narrative is [docs/experiment_process.md](docs/experiment_process.md).
 
-The result is a completed negative finding: this SDXL pool should not be presented as an improvement to the current DCGAN recipe. These 4K fine-tuning values are not directly comparable with the 20K path-based Exp11 FID or the B1 clean-unique FID. See [`docs/sdxl_controlled_study.md`](docs/sdxl_controlled_study.md) for the protocol and evidence boundary.
+## Visual evidence
 
-![DCGAN experiment roadmap](04_visual_assets/interview_results_roadmap.svg)
+![Experiment roadmap](04_visual_assets/interview_results_roadmap.svg)
+
+![FID and Coverage trade-off across SDXL ratios](04_visual_assets/sdxl_fid_coverage_tradeoff.svg)
 
 ![Matched CLIP continuation sweep](04_visual_assets/clip_control_sweep.svg)
 
 ### Qualitative samples
 
-One compact figure shows one sample grid for each major stage. The first Phase 2 baseline is explicitly the no-added-module DCGAN architecture with the fixed Phase 1 augmentation policy; it is not the later Width x3 model.
+The original long contact sheet was split into stage-level cards so the progression is easier to scan. The first Phase 2 card is the plain no-added-module baseline, not the later Width x3 model.
 
-<p align="center">
-  <img src="04_visual_assets/qualitative_samples_compact.png" alt="Nine labeled sample grids covering early tuning, augmentation, the plain no-module baseline, SN-Hinge, generator width, data scale, DiffAugment plus EMA, CLIP, and the B1 unique-data baseline" width="760">
-</p>
+<table>
+  <tr>
+    <td align="center"><b>Phase 1: epoch budget</b><br><img src="04_visual_assets/phase1_epoch_200.png" alt="Phase 1 epoch study samples" width="220"></td>
+    <td align="center"><b>Phase 1: augmentation</b><br><img src="04_visual_assets/phase1_sharpen_aug_epoch100.png" alt="Phase 1 augmentation samples" width="220"></td>
+    <td align="center"><b>Phase 2: plain baseline</b><br><img src="04_visual_assets/phase2_baseline_no_modules_epoch200.png" alt="Phase 2 no-added-module baseline samples" width="220"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Phase 2: D stabilization</b><br><img src="04_visual_assets/phase2_sn_hinge_epoch200.png" alt="Phase 2 discriminator stabilization samples" width="220"></td>
+    <td align="center"><b>Phase 3: generator width</b><br><img src="04_visual_assets/milestone_03_width3x_epoch200.png" alt="Phase 3 generator width samples" width="220"></td>
+    <td align="center"><b>Phase 3: DiffAugment + EMA</b><br><img src="04_visual_assets/milestone_11_diffaug_ema_epoch200.png" alt="Phase 3 DiffAugment and EMA samples" width="220"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Phase 5: CLIP continuation</b><br><img src="04_visual_assets/clip_C1_lambda001_samples.png" alt="Phase 5 CLIP continuation samples" width="220"></td>
+    <td align="center"><b>Phase 6: clean-unique data</b><br><img src="04_visual_assets/b1_formal_clean_unique_17k_epoch200.png" alt="Phase 6 clean unique baseline samples" width="220"></td>
+    <td align="center"><b>Phase 7: controlled SDXL study</b><br><img src="04_visual_assets/sdxl_a0_epoch100.png" alt="Phase 7 controlled SDXL study samples" width="220"></td>
+  </tr>
+</table>
 
-### New data audit
+The full compact montage remains available as [`qualitative_samples_compact.png`](04_visual_assets/qualitative_samples_compact.png) for reviewers who want a single downloadable artifact.
 
-| Audit result | Value |
-|---|---:|
-| Paths scanned | 21,551 |
-| Unique SHA-256 contents | 17,029 |
-| Exact duplicate groups | 3,626 |
-| Redundant copies | 4,522 |
-| Bad files | 0 |
+The SDXL pilot is preserved separately because it documents the synthetic-data candidate pool and the cleaning workflow:
 
-The audit record, unique-content manifest, B1 metrics, and sanitized Kaggle entry points are documented in [`docs/data_quality_and_sdxl_extension.md`](docs/data_quality_and_sdxl_extension.md). B1 FID `45.07` is intentionally not treated as a direct improvement or regression against the earlier path-based Exp11 FID `38.88`, because the data pool changed.
+![SDXL pilot contact sheet](04_visual_assets/sdxl_pilot_contact_sheet.jpg)
 
-## How to interpret the metrics
+## Metric boundaries
 
-The headline field is named `fid_legacy_project` to prevent it from being confused with a standardized benchmark. It uses the historical torchvision Inception-v3 pool3 pipeline with 10K real and 10K fake samples. Historical real samples are primarily drawn from the training distribution, not a strict unseen holdout, and fake sampling introduces evaluation noise.
+The headline field is fid_legacy_project, not a standardized benchmark. Historical runs use the project's torchvision Inception-v3 pool3 pipeline, with protocol details changing by phase. Phase 7 uses the same code path for all A0-A50 groups, but its evaluation code collects up to 4,000 real images from the 4K pool and 5,000 fake images; this asymmetry is documented and means the values should only be used for within-study ranking.
 
-FID is useful for longitudinal comparison when the protocol is held constant, but it is sensitive to feature-network, resizing, preprocessing, and finite-sample choices. The project therefore keeps old values unchanged and plans to add a separately named standardized FID beside them. See [`metric_protocol.md`](metric_protocol.md) for the exact boundary and the next evaluation plan.
+The older LPIPS field is an AlexNet feature-distance proxy, not calibrated LPIPS. CLIP-MMD is a separate distribution metric. Coverage, blur rate, Laplacian variance, and edge density are supporting diagnostics. See [metric_protocol.md](metric_protocol.md) and [docs/reproduction_boundary.md](docs/reproduction_boundary.md).
 
-The historical `LPIPS` fields in older logs are AlexNet feature-distance proxies, not calibrated LPIPS. The CLIP sweep reports both FID and CLIP MMD because the two objectives do not select exactly the same checkpoint: C1 has the lowest local legacy FID, while C4 has the lowest CLIP MMD?.
+Known limitations:
+
+- most comparisons use one seed and one evaluation draw;
+- real images are primarily from the training distribution, not a strict holdout;
+- historical metrics are not directly comparable to clean-fid or torch-fidelity;
+- Phase 7 discriminator evaluation logits include an A0 anomaly and are excluded from headline conclusions;
+- the project does not claim novelty, SOTA performance, or causal separation of DiffAugment versus EMA.
 
 ## Reproduction boundary
 
-This is a Kaggle experiment archive, not a one-command local package yet.
+This is a Kaggle experiment archive:
 
-- Training was performed in Kaggle GPU notebooks/scripts.
-- The dataset is intentionally not included.
-- Model weights are kept outside Git history and remain local until redistribution rights are confirmed.
-- Several historical scripts retain Kaggle-oriented defaults and expect an attached dataset and, for CLIP experiments, an attached weights Dataset.
-- `requirements.txt` is a compatibility floor, not a lockfile.
-- Exact environment evidence captured during the CLIP runs is recorded in [`docs/runtime_and_dependencies.md`](docs/runtime_and_dependencies.md).
+- the dataset is not included;
+- model weights and large checkpoints stay outside Git history;
+- representative entry points expect Kaggle Input datasets and GPU/Internet settings;
+- requirements.txt is a compatibility floor, not a lockfile;
+- the snapshot checks validate evidence files without requiring a GPU.
 
-Representative Kaggle entry points:
+    python -m unittest discover -s tests -v
 
-```text
-02_selected_experiments/phase2_00_baseline.py
-01_public_core/final_exp11_diffaug_ema.py
-02_selected_experiments/clip_E0_formal_eval.py
-02_selected_experiments/clip_C1_lambda_001.py
-01_public_core/phase6_audit_original_dataset.py
-01_public_core/phase6_b1_formal_clean_unique_17k.py
-```
-
-To reproduce a historical result responsibly, attach a permitted dataset, use the matching entry point and configuration, record the dataset manifest hash, and preserve the runtime metadata. The detailed checklist is in [`docs/reproduction_boundary.md`](docs/reproduction_boundary.md).
-
-## Snapshot integrity checks
-
-These checks validate the curated evidence without requiring a GPU or the private dataset:
-
-```powershell
-python -m unittest discover -s tests -v
-python tools/build_interview_figures.py
-```
-
-The first command is also run by GitHub Actions on pushes and pull requests.
+For the ongoing update process, use [UPDATE_WORKFLOW.md](UPDATE_WORKFLOW.md). For the one-month audit, claims, resume bullets, and interview framing, see [docs/month1_audit_2026-08.md](docs/month1_audit_2026-08.md) and [docs/interview_playbook.md](docs/interview_playbook.md). The next deployment phase is planned in [docs/next_phase_deployment_plan.md](docs/next_phase_deployment_plan.md).
 
 ## Repository map
 
 | Path | Purpose |
 |---|---|
-| `01_public_core/` | Baseline, final Exp11 code, and English experiment guides |
-| `02_selected_experiments/` | Representative scripts plus the full-process source archive for Phases 1, 2, 3, 5, and 7 |
-| `03_metrics_and_logs/` | Curated JSON metrics and CSV logs, including the controlled SDXL study |
-| `04_visual_assets/` | Canonical interview figures, full-process sample grids, SDXL study samples, and archival charts |
-| `06_model_artifacts/` | Local-only model files and checksums; excluded by `.gitignore` |
-| `docs/` | Reproduction boundary, data audit, runtime evidence, and technical project story |
-| `tests/` | CPU-only snapshot integrity checks for JSON, CSV, SVG, and README references |
-| `tools/` | Standard-library figure builder for the canonical interview charts |
-| `99_source_map/` | Freeze scope and source-to-snapshot mapping |
+| 01_public_core/ | Public baseline, Exp11 recipe, and data-audit entry points |
+| 02_selected_experiments/ | Selected scripts plus the complete staged source archive |
+| 03_metrics_and_logs/ | Curated JSON metrics and CSV training logs |
+| 04_visual_assets/ | Interview figures, sample grids, and SDXL visual evidence |
+| docs/ | Protocols, limitations, project story, audit, and interview guidance |
+| tests/ | CPU-only snapshot integrity checks |
+| tools/ | Figure and evidence utilities |
 
-## What is intentionally not claimed
+## Interview-ready one-minute summary
 
-- This is not a state-of-the-art image generator.
-- Legacy FID values are not directly comparable with published clean-fid or torch-fidelity numbers.
-- The current snapshot does not establish strict generalization without a holdout set.
-- A single seed and one evaluation draw are not enough for a causal claim about a small metric difference.
-- Public visibility does not imply an open-source reuse license; see `LICENSE_DECISION.md`.
+> I ran a resource-constrained PyTorch DCGAN study in Kaggle for unconditional 64x64 anime-face generation. I structured the work as staged ablations: first selecting a practical epoch and augmentation budget, then using a no-added-module DCGAN as the architectural control for attention, frequency, edge, and discriminator-stabilization tests. I next tested generator capacity and data scale, then froze a Width x3, 20K-image recipe with DiffAugment and EMA. A matched CLIP-MMD continuation sweep showed that the best local legacy FID and the best CLIP-MMD did not select the same setting. After auditing 21,551 paths down to 17,029 unique SHA-256 contents, I designed a fixed-budget SDXL replacement study. The tested synthetic pool failed to improve FID or coverage, so I preserved the negative result and its stopping rule. The project's main limitation is that it remains Kaggle-only with legacy, mostly single-seed evaluation.
 
-## Next research and engineering milestones
+## Status
 
-1. Preserve the Phase 7 negative result and decide whether a new, style-matched SDXL pool is justified.
-2. Add a unified Legacy FID, Clean-FID, coverage, blur, and diversity report.
-3. Add nearest-neighbor grids and, when compute permits, repeated seeds or uncertainty estimates.
-4. If synthetic-data work continues, freeze a row-level accepted manifest before any new mixture run.
-5. Keep the Kaggle-only boundary explicit and publish only permitted code, samples, manifests, and metrics.
-
-## Publication status
-
-This repository is now Public for technical review. The dataset and model weights remain outside Git history; the public evidence consists of code, small metrics/logs, manifests, plots, and sample grids. The open-source license decision is documented separately in [`LICENSE_DECISION.md`](LICENSE_DECISION.md). Large binary artifacts should remain outside Git history; GitHub documents Releases and Git LFS as the appropriate mechanisms for large files.
-
-## Technical project story
-
-For an interview, frame the work as an experiment-design and evaluation project: stabilize the adversarial game, test capacity and data scale under a fixed resource budget, preserve negative results, and treat metric disagreement as a research finding. The concise technical version is in [`docs/project_story.md`](docs/project_story.md).
+Public technical-review snapshot, updated 2026-08-10. The internship work remains ongoing; future experiments should be added as scoped, dated evidence rather than rewritten history.

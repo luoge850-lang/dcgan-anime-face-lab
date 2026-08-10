@@ -23,11 +23,11 @@ Phase 2 `00_baseline` is the no-added-module architectural baseline. It uses the
 
 ### 3. Test stabilization and capacity
 
-Spectral Normalization and Hinge loss improved the discriminator-side comparison. Generator Width?3 was stronger than the smaller and larger capacity variants in the tested budget. Negative results were kept because they define the tested resource-constrained design space.
+Spectral Normalization and Hinge loss improved the discriminator-side comparison. Generator Width ×3 was stronger than the smaller and larger capacity variants in the tested budget. Negative results were kept because they define the tested resource-constrained design space.
 
 ### 4. Separate data scale from architecture
 
-Width?3 was held fixed while the data scale changed from 10K to 20K. This is one of the cleanest comparisons in the project because the script records the architecture, optimizer, seed, epoch count, and batch size as unchanged.
+Width ×3 was held fixed while the data scale changed from 10K to 20K. This is one of the cleanest comparisons in the project because the script records the architecture, optimizer, seed, epoch count, and batch size as unchanged.
 
 ### 5. Stabilize the training trajectory
 
@@ -43,7 +43,7 @@ The SHA-256 audit found 21,551 paths but only 17,029 unique contents. B1 fixes t
 
 ## A 90-second answer
 
-> My internship project is a resource-constrained PyTorch DCGAN study for unconditional 64x64 anime-face generation. I structured it as staged experiments rather than only selecting a final checkpoint. I first selected a practical epoch budget and augmentation policy, then used a no-added-module DCGAN as the architectural control for attention, frequency, edge, and discriminator-stabilization ablations. I next tested Generator capacity and held the Width?3 architecture fixed while scaling the data from 10K to 20K images. The strongest historical result came from combining the stronger generator, more data, DiffAugment, and EMA. I then ran a matched CLIP-MMD continuation sweep with a no-CLIP control. The best legacy FID and best CLIP MMD were not the same checkpoint, so I treated the metrics as complementary. Finally, I audited the source data with SHA-256, found 4,522 redundant copies, and established B1 on 17,029 unique contents before the planned SDXL mixture experiments. The main limitations are Kaggle-only execution, legacy FID, a non-holdout real set, and mostly single-seed results.
+> My internship project is a resource-constrained PyTorch DCGAN study for unconditional 64x64 anime-face generation. I structured it as staged experiments rather than only selecting a final checkpoint. I first selected a practical epoch budget and augmentation policy, then used a no-added-module DCGAN as the architectural control for attention, frequency, edge, and discriminator-stabilization ablations. I next tested Generator capacity and held the Width ×3 architecture fixed while scaling the data from 10K to 20K images. The strongest historical result came from combining the stronger generator, more data, DiffAugment, and EMA. I then ran a matched CLIP-MMD continuation sweep with a no-CLIP control. The best legacy FID and best CLIP MMD were not the same checkpoint, so I treated the metrics as complementary. Finally, I audited the source data with SHA-256, found 4,522 redundant copies, and established B1 on 17,029 unique contents before the planned SDXL mixture experiments. The main limitations are Kaggle-only execution, legacy FID, a non-holdout real set, and mostly single-seed results.
 
 ## Questions you should be ready for
 
@@ -53,11 +53,11 @@ Because the early study showed a useful improvement up to 200 epochs and the pro
 
 ### Was the baseline completely vanilla?
 
-It was vanilla with respect to added architecture and discriminator modules, but it retained the Phase 1 Flip+Sharpen augmentation. The precise name is ?no-added-module architectural baseline.?
+It was vanilla with respect to added architecture and discriminator modules, but it retained the Phase 1 Flip+Sharpen augmentation. The precise name is “no-added-module architectural baseline.”
 
 ### Which change helped the most?
 
-Within the tested scopes, the largest reliable milestone was the combined progression to Width?3, 20K data, DiffAugment, and EMA. DiffAugment and EMA were introduced together, so their separate effects were not identified.
+Within the tested scopes, the largest reliable milestone was the combined progression to Width ×3, 20K data, DiffAugment, and EMA. DiffAugment and EMA were introduced together, so their separate effects were not identified.
 
 ### Why is B1 FID 45.07 higher than Exp11 FID 38.88?
 
