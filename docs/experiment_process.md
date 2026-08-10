@@ -66,4 +66,4 @@ The pilot review CSV is preserved as an audit template, but its row-level `manua
 - `docs/sdxl_controlled_study.md` explains the Phase 7 4K fine-tuning scope and negative result.
 - `03_metrics_and_logs/` preserves the wider historical metric record.
 - `02_selected_experiments/full_process/` now contains the earlier source scripts, not only the final selected scripts.
-- `04_visual_assets/qualitative_samples_compact.png` shows one labeled sample grid per major milestone, with the no-module baseline explicitly labeled.
+- `04_visual_assets/` contains stage-level qualitative cards, with the no-module baseline explicitly labeled; the original compact montage is retained as a downloadable appendix.
