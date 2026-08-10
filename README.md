@@ -99,7 +99,27 @@ The full compact montage remains available as [`qualitative_samples_compact.png`
 
 The SDXL pilot is preserved separately because it documents the synthetic-data candidate pool and the cleaning workflow:
 
-![SDXL pilot contact sheet](04_visual_assets/sdxl_pilot_contact_sheet.jpg)
+<details>
+<summary>SDXL pilot provenance (not shown inline)</summary>
+
+The pilot contact sheet is kept as a downloadable artifact because it documents the synthetic-data candidate pool and the cleaning workflow. It is intentionally not rendered in the README gallery.
+
+- [Download the pilot contact sheet](04_visual_assets/sdxl_pilot_contact_sheet.jpg)
+- [Data audit and cleaning notes](docs/data_quality_and_sdxl_extension.md)
+- [Controlled replacement protocol](docs/sdxl_controlled_study.md)
+</details>
+
+## Metric comparability
+
+Short answer: no. The project uses one broad historical FID family for much of the DCGAN work, but the data pool, continuation setting, sample counts, and auxiliary metrics change across stages.
+
+| Scope | Comparable metric | What changes or limits comparison |
+|---|---|---|
+| Phase 1 to Phase 5 legacy FID | Project Inception-v3 pool3 FID; historical 10K-real/10K-fake path | Dataset size, training objective, continuation state, and experiment purpose differ; use only inside the named comparison scope |
+| Phase 5 CLIP sweep | Same legacy FID plus CLIP-MMD on 2K CLIP features | CLIP-MMD is a separate distribution metric; C0 is the required no-CLIP control |
+| Phase 6 B1 | Same legacy FID implementation | Training pool changes to 17,029 exact-unique contents, so it is a data-quality baseline, not an architecture win |
+| Phase 7 A0-A50 | Same legacy FID code path plus Coverage | Up to 4K real vs 5K fake features; valid for within-study ranking only, not a standardized benchmark |
+| LPIPS, Diversity, Laplacian, Edge Density, D logits | Supporting diagnostics | Definitions and loss functions vary; none is a universal replacement for FID |
 
 ## Metric boundaries
 
