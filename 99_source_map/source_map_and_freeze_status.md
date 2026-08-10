@@ -1,6 +1,6 @@
 # Source map and freeze status
 
-Freeze date: 2026-08-04
+Freeze date: 2026-08-10
 
 ## Included
 
@@ -9,6 +9,7 @@ Freeze date: 2026-08-04
 - Representative Phase 2 discriminator/loss experiments.
 - Representative Phase 3 Generator, data-scale, Laplacian, and DiffAugment+EMA experiments.
 - Formal CLIP evaluation/control and lambda sweep scripts.
+- Completed Phase 7 SDXL controlled-study source scripts and selected evidence.
 - JSON metrics, CSV logs, selected samples, comparison charts, and key Exp09/Exp11 model artifacts.
 
 ## Intentionally excluded
@@ -16,7 +17,7 @@ Freeze date: 2026-08-04
 - Raw image datasets and generated FID image dumps.
 - Optimizer-only checkpoints and redundant binary artifacts.
 - Internal work logs, Word reports, document-build folders, and unrelated root-level files.
-- SDXL data-mixture experiments that are still ongoing or not yet a complete public result.
+- Raw SDXL candidate/production image pools, archives, and large checkpoints.
 
 ## Current status interpretation
 

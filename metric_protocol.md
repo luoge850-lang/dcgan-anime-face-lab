@@ -10,7 +10,7 @@ FID was introduced as a distribution-level comparison using features from a pret
 
 | Field | Frozen definition | Safe interpretation |
 |---|---|---|
-| `fid_legacy_project` | torchvision Inception-v3 pool3 features; project preprocessing; 10K real + 10K fake | Compare experiments only when dataset size, model choice, preprocessing, and evaluation path are held constant |
+| fid_legacy_project | torchvision Inception-v3 pool3 features; project preprocessing; sample counts vary by phase | Compare only within a declared scope. Phase 2/3/5 use the historical 10K-real/10K-fake path; Phase 7 uses up to 4K real and 5K fake from the fixed 4K fine-tuning pool |
 | `clip_mmd2_unbiased` | Frozen OpenCLIP ViT-B/32 image features; multi-scale RBF MMD²; 2K evaluation features | Compare the matched Phase 5 continuation sweep; do not treat it as FID |
 | `LPIPS_legacy_AlexNet_feature_distance` | Historical AlexNet feature MSE proxy | Do not call this calibrated LPIPS |
 | `Diversity`, `Laplacian_Variance`, `Edge_Density` | Project-defined auxiliary diagnostics | Use as supporting evidence, not as a replacement for distributional evaluation |
@@ -28,6 +28,8 @@ This B1 value must not be plotted as a direct architecture improvement over the 
 3. Fake samples are stochastic; a single 10K draw does not provide an uncertainty interval.
 4. The legacy pipeline is not guaranteed to match clean-fid, torch-fidelity, or another implementation.
 5. Most historical results use one seed, so small changes should not be described as causal without matched controls and replication.
+6. The Phase 7 A0–A50 script collects fewer real than fake evaluation features because the real pool contains 4K images while N_FID=5000; the asymmetry is constant across the five groups but is not a standardized FID protocol.
+7. Phase 7 D_real_eval/D_fake_eval fields are not used for the headline comparison because the A0 record contains an implausible magnitude and the evaluation path is not a clean cross-group discriminator-health protocol.
 
 ## Required next protocol
 

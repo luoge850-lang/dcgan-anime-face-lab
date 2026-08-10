@@ -1,14 +1,14 @@
 """
-???? rejected ? ? v2 ???????????
+人工复核 rejected — 在 v2 清洗结果基础上手动捞回
 ================================================================================
-??: v2 ?????, /kaggle/working/SDXL_Cleaned/ ??:
-  - accepted/  (?????)
-  - rejected/  (????, ???????)
+前提: v2 脚本已运行, /kaggle/working/SDXL_Cleaned/ 中有:
+  - accepted/  (自动通过的)
+  - rejected/  (被淘汰的, 按原因分文件夹)
   - rejected_manifest.csv
 
-???: ????? review_rejected.csv ? ?? ? Excel ?? ? ???
-        review_rejected_checked.csv ? ?? ? ?????
-???: ? manual_keep=1 ?? rejected ?? accepted ? ???? zip
+第一轮: 本脚本生成 review_rejected.csv → 下载 → Excel 标记 → 保存为
+        review_rejected_checked.csv → 上传 → 复跑本脚本
+第二轮: 把 manual_keep=1 的从 rejected 搬到 accepted → 重新打包 zip
 """
 
 import csv, json, os, shutil, zipfile
@@ -20,15 +20,15 @@ REVIEW_TEMPLATE = Path("/kaggle/working/review_rejected.csv")
 REVIEW_CHECKED_NAME = "review_rejected_checked.csv"
 MANUAL_KEEP_DIR = Path("/kaggle/working/SDXL_Cleaned/rejected/manual_keep")
 
-# ?? ????? review_rejected_checked.csv ??
+# ── 检查是否有 review_rejected_checked.csv ──
 checked_path = None
 for p in Path("/kaggle/input").rglob(REVIEW_CHECKED_NAME):
     checked_path = p; break
 
 if checked_path:
-    # ???????????????????????????????????????
-    # ???: ?? manual_keep=1
-    # ???????????????????????????????????????
+    # ═══════════════════════════════════════
+    # 第二轮: 合并 manual_keep=1
+    # ═══════════════════════════════════════
     print(f"[review] Found {checked_path}")
 
     decisions = {}
@@ -39,7 +39,7 @@ if checked_path:
     keep_count = sum(1 for v in decisions.values() if v == "1")
     print(f"[review] manual_keep=1: {keep_count}/{len(decisions)}")
 
-    # ?? manual_keep=1 ???
+    # 复制 manual_keep=1 的图片
     MANUAL_KEEP_DIR.mkdir(parents=True, exist_ok=True)
     acc_dir = OUTPUT_DIR / "accepted"
     existing = set(f.stem for f in acc_dir.iterdir())
@@ -60,7 +60,7 @@ if checked_path:
 
     print(f"[review] Added {added} images to accepted/")
 
-    # ????
+    # 重新打包
     acc_files = sorted(acc_dir.iterdir())
     zip_path = Path("/kaggle/working/cleaned_accepted_final.zip")
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_STORED) as z:
@@ -74,9 +74,9 @@ if checked_path:
     print(f"{'='*60}")
 
 else:
-    # ???????????????????????????????????????
-    # ???: ??????
-    # ???????????????????????????????????????
+    # ═══════════════════════════════════════
+    # 第一轮: 生成审核模板
+    # ═══════════════════════════════════════
     print("[review] Generating manual review template for rejected images...")
 
     rows = []
@@ -89,7 +89,7 @@ else:
                     "reject_reason": cat_dir.name,
                     "source": p.name,
                     "file_size_kb": round(p.stat().st_size / 1024, 1),
-                    "manual_keep": "",  # ? ?? 1=?? ? 0=??
+                    "manual_keep": "",  # ← 你填 1=保留 或 0=丢弃
                 })
 
     with REVIEW_TEMPLATE.open("w", newline="", encoding="utf-8-sig") as f:
@@ -101,9 +101,9 @@ else:
     for cat in sorted(set(r["reject_reason"] for r in rows)):
         n = sum(1 for r in rows if r["reject_reason"] == cat)
         print(f"    {cat}: {n}")
-    print(f"  ?????????????????????????????????????????????")
-    print(f"  1. ? Output ?? review_rejected.csv")
-    print(f"  2. Excel ?? ? ?? manual_keep ? (1=??, 0=??)")
-    print(f"  3. ??? review_rejected_checked.csv")
-    print(f"  4. ??? Kaggle Dataset ? attach ? ?????")
+    print(f"  ─────────────────────────────────────────────")
+    print(f"  1. 从 Output 下载 review_rejected.csv")
+    print(f"  2. Excel 打开 → 只改 manual_keep 列 (1=保留, 0=丢弃)")
+    print(f"  3. 保存为 review_rejected_checked.csv")
+    print(f"  4. 上传为 Kaggle Dataset → attach → 复跑本脚本")
     print(f"{'='*60}")

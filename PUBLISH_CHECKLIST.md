@@ -9,7 +9,7 @@ The repository owner has authorized public visibility. The current public releas
 - [x] Confirm that the project may be shown publicly.
 - [x] Confirm that the current code, metrics, plots, manifests, and generated samples may be shown publicly.
 - [ ] Confirm whether the model weights may be redistributed.
-- [ ] Review the repository for internal names, paths, logs, and credentials.
+- [x] Review the repository for internal names, paths, logs, and credentials.
 - [ ] Choose a license only after ownership is clear.
 
 ## Recommended repository settings
@@ -19,7 +19,7 @@ The repository owner has authorized public visibility. The current public releas
 - Topics: `pytorch`, `dcgan`, `gan`, `generative-models`, `computer-vision`, `reproducible-research`
 - Default branch: `main`
 - First tag: `v0.1-snapshot`
-- Keep the repository private until publication permission is confirmed.
+- The owner has confirmed that this snapshot may be public; keep datasets, weights, credentials, and unapproved internal material private.
 
 ## Local push after authentication
 

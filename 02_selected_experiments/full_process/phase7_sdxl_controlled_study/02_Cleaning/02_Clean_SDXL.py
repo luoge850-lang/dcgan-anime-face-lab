@@ -1,24 +1,24 @@
 """
-SDXL Cleaning ? Colab ?????
+SDXL Cleaning — Colab 粘贴即跑。
 ================================================================================
-??????:
-  1. ???? (SHA-256 ??, aHash ???, Laplacian ??, ????)
-  2. ???? (?? review_template.csv ? ???? ? ????)
+两轮清洗流程:
+  1. 自动筛选 (SHA-256 去重, aHash 近重复, Laplacian 模糊, 纯色检测)
+  2. 人工审核 (生成 review_template.csv → 人工标记 → 重新运行)
 
-??:
-  ? SDXL ?? zip ?? Colab ????? ? /content/
-  (? Kaggle ??? all_candidates_cumulative.zip ???)
+输入:
+  把 SDXL 候选 zip 拖入 Colab 文件浏览器 → /content/
+  (从 Kaggle 下载的 all_candidates_cumulative.zip 或类似)
 
-??:
-  cleaned_accepted.zip  ? ????? 64?64 ?? + accepted_manifest.csv
+输出:
+  cleaned_accepted.zip  — 通过清洗的 64×64 图片 + accepted_manifest.csv
 
-????:
-  1. colab.research.google.com ? New Notebook ? T4 GPU
-  2. ??? zip ?? /content/
-  3. ?????????? cell ? Ctrl+Enter
-  4. ???: ???? ? ?? review_template.csv, ?? manual_keep ?
-  5. ???: ????? review_checked.csv ??, ???????
-  6. ?? cleaned_accepted.zip
+使用方法:
+  1. colab.research.google.com → New Notebook → T4 GPU
+  2. 把候选 zip 拖入 /content/
+  3. 本文件全文粘贴到一个 cell → Ctrl+Enter
+  4. 第一轮: 自动筛选 → 下载 review_template.csv, 标记 manual_keep 列
+  5. 第二轮: 把标记好的 review_checked.csv 拖入, 重新运行本脚本
+  6. 下载 cleaned_accepted.zip
 """
 
 from __future__ import annotations
@@ -27,9 +27,9 @@ import importlib.util
 from pathlib import Path
 from collections import defaultdict
 
-# ???????????????????????????????????????????????????????????????????
-# 0. ??
-# ???????????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════════
+# 0. 依赖
+# ═══════════════════════════════════════════════════════════════════
 def _install() -> None:
     pkgs = [("numpy", "numpy"), ("Pillow>=10.0.0", "PIL")]
     missing = [p for p, m in pkgs if importlib.util.find_spec(m) is None]
@@ -41,28 +41,28 @@ import numpy as np
 from PIL import Image
 
 
-# ???????????????????????????????????????????????????????????????????
-# 1. ??
-# ???????????????????????????????????????????????????????????????????
-# ?????? zip????????SDXL_INPUT_ZIPS=/content/kaggle_1600.zip,/content/colab_1000.zip
-# ???????SDXL_INPUT_GLOB=/content/*candidate*.zip
-# ?????????SDXL_INPUT_DIR=/content/SDXL_Production_v3
+# ═══════════════════════════════════════════════════════════════════
+# 1. 配置
+# ═══════════════════════════════════════════════════════════════════
+# 支持多个输入 zip（用逗号分隔）：SDXL_INPUT_ZIPS=/content/kaggle_1600.zip,/content/colab_1000.zip
+# 或者用通配符：SDXL_INPUT_GLOB=/content/*candidate*.zip
+# 也可以直接放目录：SDXL_INPUT_DIR=/content/SDXL_Production_v3
 INPUT_ZIPS = os.environ.get("SDXL_INPUT_ZIPS", "")
 INPUT_ZIP  = Path(os.environ.get("SDXL_INPUT_ZIP", "/content/all_candidates_cumulative.zip"))
 INPUT_DIR  = Path(os.environ.get("SDXL_INPUT_DIR", "/content/SDXL_Production_v3"))
 INPUT_GLOB = os.environ.get("SDXL_INPUT_GLOB", "/content/*SDXL*.zip")
 OUTPUT_DIR = Path(os.environ.get("SDXL_CLEAN_OUTPUT", "/content/SDXL_Cleaned"))
 
-REVIEW_CSV      = os.environ.get("SDXL_REVIEW_CSV", "")  # ???: review_checked.csv ??
-TARGET_ACCEPTED = int(os.environ.get("SDXL_TARGET", "1100"))  # 1600 candidates ? 70% ? 1120
+REVIEW_CSV      = os.environ.get("SDXL_REVIEW_CSV", "")  # 第二轮: review_checked.csv 路径
+TARGET_ACCEPTED = int(os.environ.get("SDXL_TARGET", "1100"))  # 1600 candidates × 70% ≈ 1120
 REQUIRE_MANUAL  = os.environ.get("SDXL_REQUIRE_MANUAL", "1") == "1"
-BLUR_THRESHOLD  = float(os.environ.get("SDXL_BLUR_THRESHOLD", "0"))  # 0 = ????
+BLUR_THRESHOLD  = float(os.environ.get("SDXL_BLUR_THRESHOLD", "0"))  # 0 = 自动校准
 SEED            = int(os.environ.get("SDXL_CLEAN_SEED", "42"))
 
 
-# ???????????????????????????????????????????????????????????????????
-# 2. ????
-# ???????????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════════
+# 2. 工具函数
+# ═══════════════════════════════════════════════════════════════════
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -85,10 +85,10 @@ def laplacian_score(path: Path) -> float:
 
 
 def _collect_zips() -> list[Path]:
-    """?????? zip ??"""
+    """收集所有输入 zip 路径"""
     zips: list[Path] = []
 
-    # 1. SDXL_INPUT_ZIPS: ?????????
+    # 1. SDXL_INPUT_ZIPS: 逗号分隔的显式列表
     if INPUT_ZIPS:
         for p in INPUT_ZIPS.split(","):
             p = p.strip()
@@ -99,11 +99,11 @@ def _collect_zips() -> list[Path]:
                 else:
                     print(f"[input] WARNING: zip not found: {p}")
 
-    # 2. SDXL_INPUT_ZIP: ?? zip (????)
+    # 2. SDXL_INPUT_ZIP: 单个 zip (兼容旧版)
     if INPUT_ZIP.exists() and INPUT_ZIP not in zips:
         zips.append(INPUT_ZIP)
 
-    # 3. SDXL_INPUT_GLOB: ?????
+    # 3. SDXL_INPUT_GLOB: 通配符匹配
     if INPUT_GLOB and not zips:
         import glob as _glob
         for p in sorted(_glob.glob(INPUT_GLOB)):
@@ -115,17 +115,17 @@ def _collect_zips() -> list[Path]:
 
 
 def resolve_input() -> list[tuple[Path, Path]]:
-    """??????? ? ?? [(manifest_path, image_root), ...]"""
+    """收集所有输入源 → 返回 [(manifest_path, image_root), ...]"""
     results: list[tuple[Path, Path]] = []
 
-    # A. ????
+    # A. 已有目录
     if INPUT_DIR.exists():
         manifests = sorted(INPUT_DIR.rglob("candidate_manifest.csv"))
         for mf in manifests:
             results.append((mf, mf.parent))
             print(f"[input] Directory: {mf}")
 
-    # B. ?? zip
+    # B. 多个 zip
     zips = _collect_zips()
     for zp in zips:
         extract_root = OUTPUT_DIR.parent / f"_extracted_{zp.stem}"
@@ -138,7 +138,7 @@ def resolve_input() -> list[tuple[Path, Path]]:
         inner_manifests = sorted(extract_root.rglob("candidate_manifest.csv"))
         for mf in inner_manifests:
             results.append((mf, mf.parent))
-            print(f"[input] Zip '{zp.name}' ? manifest: {mf}")
+            print(f"[input] Zip '{zp.name}' → manifest: {mf}")
 
     if not results:
         raise FileNotFoundError(
@@ -152,7 +152,7 @@ def resolve_input() -> list[tuple[Path, Path]]:
 
 
 def calibrate_blur_threshold(rows: list[dict], input_root: Path) -> float:
-    """??????????????? (P10)"""
+    """用候选图自身的分布校准模糊阈值 (P10)"""
     scores = []
     for r in rows[: min(len(rows), 2000)]:
         p = input_root / r.get("image_64_path", "")
@@ -162,7 +162,7 @@ def calibrate_blur_threshold(rows: list[dict], input_root: Path) -> float:
             except Exception:
                 pass
     if not scores:
-        return 80.0  # ???
+        return 80.0  # 默认值
     p10 = float(np.percentile(scores, 10))
     print(f"[blur] Auto threshold: p10={p10:.1f} (from {len(scores)} candidates)")
     return p10
@@ -194,23 +194,23 @@ def automatic_flags(rows: list[dict], input_root: Path) -> tuple[list[dict], flo
                 row["average_hash"] = ah
                 row["laplacian_score"] = f"{score:.2f}"
 
-                # SHA-256 ????
+                # SHA-256 精确重复
                 if digest in seen_sha:
                     flags.append(f"exact_duplicate_of:{seen_sha[digest]}")
                 else:
                     seen_sha[digest] = row["sample_id"]
 
-                # aHash ???
+                # aHash 近重复
                 if ah in seen_hash:
                     flags.append(f"near_duplicate_of:{seen_hash[ah]}")
                 else:
                     seen_hash[ah] = row["sample_id"]
 
-                # ??
+                # 模糊
                 if score < threshold:
                     flags.append("blur")
 
-                # ??/???
+                # 纯色/近空白
                 arr = np.asarray(Image.open(p).convert("RGB"))
                 if arr.std() < 3:
                     flags.append("near_blank")
@@ -257,7 +257,7 @@ def read_review(rows: list[dict]) -> list[dict]:
 
 
 def stratified_select(rows: list[dict]) -> list[dict]:
-    """????: ?? (pose, hair) ??????, ???? TARGET"""
+    """分层采样: 每个 (pose, hair) 组合均匀选取, 尽量达到 TARGET"""
     eligible = []
     for r in rows:
         manual_ok = r.get("manual_keep", "").strip() == "1"
@@ -270,7 +270,7 @@ def stratified_select(rows: list[dict]) -> list[dict]:
                 eligible.append(r)
 
     if len(eligible) < TARGET_ACCEPTED:
-        # ????? ? ????????? eligible
+        # 不强制报错 — 只是警告并返回所有 eligible
         print(f"[warning] Only {len(eligible)} eligible candidates; target was {TARGET_ACCEPTED}")
         print(f"  Will use all {len(eligible)}. Generate more candidates if more needed.")
 
@@ -297,15 +297,15 @@ def stratified_select(rows: list[dict]) -> list[dict]:
     return selected
 
 
-# ???????????????????????????????????????????????????????????????????
-# 3. ???
-# ???????????????????????????????????????????????????????????????????
+# ═══════════════════════════════════════════════════════════════════
+# 3. 主流程
+# ═══════════════════════════════════════════════════════════════════
 def main():
     input_sources = resolve_input()
 
-    # ???? manifest
+    # 合并所有 manifest
     all_rows: list[dict] = []
-    seen_ids: dict[str, int] = {}  # sample_id ? row_index (0-first)
+    seen_ids: dict[str, int] = {}  # sample_id → row_index (0-first)
     collision_count = 0
 
     for manifest_path, image_root in input_sources:
@@ -317,9 +317,9 @@ def main():
             sid = row.get("sample_id", "")
             if sid and sid in seen_ids:
                 collision_count += 1
-                # ???????? sample_id
+                # 自动重命名冲突的 sample_id
                 new_sid = f"{sid}_{manifest_path.parent.name}"
-                print(f"  [collision] {sid} in {manifest_path.parent.name} ? renamed to {new_sid}")
+                print(f"  [collision] {sid} in {manifest_path.parent.name} → renamed to {new_sid}")
                 row["sample_id"] = new_sid
                 row["_original_sample_id"] = sid
             if row["sample_id"]:
@@ -328,11 +328,11 @@ def main():
         print(f"[input] {len(rows)} rows from {manifest_path}")
 
     if collision_count:
-        print(f"[input] ? {collision_count} sample_id collisions resolved by renaming")
+        print(f"[input] ⚠ {collision_count} sample_id collisions resolved by renaming")
 
     print(f"[input] Total: {len(all_rows)} candidates from {len(input_sources)} source(s)")
 
-    # ???? image_64_path
+    # 统一解析 image_64_path
     for row in all_rows:
         img_path = row.get("image_64_path", "")
         img_root = Path(row["_image_root"])
@@ -340,21 +340,21 @@ def main():
 
     rows = all_rows
 
-    # ????
+    # 自动筛选
     rows, threshold = automatic_flags(rows, input_root)
     auto_pass = sum(1 for r in rows if r.get("auto_pass") == "1")
     blur_count = sum(1 for r in rows if "blur" in (r.get("auto_flags", "")))
     dup_count = sum(1 for r in rows if "duplicate" in (r.get("auto_flags", "")))
     print(f"[auto] pass={auto_pass}/{len(rows)}  blur={blur_count}  dup={dup_count}  threshold={threshold:.1f}")
 
-    # ??????
+    # 生成审核模板
     review_path = write_review_template(rows)
 
-    # ?????? (????)
+    # 读取人工审核 (如果提供)
     rows = read_review(rows)
 
     if not REVIEW_CSV:
-        # ???: ?????, ??????
+        # 第一轮: 仅自动筛选, 输出审核模板
         (OUTPUT_DIR / "cleaning_summary.json").write_text(json.dumps({
             "stage": "automatic_screen_only",
             "candidate_count": len(rows),
@@ -363,22 +363,22 @@ def main():
             "dup_count": dup_count,
             "blur_threshold": threshold,
             "target_accepted": TARGET_ACCEPTED,
-            "next": "Fill review_template.csv ? save as review_checked.csv ? re-run with SDXL_REVIEW_CSV=/content/SDXL_Cleaned/review_checked.csv"
+            "next": "Fill review_template.csv → save as review_checked.csv → re-run with SDXL_REVIEW_CSV=/content/SDXL_Cleaned/review_checked.csv"
         }, ensure_ascii=False, indent=2), encoding="utf-8")
 
         print(f"\n{'='*60}")
         print(f"  REVIEW REQUIRED")
-        print(f"  ?????????????????????????????????????????????")
-        print(f"  1. ? Colab ??????? review_template.csv")
-        print(f"  2. ? Excel/Google Sheets ??")
-        print(f"  3. ?? manual_keep ?: 1=??, 0=??")
-        print(f"  4. ??? review_checked.csv")
-        print(f"  5. ?? Colab, ???????")
-        print(f"     (????? SDXL_REVIEW_CSV)")
+        print(f"  ─────────────────────────────────────────────")
+        print(f"  1. 从 Colab 文件浏览器下载 review_template.csv")
+        print(f"  2. 用 Excel/Google Sheets 打开")
+        print(f"  3. 标记 manual_keep 列: 1=保留, 0=丢弃")
+        print(f"  4. 保存为 review_checked.csv")
+        print(f"  5. 拖入 Colab, 重新运行本脚本")
+        print(f"     (会自动读取 SDXL_REVIEW_CSV)")
         print(f"{'='*60}")
         return
 
-    # ???: ???? ? ?? accepted
+    # 第二轮: 分层采样 → 生成 accepted
     selected = stratified_select(rows)
     accepted_dir = OUTPUT_DIR / "accepted_64"
     accepted_dir.mkdir(parents=True, exist_ok=True)
@@ -399,12 +399,12 @@ def main():
             "source_average_hash": r.get("average_hash", ""),
         })
 
-    # ?? accepted manifest
+    # 保存 accepted manifest
     with (OUTPUT_DIR / "accepted_manifest.csv").open("w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=list(accepted_rows[0].keys()))
         writer.writeheader(); writer.writerows(accepted_rows)
 
-    # ?? rejected manifest
+    # 保存 rejected manifest
     with (OUTPUT_DIR / "rejected_manifest.csv").open("w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=["sample_id", "auto_flags", "manual_keep", "reject_reason"])
         writer.writeheader()
@@ -412,7 +412,7 @@ def main():
             if r["sample_id"] not in selected_ids:
                 writer.writerow({k: r.get(k, "") for k in ["sample_id", "auto_flags", "manual_keep", "reject_reason"]})
 
-    # ??
+    # 总结
     (OUTPUT_DIR / "cleaning_summary.json").write_text(json.dumps({
         "stage": "accepted_manifest_ready",
         "candidate_count": len(rows),
@@ -426,7 +426,7 @@ def main():
         }
     }, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # ??
+    # 打包
     zip_path = OUTPUT_DIR.parent / "cleaned_accepted.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as z:
         for f in OUTPUT_DIR.rglob("*"):
@@ -437,10 +437,10 @@ def main():
     print(f"\n{'='*60}")
     print(f"  CLEANING DONE")
     print(f"  Accepted: {len(accepted_rows)} / {len(rows)} candidates")
-    print(f"  ?????????????????????????????????????????????")
-    print(f"  ?? ??: Colab ???????")
-    print(f"     ? ?? cleaned_accepted.zip ({size_mb:.0f}MB)")
-    print(f"     ? Download")
+    print(f"  ─────────────────────────────────────────────")
+    print(f"  💾 下载: Colab 左侧文件浏览器")
+    print(f"     → 右键 cleaned_accepted.zip ({size_mb:.0f}MB)")
+    print(f"     → Download")
     print(f"{'='*60}")
 
 
