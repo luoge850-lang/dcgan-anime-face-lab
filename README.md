@@ -6,7 +6,7 @@
 ![Resolution](https://img.shields.io/badge/output-64x64-blue)
 ![Public snapshot](https://img.shields.io/badge/public%20snapshot-v0.4-lightgrey)
 
-> A curated public snapshot of a one-month internship study on unconditional 64x64 anime-face generation. Training was performed in Kaggle; this repository is an auditable research archive and interview portfolio, not a one-command local package or a state-of-the-art claim.
+> A curated public snapshot of a one-month internship study on unconditional 64x64 anime-face generation. Training was performed in Kaggle; this repository is an auditable research archive and interview portfolio, not a one-command local package or a state-of-the-art claim. 
 
 ## Why this project is worth reviewing
 
