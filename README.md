@@ -1,4 +1,4 @@
-# Resource-Constrained DCGAN for Anime-Face Generation
+# Efficient Generative Model Optimization: Resource-Constrained DCGAN Study
 
 ![Status: ongoing research](https://img.shields.io/badge/status-ongoing%20research-orange)
 ![PyTorch](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
@@ -6,7 +6,7 @@
 ![Resolution](https://img.shields.io/badge/output-64x64-blue)
 ![Public snapshot](https://img.shields.io/badge/public%20snapshot-v0.4-lightgrey)
 
-> A curated public snapshot of a one-month internship study on unconditional 64x64 anime-face generation. Training was performed in Kaggle; this repository is an auditable research archive and interview portfolio, not a one-command local package or a state-of-the-art claim. 
+> A curated public snapshot of a one-month internship study on unconditional 64x64 anime-face generation. Training was performed in Kaggle; this repository is an auditable generative-model optimization archive and interview portfolio, not a one-command local package or a state-of-the-art claim.
 
 ## Why this project is worth reviewing
 
@@ -20,6 +20,19 @@ The work is organized as a sequence of controlled questions rather than a single
 6. Can a cleaned SDXL pool replace part of the original data without sacrificing coverage?
 
 The strongest engineering/research skill demonstrated here is experimental reasoning under compute constraints: define a scope, keep a control, record negative results, and avoid comparing incompatible metric protocols.
+
+## End-to-end workflow
+
+<p align="center">
+  <img src="docs/diagrams/experiment-pipeline.svg" alt="DCGAN controlled experiment and deployment pipeline" width="100%" />
+</p>
+
+> The SVG is the primary portfolio view. The editable source is available at
+> [`docs/diagrams/experiment-pipeline.mmd`](docs/diagrams/experiment-pipeline.mmd).
+
+The public snapshot currently documents the training and evaluation stages.
+The export and runtime benchmarking stage is kept as a planned follow-up and
+is not presented as completed evidence in this repository.
 
 ## Experiment progression
 
@@ -64,6 +77,21 @@ The controlled SDXL result is intentionally negative:
 The tested SDXL pool did not improve FID or feature coverage. A10 is approximately neutral in FID but already loses coverage; higher ratios degrade both. This is a useful stopping result, not a failure to hide.
 
 The complete provenance table is [results_summary.csv](results_summary.csv). The full narrative is [docs/experiment_process.md](docs/experiment_process.md).
+
+## Deployment scope
+
+The next deployment milestone targets the EMA **generator only**. The
+discriminator is needed for adversarial training but is not part of the first
+inference export. The planned validation sequence is:
+
+1. Export the generator with a fixed batch-1 input.
+2. Check ONNX graph validity and PyTorch/ONNX numerical agreement.
+3. Compare PyTorch and ONNX Runtime after warm-up.
+4. Report median/P95 latency, throughput, peak memory, device, and runtime versions.
+
+Until those artifacts are generated and versioned, ONNX Runtime, TensorRT,
+OpenVINO, and quantization should be described as planned or hands-on follow-up
+work rather than as completed benchmark results.
 
 ## Visual evidence
 
