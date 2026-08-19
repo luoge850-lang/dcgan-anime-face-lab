@@ -41,6 +41,39 @@ flowchart LR
 
 For a static export of the same workflow, see [`experiment-pipeline.svg`](docs/diagrams/experiment-pipeline.svg) and its editable [`experiment-pipeline.mmd`](docs/diagrams/experiment-pipeline.mmd).
 
+## DCGAN core experiment record
+
+The training line is documented separately from the later SDXL and deployment branches:
+
+| Phase | Question | Representative evidence | Decision |
+|---|---|---|---|
+| 1. Budget and input policy | How much training and which basic augmentations? | 50 -> 300 epochs: Legacy FID 184.11 -> 105.34; sharpening was the best listed augmentation candidate at 121.11 | Select a practical epoch/input policy for later studies |
+| 2. Module tuning | Do G-side features or D-side stabilization help? | No-added-module baseline 109.40; D SN + Hinge + R1 89.92 | D-side stabilization was the strongest Phase 2 path |
+| 3. G strengthening | Do capacity, data scale, DiffAugment, and EMA help? | Width x3 + 20K + DiffAugment + EMA: Legacy FID 38.88 | Keep as a combined candidate, not a single-factor claim |
+| 4. CLIP continuation | Does frozen CLIP guidance improve perceptual alignment? | C1 lowest FID 33.4114; C4 lowest CLIP MMD2 0.040990 | Treat FID and CLIP MMD2 as a trade-off |
+
+The detailed record, source links, decision boundaries, and figure audit are in [`docs/dcgan_core_experiment_record.md`](docs/dcgan_core_experiment_record.md). The verified metric catalog is [`dcgan_core_metrics.csv`](03_metrics_and_logs/dcgan_core/dcgan_core_metrics.csv).
+
+### Verified DCGAN figures from the current source directory
+
+![Epoch budget FID](04_visual_assets/dcgan_core/01_epoch_fid.svg)
+
+![Augmentation candidates FID](04_visual_assets/dcgan_core/02_augmentation_fid.svg)
+
+![Generator strengthening FID](04_visual_assets/dcgan_core/03_generator_strengthening_fid.svg)
+
+![Generator strengthening diversity](04_visual_assets/dcgan_core/04_generator_strengthening_lpips.svg)
+
+![Generator-side deep tuning FID](04_visual_assets/dcgan_core/05_deep_tuning_generator_fid.svg)
+
+![Discriminator-side deep tuning FID](04_visual_assets/dcgan_core/06_deep_tuning_discriminator_fid.svg)
+
+![CLIP lambda sweep FID](04_visual_assets/dcgan_core/07_clip_lambda_fid.svg)
+
+Only the seven DCGAN SVGs physically present in `dcgan_lab/results/figures` are embedded. The source manifest references nine additional DCGAN entries that are not embedded: seven loss figures were intentionally removed, and two non-loss figures are absent from the current source directory. The discrepancy is documented in [`figure_audit.csv`](03_metrics_and_logs/dcgan_core/figure_audit.csv).
+
+The complete source-derived SVG gallery, including the physically present deployment, quantization, and service charts, is available in [`docs/source_figure_gallery.md`](docs/source_figure_gallery.md). The four soak-labeled source figures are shown there as provenance only and are not used to upgrade the latest staged service claim into a soak-test claim.
+
 ## Main findings
 
 ### 1. Training and modeling
@@ -171,6 +204,8 @@ Additional process documents: [`docs/data_quality_and_sdxl_extension.md`](docs/d
 | `docs/` | Protocols, audit findings, baseline relationships, and interview framing |
 | `tests/` | Snapshot integrity checks |
 | `tools/` | Deterministic figure builders |
+| `03_metrics_and_logs/dcgan_core/` | DCGAN-only metric catalog and figure provenance audit |
+| `docs/source_figure_gallery.md` | Gallery of all 33 physically present source SVGs |
 
 ## Reproduction boundary
 

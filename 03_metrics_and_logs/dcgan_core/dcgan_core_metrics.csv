@@ -1,0 +1,50 @@
+family,experiment,fid,diversity,laplacian,edge_ratio,clip_mmd,source,protocol
+前期调优,exp1_epoch_050,184.11,0.004,7393,,,results\前期调优结果\exp1_epoch_050\metrics.json,legacy project metric
+前期调优,exp1_epoch_100,136.78,0.004,8578.28,,,results\前期调优结果\exp1_epoch_100\metrics.json,legacy project metric
+前期调优,exp1_epoch_200,113.97,0.0039,8189.13,,,results\前期调优结果\exp1_epoch_200\metrics.json,legacy project metric
+前期调优,exp1_epoch_300,105.34,0.0041,8235.2,,,results\前期调优结果\exp1_epoch_300\metrics.json,legacy project metric
+前期调优,exp2_a_flip,127.89,26.1387,8558.7,,,results\前期调优结果\exp2_a_flip\metrics.json,legacy project metric
+前期调优,exp2_blur,141.15,23.7647,4153.6,,,results\前期调优结果\exp2_blur\metrics.json,legacy project metric
+前期调优,exp2_b_color,136.12,26.4922,7732.24,,,results\前期调优结果\exp2_b_color\metrics.json,legacy project metric
+前期调优,exp2_denoise,155.81,24.2186,4449.12,,,results\前期调优结果\exp2_denoise\metrics.json,legacy project metric
+前期调优,exp2_sharpen,121.11,27.442,8279.96,,,results\前期调优结果\exp2_sharpen\metrics.json,legacy project metric
+前期调优,exp3_c1_flip_color,129.52,23.5719,7795.35,,,results\前期调优结果\exp3_c1_flip_color\metrics.json,legacy project metric
+前期调优,exp3_c2_color_sharpen,139.3,24.3878,7830.24,,,results\前期调优结果\exp3_c2_color_sharpen\metrics.json,legacy project metric
+前期调优,exp3_c3_flip_sharpen,124.43,28.7207,8634.45,,,results\前期调优结果\exp3_c3_flip_sharpen\metrics.json,legacy project metric
+前期调优,exp3_c4_flip_color_sharpen,121.54,26.689,8457.91,,,results\前期调优结果\exp3_c4_flip_color_sharpen\metrics.json,legacy project metric
+G结构强化,01_G_Width2x,78.75,29.3902,9842.3,1.0193,,results\G强化实验结果\01_G_Width2x\metrics.json,legacy project metric
+G结构强化,02_G_ResG,95.6,29.7012,8990.29,1.0219,,results\G强化实验结果\02_G_ResG\metrics.json,legacy project metric
+G结构强化,03_G_Width3x,59,31.1457,9957.99,1.0023,,results\G强化实验结果\03_G_Width3x\metrics.json,legacy project metric
+G结构强化,04_G_Width4x,63.66,30.1681,9851.63,1.0214,,results\G强化实验结果\04_G_Width4x\metrics.json,legacy project metric
+G结构强化,05_G_Width3x_R1,59.57,32.7201,10593.55,0.9952,,results\G强化实验结果\05_G_Width3x_R1\metrics.json,legacy project metric
+G结构强化,06_G_Width3x_ResG_pre,76.16,29.4066,10046.27,1.0454,,results\G强化实验结果\06_G_Width3x_ResG_pre\metrics.json,legacy project metric
+G结构强化,07_G_PixelShuffle_NoBN,90.25,29.7037,10147.01,1.0366,,results\G强化实验结果\07_G_PixelShuffle_NoBN\metrics.json,legacy project metric
+G结构强化,08_G_Width3x_SA_SN,62.88,30.4185,10575.97,1.005,,results\G强化实验结果\08_G_Width3x_SA_SN\metrics.json,legacy project metric
+G结构强化,09_G_Width3x_20K,49.17,31.1125,10833.11,1.0052,,results\G强化实验结果\09_G_Width3x_20K\metrics.json,legacy project metric
+G结构强化,10_G_Width3x_20K_Laplacian,53.74,30.5937,8842.95,1.0057,,results\G强化实验结果\10_G_Width3x_20K_Laplacian\metrics.json,legacy project metric
+G结构强化,11_G_DiffAug_EMA_20K,38.88,30.7985,9664.76,0.9703,,results\G强化实验结果\11_G_DiffAug_EMA_20K\metrics.json,"Legacy project torchvision Inception-v3 pipeline, 10K real/10K fake. Comparable with Exp09 inside this project; not directly comparable with published clean-fid/torch-fidelity values."
+深度调优,00_baseline,109.4,25.8967,9099.61,1.0979,,results\深度调优结果\00_baseline\metrics.json,legacy project metric
+深度调优,01_G_SENet_4layer,106.52,26.0046,9148.6,1.0918,,results\深度调优结果\01_G_SENet_4layer\metrics.json,legacy project metric
+深度调优,02_G_SENet_1layer,96.76,25.5182,8845.68,1.0679,,results\深度调优结果\02_G_SENet_1layer\metrics.json,legacy project metric
+深度调优,03_G_CBAM_4layer,107.94,26.0181,8928.97,1.069,,results\深度调优结果\03_G_CBAM_4layer\metrics.json,legacy project metric
+深度调优,04_G_CBAM_1layer,105.47,26.7,9465.97,1.0914,,results\深度调优结果\04_G_CBAM_1layer\metrics.json,legacy project metric
+深度调优,05_G_Wavelet,106.14,26.2084,9056.53,1.1061,,results\深度调优结果\05_G_Wavelet\metrics.json,legacy project metric
+深度调优,06_G_FFT,108.4,27.4263,9079.78,1.0823,,results\深度调优结果\06_G_FFT\metrics.json,legacy project metric
+深度调优,07_G_Canny,109.02,27.6279,9654.09,1.0648,,results\深度调优结果\07_G_Canny\metrics.json,legacy project metric
+深度调优,08_G_Laplacian,98.67,28.1116,8928.25,1.0857,,results\深度调优结果\08_G_Laplacian\metrics.json,legacy project metric
+深度调优,09_G_SENet1L_Wavelet_Laplacian,104.93,26.7853,9178.21,1.0687,,results\深度调优结果\09_G_SENet1L_Wavelet_Laplacian\metrics.json,legacy project metric
+深度调优,10_G_SENet1L_Laplacian,104.28,27.9075,8954.54,1.079,,results\深度调优结果\10_G_SENet1L_Laplacian\metrics.json,legacy project metric
+深度调优,11_D_SN,99.19,28.7305,9234.6,1.0341,,results\深度调优结果\11_D_SN\metrics.json,legacy project metric
+深度调优,12_D_Hinge,129.16,24.8903,7748.4,1.1015,,results\深度调优结果\12_D_Hinge\metrics.json,legacy project metric
+深度调优,13_D_SN_Hinge,96.25,28.8741,8847.61,1.0247,,results\深度调优结果\13_D_SN_Hinge\metrics.json,legacy project metric
+深度调优,14_D_SN_Hinge_SA,103.54,28.6288,9450.26,1.0464,,results\深度调优结果\14_D_SN_Hinge_SA\metrics.json,legacy project metric
+深度调优,15_D_SN_Hinge_G_SENet_1layer,101.12,26.9023,9842.42,1.0516,,results\深度调优结果\15_D_SN_Hinge_G_SENet_1layer\metrics.json,legacy project metric
+深度调优,16_D_SENet_SN_Hinge,98.62,28.1205,9381.54,1.0441,,results\深度调优结果\16_D_SENet_SN_Hinge\metrics.json,legacy project metric
+深度调优,17_D_FFT_SN_Hinge,108.81,28.3151,9636.85,1.0348,,results\深度调优结果\17_D_FFT_SN_Hinge\metrics.json,legacy project metric
+深度调优,18_G_SENet_D_SN_BCE,96.02,29.3453,9675.33,1.0246,,results\深度调优结果\18_G_SENet_D_SN_BCE\metrics.json,legacy project metric
+深度调优,19_D_SN_Hinge_R1,89.92,30.6283,9630.98,1.0286,,results\深度调优结果\19_D_SN_Hinge_R1\metrics.json,legacy project metric
+CLIP正则,C0_continue_L0,33.78459378302617,,,,0.042831987142562866,results\CLIP实验结果\C0_continue_L0\final_metrics.json,legacy Inception-v3 FID; CLIP MMD is separate
+CLIP正则,C1_clip_L001,33.41141809260057,,,,0.04265737533569336,results\CLIP实验结果\C1_clip_L001\metrics_epoch_050.json,legacy Inception-v3 FID; CLIP MMD is separate
+CLIP正则,C2_clip_L0025,33.66870326479169,,,,0.04229801893234253,results\CLIP实验结果\C2_clip_L0025\metrics_epoch_050.json,legacy Inception-v3 FID; CLIP MMD is separate
+CLIP正则,C3_clip_L005,33.47181577407483,,,,0.041855961084365845,results\CLIP实验结果\C3_clip_L005\final_metrics.json,legacy Inception-v3 FID; CLIP MMD is separate
+CLIP正则,C4_clip_L010,33.62314689530387,,,,0.04099094867706299,results\CLIP实验结果\C4_clip_L010\final_metrics.json,legacy Inception-v3 FID; CLIP MMD is separate

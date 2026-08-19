@@ -1,0 +1,17 @@
+category,figure_id,manifest_file,source_disk_status,public_snapshot_file,metric,decision
+training_budget,01,01_前期训练轮数_FID.svg,present,04_visual_assets/dcgan_core/01_epoch_fid.svg,Legacy FID,used
+augmentation,02,02_前期增强实验_FID.svg,present,04_visual_assets/dcgan_core/02_augmentation_fid.svg,Legacy FID,used
+generator_strengthening,03,03_G强化_FID.svg,present,04_visual_assets/dcgan_core/03_generator_strengthening_fid.svg,Legacy FID,used
+generator_strengthening,04,04_G强化_多样性LPIPS.svg,present,04_visual_assets/dcgan_core/04_generator_strengthening_lpips.svg,LPIPS-Alex diversity,used
+deep_tuning,05,05_深度调优_G方法_FID.svg,present,04_visual_assets/dcgan_core/05_deep_tuning_generator_fid.svg,Legacy FID,used
+deep_tuning,06,06_深度调优_D方法_FID.svg,present,04_visual_assets/dcgan_core/06_deep_tuning_discriminator_fid.svg,Legacy FID,used
+clip,07,07_CLIP正则_FID.svg,present,04_visual_assets/dcgan_core/07_clip_lambda_fid.svg,Legacy FID,used
+clip,08,08_CLIP正则_MMD2.svg,missing_current_source,,CLIP MMD2,not used
+training_dynamics,09,09_前期代表_D_loss.svg,intentionally_removed_per_owner_note,,D loss,not used
+training_dynamics,10,10_前期代表_G_loss.svg,intentionally_removed_per_owner_note,,G loss,not used
+training_dynamics,11,11_G强化代表_D_loss.svg,intentionally_removed_per_owner_note,,D loss,not used
+training_dynamics,12,12_G强化代表_G_loss.svg,intentionally_removed_per_owner_note,,G loss,not used
+training_dynamics,13,13_深度代表_G_adv.svg,intentionally_removed_per_owner_note,,G adversarial loss,not used
+training_dynamics,14,14_深度代表_G_wavelet.svg,intentionally_removed_per_owner_note,,Wavelet loss,not used
+training_dynamics,15,15_CLIP代表_D_loss.svg,intentionally_removed_per_owner_note,,D loss,not used
+training_dynamics,16,16_CLIP代表_CLIP_MMD.svg,missing_current_source,,CLIP MMD2,not used

@@ -39,6 +39,13 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "04_visual_assets/sdxl_fid_coverage_tradeoff.svg",
             "04_visual_assets/deployment_quality_speed.svg",
             "04_visual_assets/service_stress_summary.svg",
+            "04_visual_assets/dcgan_core/01_epoch_fid.svg",
+            "04_visual_assets/dcgan_core/02_augmentation_fid.svg",
+            "04_visual_assets/dcgan_core/03_generator_strengthening_fid.svg",
+            "04_visual_assets/dcgan_core/04_generator_strengthening_lpips.svg",
+            "04_visual_assets/dcgan_core/05_deep_tuning_generator_fid.svg",
+            "04_visual_assets/dcgan_core/06_deep_tuning_discriminator_fid.svg",
+            "04_visual_assets/dcgan_core/07_clip_lambda_fid.svg",
             "04_visual_assets/qualitative_samples_compact.png",
             "04_visual_assets/sdxl_pilot_contact_sheet.jpg",
             "results_summary.csv",
@@ -50,8 +57,12 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "docs/month1_audit_2026-08.md",
             "docs/next_phase_deployment_plan.md",
             "docs/deployment_optimization.md",
+            "docs/dcgan_core_experiment_record.md",
+            "docs/source_figure_gallery.md",
             "03_metrics_and_logs/deployment_optimization/deployment_task_status.csv",
             "03_metrics_and_logs/deployment_optimization/deployment_quantization_summary.csv",
+            "03_metrics_and_logs/dcgan_core/figure_audit.csv",
+            "03_metrics_and_logs/dcgan_core/dcgan_core_metrics.csv",
         ):
             self.assertIn(target, readme)
             if target.endswith(".md"):
@@ -82,6 +93,29 @@ class SnapshotIntegrityTests(unittest.TestCase):
             self.assertGreater(len(scripts), 0, folder)
         self.assertTrue((ROOT / "04_visual_assets/phase2_baseline_no_modules_epoch200.png").exists())
         self.assertTrue((ROOT / "02_selected_experiments/full_process/phase5_clip_tuning/clip_C2_lambda_0025.py").exists())
+
+    def test_dcgan_core_catalog_and_figure_audit(self):
+        with (ROOT / "03_metrics_and_logs/dcgan_core/全实验指标汇总.csv").open(newline="", encoding="utf-8-sig") as handle:
+            rows = list(csv.DictReader(handle))
+        self.assertEqual(len(rows), 49)
+        self.assertTrue(all(row["protocol"] for row in rows))
+        width3_ema = next(row for row in rows if row["experiment"] == "11_G_DiffAug_EMA_20K")
+        self.assertAlmostEqual(float(width3_ema["fid"]), 38.88, places=2)
+        clip_c0 = next(row for row in rows if row["experiment"] == "C0_continue_L0")
+        self.assertAlmostEqual(float(clip_c0["fid"]), 33.78459378302617, places=8)
+
+        with (ROOT / "03_metrics_and_logs/dcgan_core/figure_audit.csv").open(newline="", encoding="utf-8") as handle:
+            audit = list(csv.DictReader(handle))
+        self.assertEqual(len(audit), 16)
+        self.assertEqual(sum(row["source_disk_status"] == "present" for row in audit), 7)
+        self.assertEqual(sum(row["source_disk_status"] == "intentionally_removed_per_owner_note" for row in audit), 7)
+        self.assertEqual(sum(row["source_disk_status"] == "missing_current_source" for row in audit), 2)
+        self.assertTrue(all((ROOT / row["public_snapshot_file"]).exists() for row in audit if row["public_snapshot_file"]))
+
+        deployment_figures = list((ROOT / "04_visual_assets/source_figures/deployment_quantization_service").glob("*.svg"))
+        self.assertEqual(len(deployment_figures), 26)
+        for path in deployment_figures:
+            self.assertTrue(ET.parse(path).getroot().tag.endswith("svg"), path)
 
     def test_sdxl_controlled_study_evidence_is_present(self):
         scripts = list((ROOT / "02_selected_experiments/full_process/phase7_sdxl_controlled_study").rglob("*.py"))
