@@ -39,6 +39,8 @@ flowchart LR
     L --> M[HTTP service and staged stress]
 ```
 
+For a static export of the same workflow, see [`experiment-pipeline.svg`](docs/diagrams/experiment-pipeline.svg) and its editable [`experiment-pipeline.mmd`](docs/diagrams/experiment-pipeline.mmd).
+
 ## Main findings
 
 ### 1. Training and modeling

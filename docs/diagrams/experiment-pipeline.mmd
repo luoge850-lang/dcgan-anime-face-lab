@@ -1,0 +1,8 @@
+flowchart LR
+  A["Dataset and split audit"] --> B["PyTorch DCGAN"]
+  B --> C["Controlled ablations"]
+  C --> D["FID / CLIP-MMD / coverage"]
+  D --> E["Qualitative review"]
+  E --> F["Candidate recipe and stop rule"]
+  F -. planned .-> G["Generator-only ONNX export"]
+  G -. planned .-> H["ONNX Runtime latency study"]

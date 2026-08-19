@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="690" viewBox="0 0 1500 690" role="img" aria-labelledby="title desc">
+  <title id="title">DCGAN experiment and deployment pipeline</title>
+  <desc id="desc">A resource-constrained DCGAN study showing controlled ablations across generator, discriminator, data and training controls, followed by multi-metric evaluation and a planned generator-only export.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#64748b"/></marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .title{font:700 28px Inter,Segoe UI,Arial,sans-serif;fill:#0f172a}
+      .subtitle{font:400 15px Inter,Segoe UI,Arial,sans-serif;fill:#475569}
+      .lane{font:700 13px Inter,Segoe UI,Arial,sans-serif;letter-spacing:1.7px;fill:#334155}
+      .node-title{font:700 16px Inter,Segoe UI,Arial,sans-serif;fill:#0f172a}
+      .node-body{font:400 13px Inter,Segoe UI,Arial,sans-serif;fill:#475569}
+      .chip{font:700 11px Inter,Segoe UI,Arial,sans-serif;letter-spacing:.7px}
+      .edge{stroke:#64748b;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+      .dashed{stroke-dasharray:7 7}
+    </style>
+  </defs>
+  <rect width="1500" height="690" rx="24" fill="#ffffff"/>
+  <rect x="24" y="24" width="1452" height="642" rx="20" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="58" y="70" class="title">DCGAN study · controlled optimization under a fixed compute budget</text>
+  <text x="58" y="98" class="subtitle">Each candidate is compared against an explicit control and reviewed with both metrics and samples.</text>
+
+  <rect x="50" y="126" width="1400" height="300" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="78" y="158" class="lane">EXPERIMENT LOOP · OBSERVED IN THE PUBLIC SNAPSHOT</text>
+
+  <rect x="78" y="204" width="190" height="132" rx="14" fill="#ffffff" stroke="#fb923c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="98" y="238" class="node-title">Dataset &amp; split</text>
+  <text x="98" y="262" class="node-body">Anime faces · 64×64</text>
+  <text x="98" y="284" class="node-body">Duplicate / quality audit</text>
+  <rect x="98" y="302" width="112" height="18" rx="9" fill="#ffedd5"/><text x="109" y="315" class="chip" fill="#c2410c">KAGGLE GPU</text>
+
+  <path d="M268 270 H304" class="edge"/>
+  <rect x="304" y="204" width="190" height="132" rx="14" fill="#ffffff" stroke="#fb923c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="324" y="238" class="node-title">PyTorch DCGAN</text>
+  <text x="324" y="262" class="node-body">Generator + discriminator</text>
+  <text x="324" y="284" class="node-body">Fixed seeds / checkpoints</text>
+  <rect x="324" y="302" width="91" height="18" rx="9" fill="#ffedd5"/><text x="335" y="315" class="chip" fill="#c2410c">BASELINE</text>
+
+  <path d="M494 270 H530" class="edge"/>
+  <rect x="530" y="184" width="260" height="164" rx="14" fill="#ffffff" stroke="#fb923c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="552" y="218" class="node-title">Controlled ablation matrix</text>
+  <text x="552" y="244" class="node-body">G: width, attention, wavelet, FFT</text>
+  <text x="552" y="266" class="node-body">D: SN, Hinge, R1</text>
+  <text x="552" y="288" class="node-body">Data: 8K → 20K, DiffAugment</text>
+  <text x="552" y="310" class="node-body">Training: EMA, CLIP-MMD control</text>
+  <rect x="552" y="322" width="124" height="18" rx="9" fill="#ffedd5"/><text x="563" y="335" class="chip" fill="#c2410c">ONE VARIABLE</text>
+
+  <path d="M790 270 H830" class="edge"/>
+  <rect x="830" y="184" width="260" height="164" rx="14" fill="#ffffff" stroke="#fb923c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="852" y="218" class="node-title">Multi-signal evaluation</text>
+  <text x="852" y="244" class="node-body">Legacy FID (protocol-labeled)</text>
+  <text x="852" y="266" class="node-body">CLIP-MMD + feature coverage</text>
+  <text x="852" y="288" class="node-body">Qualitative sample review</text>
+  <rect x="852" y="310" width="94" height="18" rx="9" fill="#ffedd5"/><text x="863" y="323" class="chip" fill="#c2410c">AUDITABLE</text>
+
+  <path d="M1090 270 H1130" class="edge"/>
+  <rect x="1130" y="204" width="190" height="132" rx="14" fill="#ffffff" stroke="#fb923c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1150" y="238" class="node-title">Candidate recipe</text>
+  <text x="1150" y="262" class="node-body">Compare control +</text>
+  <text x="1150" y="284" class="node-body">negative results</text>
+  <rect x="1150" y="302" width="105" height="18" rx="9" fill="#ffedd5"/><text x="1161" y="315" class="chip" fill="#c2410c">STOP RULE</text>
+
+  <path d="M1320 270 H1360" class="edge dashed"/>
+  <rect x="1360" y="204" width="70" height="132" rx="14" fill="#fff1f2" stroke="#fb7185" stroke-width="2"/>
+  <text x="1371" y="242" class="node-title" transform="rotate(90 1371 242)">ongoing</text>
+
+  <rect x="50" y="454" width="1400" height="166" rx="18" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="78" y="486" class="lane">NEXT DEPLOYMENT MILESTONE · PLANNED, NOT YET BENCHMARKED</text>
+  <rect x="108" y="518" width="230" height="66" rx="14" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="130" y="548" class="node-title">EMA generator export</text>
+  <text x="130" y="570" class="node-body">fixed batch-1 input</text>
+  <path d="M338 551 H390" class="edge dashed"/>
+  <rect x="390" y="518" width="250" height="66" rx="14" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="412" y="548" class="node-title">ONNX Runtime validation</text>
+  <text x="412" y="570" class="node-body">numerical agreement + latency</text>
+  <path d="M640 551 H692" class="edge dashed"/>
+  <rect x="692" y="518" width="270" height="66" rx="14" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="714" y="548" class="node-title">Runtime report</text>
+  <text x="714" y="570" class="node-body">median / P95 / memory / device</text>
+  <rect x="1100" y="530" width="280" height="42" rx="21" fill="#dcfce7" stroke="#86efac"/>
+  <text x="1130" y="556" class="chip" fill="#15803d">TENSORRT / OPENVINO · FUTURE WORK</text>
+</svg>
