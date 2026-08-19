@@ -1,0 +1,28 @@
+stage,chart_file,metric,source_scope,status
+01_前期训练与增强,01_训练轮数_FID.svg,Legacy FID,results/前期调优结果/exp1_epoch_*/metrics.json,regenerated
+01_前期训练与增强,02_数据增强_FID.svg,Legacy FID,results/前期调优结果/exp2_* and exp3_*/metrics.json,regenerated
+02_G_D模块调优,05_G端模块_FID.svg,Legacy FID,results/深度调优结果/00_baseline and G variants,regenerated
+02_G_D模块调优,06_D端模块_FID.svg,Legacy FID,results/深度调优结果/D variants,regenerated
+03_G强化与训练策略,03_G结构强化_FID.svg,Legacy FID,results/G强化实验结果/*/metrics.json,regenerated
+03_G强化与训练策略,04_G结构强化_LPIPS.svg,LPIPS-Alex diversity,results/G强化实验结果/*/metrics.json,regenerated
+04_CLIP调优,07_CLIP_FID.svg,Legacy FID,results/CLIP实验结果/C0-C4,regenerated
+04_CLIP调优,08_CLIP_MMD2.svg,CLIP MMD2,results/CLIP实验结果/C0-C4,regenerated
+05_部署与量化,17_BN未融合_延迟.svg,mean latency,results/Deployment_Optimization_Results/01_ONNX_Fusion,regenerated
+05_部署与量化,18_BN融合_延迟.svg,mean latency,results/Deployment_Optimization_Results/01_ONNX_Fusion,regenerated
+05_部署与量化,19_FP32引擎_延迟.svg,end-to-end latency,results/Deployment_Optimization_Results/02_Engine_Benchmark,regenerated
+05_部署与量化,20_FP32引擎_吞吐.svg,throughput,results/Deployment_Optimization_Results/02_Engine_Benchmark,regenerated
+05_部署与量化,21_FP16引擎_延迟.svg,end-to-end latency,results/Deployment_Optimization_Results/02_Engine_Benchmark,regenerated
+05_部署与量化,22_FP16引擎_吞吐.svg,throughput,results/Deployment_Optimization_Results/02_Engine_Benchmark,regenerated
+05_部署与量化,22_PTQ_FID.svg,Standard FID,results/Deployment_Optimization_Results/03_Quantization,regenerated
+05_部署与量化,23_PTQ_模糊率.svg,blur rate,results/Deployment_Optimization_Results/03_Quantization,regenerated
+05_部署与量化,23_TensorRT_Top3.svg,operator time,results/Deployment_Optimization_Results/02_Engine_Benchmark,regenerated
+05_部署与量化,24_PTQ_吞吐.svg,throughput,results/Deployment_Optimization_Results/03_Quantization,regenerated
+05_部署与量化,25_逐层敏感度_FID.svg,Standard FID,results/Deployment_Optimization_Results/04_Quantization_Sensitivity,regenerated
+05_部署与量化,26_逐层敏感度_延迟.svg,mean latency,results/Deployment_Optimization_Results/04_Quantization_Sensitivity,regenerated
+05_部署与量化,27_混合精度_FID.svg,Standard FID,results/Deployment_Optimization_Results/04_Quantization_Sensitivity,regenerated
+05_部署与量化,28_混合精度_延迟.svg,mean latency,results/Deployment_Optimization_Results/04_Quantization_Sensitivity,regenerated
+05_部署与量化,29_QAT_FID.svg,Standard FID,results/Deployment_Optimization_Results/05_QAT,regenerated
+05_部署与量化,30_QAT_模糊率.svg,blur rate,results/Deployment_Optimization_Results/05_QAT,regenerated
+05_部署与量化,31_QAT_P99.svg,P99 latency,results/Deployment_Optimization_Results/05_QAT,regenerated
+06_服务压测,32_并发_P99.svg,P99 latency,results/Deployment_Optimization_Results/06_Service_Stress/06BC staged ZIP,regenerated
+06_服务压测,33_并发_RPS.svg,RPS,results/Deployment_Optimization_Results/06_Service_Stress/06BC staged ZIP,regenerated

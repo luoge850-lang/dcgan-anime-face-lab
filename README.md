@@ -4,228 +4,172 @@
 ![PyTorch](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
 ![Kaggle](https://img.shields.io/badge/runtime-Kaggle%20GPU-20beff)
 ![Resolution](https://img.shields.io/badge/output-64x64-blue)
-![Deployment](https://img.shields.io/badge/deployment-ORT%20%7C%20TensorRT%20%7C%20OpenVINO-7c3aed)
 
-> A curated public snapshot of a one-month internship study on unconditional 64×64 anime-face generation, from DCGAN training ablations to cross-backend inference, quantization, and staged service stress testing.
+> A stage-based public snapshot of a one-month Kaggle internship study on unconditional 64 x 64 anime-face generation.
 
-This repository is an evidence-backed Kaggle archive and interview portfolio. It is not a one-command local reproduction package, a state-of-the-art claim, or a publication-ready statistical benchmark.
+This repository records the experiment decisions in order: training budget, input augmentation, G/D tuning, generator strengthening, CLIP continuation, and finally deployment/quantization/service validation. It is an evidence-backed engineering archive, not a one-command local reproduction package or an SOTA claim.
 
-## What this project studies
+## Project scope and protocol
 
-The work is organized as a sequence of engineering and modeling questions:
+- Dataset and training were run on Kaggle GPU notebooks.
+- Historical DCGAN training phases report the project's **Legacy Inception-v3 FID**.
+- Deployment phases report a separate **Standard Inception-v3 FID** and must not be placed on the same leaderboard.
+- Most historical comparisons are single-seed and use a real-image distribution from the training pool rather than a strict held-out test set.
+- Deleted representative loss figures are not recreated or presented as current evidence.
 
-1. How should training duration and image preprocessing be selected under a limited GPU budget?
-2. Which generator/discriminator changes improve the adversarial game?
-3. Do capacity, data scale, DiffAugment, and EMA matter more than isolated feature modules?
-4. Does a frozen CLIP image encoder provide useful perceptual guidance beyond a no-CLIP continuation control?
-5. Does replacing part of the original data with cleaned SDXL images improve long-tail coverage?
-6. How much quality is lost when the Generator is exported, accelerated, quantized, and served?
+## Stage 1 — 前期训练与数据增强
 
-## End-to-end experiment map
+### Question
 
-```mermaid
-flowchart LR
-    A[DCGAN baseline] --> B[Epoch and augmentation study]
-    B --> C[G/D and feature-module ablations]
-    C --> D[Generator scale, data scale, DiffAugment, EMA]
-    D --> E[CLIP continuation and lambda sweep]
-    E --> F[Clean-unique data audit]
-    F --> G[Controlled SDXL replacement study]
-    G --> H[ONNX export and numerical checks]
-    H --> I[ORT / TensorRT / OpenVINO benchmark]
-    I --> J[FP32 / FP16 / INT8 PTQ]
-    J --> K[Layer sensitivity and mixed precision]
-    K --> L[FakeQuantize QAT]
-    L --> M[HTTP service and staged stress]
-```
+How should the training budget and basic input policy be selected before deeper architectural changes?
 
-For a static export of the same workflow, see [`experiment-pipeline.svg`](docs/diagrams/experiment-pipeline.svg) and its editable [`experiment-pipeline.mmd`](docs/diagrams/experiment-pipeline.mmd).
+### Evidence
 
-## DCGAN core experiment record
-
-The training line is documented separately from the later SDXL and deployment branches:
-
-| Phase | Question | Representative evidence | Decision |
-|---|---|---|---|
-| 1. Budget and input policy | How much training and which basic augmentations? | 50 -> 300 epochs: Legacy FID 184.11 -> 105.34; sharpening was the best listed augmentation candidate at 121.11 | Select a practical epoch/input policy for later studies |
-| 2. Module tuning | Do G-side features or D-side stabilization help? | No-added-module baseline 109.40; D SN + Hinge + R1 89.92 | D-side stabilization was the strongest Phase 2 path |
-| 3. G strengthening | Do capacity, data scale, DiffAugment, and EMA help? | Width x3 + 20K + DiffAugment + EMA: Legacy FID 38.88 | Keep as a combined candidate, not a single-factor claim |
-| 4. CLIP continuation | Does frozen CLIP guidance improve perceptual alignment? | C1 lowest FID 33.4114; C4 lowest CLIP MMD2 0.040990 | Treat FID and CLIP MMD2 as a trade-off |
-
-The detailed record, source links, decision boundaries, and figure audit are in [`docs/dcgan_core_experiment_record.md`](docs/dcgan_core_experiment_record.md). The verified metric catalog is [`dcgan_core_metrics.csv`](03_metrics_and_logs/dcgan_core/dcgan_core_metrics.csv).
-
-### Verified DCGAN figures from the current source directory
-
-![Epoch budget FID](04_visual_assets/dcgan_core/01_epoch_fid.svg)
-
-![Augmentation candidates FID](04_visual_assets/dcgan_core/02_augmentation_fid.svg)
-
-![Generator strengthening FID](04_visual_assets/dcgan_core/03_generator_strengthening_fid.svg)
-
-![Generator strengthening diversity](04_visual_assets/dcgan_core/04_generator_strengthening_lpips.svg)
-
-![Generator-side deep tuning FID](04_visual_assets/dcgan_core/05_deep_tuning_generator_fid.svg)
-
-![Discriminator-side deep tuning FID](04_visual_assets/dcgan_core/06_deep_tuning_discriminator_fid.svg)
-
-![CLIP lambda sweep FID](04_visual_assets/dcgan_core/07_clip_lambda_fid.svg)
-
-Only the seven DCGAN SVGs physically present in `dcgan_lab/results/figures` are embedded. The source manifest references nine additional DCGAN entries that are not embedded: seven loss figures were intentionally removed, and two non-loss figures are absent from the current source directory. The discrepancy is documented in [`figure_audit.csv`](03_metrics_and_logs/dcgan_core/figure_audit.csv).
-
-The complete source-derived SVG gallery, including the physically present deployment, quantization, and service charts, is available in [`docs/source_figure_gallery.md`](docs/source_figure_gallery.md). The four soak-labeled source figures are shown there as provenance only and are not used to upgrade the latest staged service claim into a soak-test claim.
-
-## Main findings
-
-### 1. Training and modeling
-
-| Scope | Representative result | Interpretation |
+| Experiment | Legacy FID | Interpretation |
 |---|---:|---|
-| Epoch study | Legacy FID 184.11 → 105.34 from 50 → 300 epochs | Training budget matters, but is not the only factor. |
-| Phase 2 baseline | 109.40 | No added deep module; retains the selected Phase 1 input policy. |
-| D SN + Hinge | 96.25 | A discriminator-stabilization milestone. |
-| D SN + Hinge + R1 | 89.92 | Best recorded Phase 2 candidate under its single-seed legacy protocol. |
-| Width ×3 + 20K + DiffAugment + EMA | 38.88 | Strong later candidate; scope changes, so not a single-factor improvement claim. |
-| CLIP λ=0.01 | 33.41 | Lowest Legacy FID in the local CLIP continuation sweep; C0 no-CLIP is required control. |
+| 50 epochs | 184.11 | Early checkpoint |
+| 100 epochs | 136.78 | Large early improvement |
+| 200 epochs | 113.97 | Continued improvement |
+| 300 epochs | 105.34 | Lower marginal gain |
+| Sharpen augmentation | 121.11 | Lowest listed augmentation candidate |
 
-The headline historical metric is the project-specific Legacy FID. These rows should only be compared within their named scope.
+The epoch study lowered FID by about 42.8% within the same recipe. Sharpening was the best recorded augmentation candidate in the listed small search; this does not establish a universal augmentation optimum.
 
-### 2. SDXL controlled study: a useful negative result
+![前期训练轮数与 FID](04_visual_assets/stage_figures/01_前期训练与增强/01_训练轮数_FID.svg)
 
-| Group | Original | SDXL | Legacy FID | Coverage |
-|---|---:|---:|---:|---:|
-| A0 | 4,000 | 0 | 37.91 | 0.6687 |
-| A10 | 3,600 | 400 | 37.99 | 0.6525 |
-| A20 | 3,200 | 800 | 41.58 | 0.6108 |
-| A30 | 2,800 | 1,200 | 44.92 | 0.5423 |
-| A50 | 2,000 | 2,000 | 49.94 | 0.4397 |
+More evidence: [stage 1 charts](04_visual_assets/stage_figures/01_前期训练与增强/) and [`phase1_early_tuning`](02_selected_experiments/full_process/phase1_early_tuning/).
 
-Increasing the tested SDXL replacement ratio did not improve the controlled result. The likely engineering interpretation is distribution/style mismatch between the original and synthetic pools under the tested cleaning and fine-tuning protocol. This is a stopping result, not an omitted result.
+## Stage 2 — G/D 模块与对抗目标调优
 
-### 3. Deployment and quantization
+### Baseline definition
 
-The current inference graph is a standard Generator graph:
+The Phase 2 `00_baseline` is the **no-added-deep-module architectural control**. It retains the selected Phase 1 input policy, so it should not be described as a model with no preprocessing at all. Its recorded Legacy FID is **109.40**.
 
-```text
-z [B,128,1,1]
-  → ConvTranspose + BatchNorm + ReLU × 4
-  → ConvTranspose + Tanh
-  → image [B,3,64,64]
-```
+### Evidence
 
-| Precision / strategy | Standard FID | Blur rate | Mean latency | Throughput |
-|---|---:|---:|---:|---:|
-| FP32 | 29.9911 | 12.0% | 14.6969 ms/batch | 4,354.7 images/s |
-| FP16 | 29.9941 | 12.0% | 4.1304 ms/batch | 15,495.0 images/s |
-| INT8 PTQ | 35.3198 | 12.5% | 3.0323 ms/batch | 21,106.1 images/s |
-| Mixed `net.0 + net.12` FP16 | 31.1776 | 12.1% | 1.3349 ms/batch | 23,971.7 images/s |
-| QAT INT8 | 31.6456 | 11.3% | 1.6760 ms/batch | 19,092.7 images/s |
+| Path | Representative result | Interpretation |
+|---|---:|---|
+| G + SENet, 1 layer | 96.76 | Best listed G-side single-module candidate |
+| G + Laplacian | 98.67 | Improvement in this run, not a universal module claim |
+| D + SN + Hinge | 96.25 | Stabilization candidate |
+| D + SN + Hinge + R1 | 89.92 | Best recorded Phase 2 candidate |
 
-The mixed-precision result is the selected quality-speed trade-off for the current graph. QAT improves over all-INT8 PTQ under the revised acceptance criterion, but does not beat the selected mixed-precision PTQ baseline on the archived comparison.
+The strongest Phase 2 path came from discriminator-side stabilization. The full search was not a perfectly balanced factorial design, so individual module effects are conditional rather than fully isolated.
 
-### 4. Staged service stress
+![D 端方法 FID](04_visual_assets/stage_figures/02_G_D模块调优/06_D端模块_FID.svg)
 
-The latest archived run used a single-process, single-worker TensorRT service on a Tesla T4 and tested HTTP concurrency 1, 2, 4, 8, 16, 32, 48, 64, 80, 96, and 128.
+More evidence: [stage 2 charts](04_visual_assets/stage_figures/02_G_D模块调优/) and [`phase2_module_tuning`](02_selected_experiments/full_process/phase2_module_tuning/).
+
+## Stage 3 — G 强化与训练策略
+
+### Question
+
+Do generator capacity, data scale, DiffAugment, and EMA matter more than isolated feature modules?
+
+### Evidence
+
+| Recipe | Legacy FID | Causal boundary |
+|---|---:|---|
+| G Width x2 | 78.75 | Capacity comparison |
+| G Width x3 | 59.00 | Capacity comparison |
+| G Width x4 | 63.66 | Capacity comparison |
+| Width x3 + 20K data | 49.17 | Capacity and data-scale change |
+| Width x3 + 20K + Laplacian | 53.74 | Combined change |
+| Width x3 + 20K + DiffAugment + EMA | 38.88 | Strong combined candidate |
+
+The 38.88 result is not attributed to one module. It is a later recipe that changes several factors together. The source archive also contains newer source-only scripts without a matching row in the current metric catalog; they are not presented as measured improvements.
+
+![G 结构强化 FID](04_visual_assets/stage_figures/03_G强化与训练策略/03_G结构强化_FID.svg)
+
+More evidence: [stage 3 charts](04_visual_assets/stage_figures/03_G强化与训练策略/) and [`phase3_generator_strengthening`](02_selected_experiments/full_process/phase3_generator_strengthening/).
+
+## Stage 4 — CLIP continuation 与权重消融
+
+### Question
+
+Does frozen CLIP image guidance improve perceptual alignment beyond a no-CLIP continuation control?
+
+### Evidence
+
+| Run | lambda | Legacy FID | CLIP MMD2 |
+|---|---:|---:|---:|
+| C0 continuation control | 0 | 33.7846 | 0.042832 |
+| C1 | 0.0100 | 33.4114 | 0.042657 |
+| C2 | 0.0250 | 33.6687 | 0.042298 |
+| C3 | 0.0500 | 33.4718 | 0.041856 |
+| C4 | 0.1000 | 33.6231 | 0.040990 |
+
+C1 has the lowest FID, while C4 has the lowest CLIP MMD2. The correct conclusion is a perceptual trade-off, not “larger CLIP weight is always better.”
+
+![CLIP 正则强度与 FID](04_visual_assets/stage_figures/04_CLIP调优/07_CLIP_FID.svg)
+
+More evidence: [stage 4 charts](04_visual_assets/stage_figures/04_CLIP调优/) and [`phase5_clip_tuning`](02_selected_experiments/full_process/phase5_clip_tuning/).
+
+## Stage 5 — 部署、量化与推理效率
+
+This stage is evaluated separately from the historical training leaderboard.
+
+| Precision / strategy | Standard FID | Blur rate | Throughput |
+|---|---:|---:|---:|
+| FP32 | 29.9911 | 12.0% | 4,354.7 images/s |
+| FP16 | 29.9941 | 12.0% | 15,495.0 images/s |
+| INT8 PTQ | 35.3198 | 12.5% | 21,106.1 images/s |
+| Mixed `net.0 + net.12` FP16 | 31.1776 | 12.1% | 23,971.7 images/s |
+| QAT INT8 | 31.6456 | 11.3% | 19,092.7 images/s |
+
+The mixed-precision path is the selected quality-speed trade-off for the current graph. QAT improves over all-INT8 PTQ under the revised acceptance criterion, but does not beat the selected mixed PTQ result.
+
+![混合精度策略 FID](04_visual_assets/stage_figures/05_部署与量化/27_混合精度_FID.svg)
+
+More evidence: [stage 5 charts](04_visual_assets/stage_figures/05_部署与量化/), [`deployment_optimization.md`](docs/deployment_optimization.md), [`deployment_task_status.csv`](03_metrics_and_logs/deployment_optimization/deployment_task_status.csv), and [`deployment_quantization_summary.csv`](03_metrics_and_logs/deployment_optimization/deployment_quantization_summary.csv).
+
+## Stage 6 — 服务阶梯压测
+
+The current archived staged run tests concurrency 1, 2, 4, 8, 16, 32, 48, 64, 80, 96, and 128 on a single-process TensorRT service.
 
 - 0 failed requests at every tested stage;
-- P99 increased from 5 ms at concurrency 1 to 490 ms at concurrency 128;
+- P99 latency increased from 5 ms to 490 ms;
 - throughput stayed near 335–342 requests/s;
-- 100 system-monitor samples were collected at a 5-second interval;
-- peak GPU memory: 677.2 MB;
-- peak service RSS: 1,077.8 MB;
-- no hard crash was observed through the tested maximum.
+- peak GPU memory was 677.2 MB and peak RSS was 1,077.8 MB;
+- 128 is the maximum tested concurrency, not a proven physical crash point;
+- no long soak conclusion is claimed because the current raw result package contains no corresponding completed soak table.
 
-This was a staged run, not a 30-minute soak. The repository therefore does not claim that long-running memory leaks have been ruled out.
+![服务并发与 P99](04_visual_assets/stage_figures/06_服务压测/32_并发_P99.svg)
 
-## Visual evidence
+More evidence: [stage 6 charts](04_visual_assets/stage_figures/06_服务压测/) and [`service_stress_summary.csv`](03_metrics_and_logs/deployment_optimization/06_Service_Stress/service_stress_summary.csv).
 
-![Experiment roadmap](04_visual_assets/interview_results_roadmap.svg)
+## Objective audit and freeze boundary
 
-![Deployment quality-speed trade-off](04_visual_assets/deployment_quality_speed.svg)
-
-![Service stress: concurrency, P99, and throughput](04_visual_assets/service_stress_summary.svg)
-
-![SDXL FID and Coverage trade-off](04_visual_assets/sdxl_fid_coverage_tradeoff.svg)
-
-![CLIP controlled continuation sweep](04_visual_assets/clip_control_sweep.svg)
-
-### Qualitative samples
-
-The gallery uses one compact representative image per stage. The Phase 2 baseline card is the plain no-added-module architectural control; it still uses the documented Phase 1 input policy.
-
-<table>
-  <tr>
-    <td align="center"><b>Phase 1: epoch budget</b><br><img src="04_visual_assets/phase1_epoch_200.png" alt="Phase 1 epoch study samples" width="220"></td>
-    <td align="center"><b>Phase 1: sharpening</b><br><img src="04_visual_assets/phase1_sharpen_aug_epoch100.png" alt="Phase 1 sharpening samples" width="220"></td>
-    <td align="center"><b>Phase 2: plain baseline</b><br><img src="04_visual_assets/phase2_baseline_no_modules_epoch200.png" alt="Phase 2 no-added-module baseline samples" width="220"></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Phase 2: D stabilization</b><br><img src="04_visual_assets/phase2_sn_hinge_epoch200.png" alt="Phase 2 discriminator stabilization samples" width="220"></td>
-    <td align="center"><b>Phase 3: generator width</b><br><img src="04_visual_assets/milestone_03_width3x_epoch200.png" alt="Phase 3 generator width samples" width="220"></td>
-    <td align="center"><b>Phase 3: DiffAugment + EMA</b><br><img src="04_visual_assets/milestone_11_diffaug_ema_epoch200.png" alt="Phase 3 DiffAugment and EMA samples" width="220"></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Phase 5: CLIP continuation</b><br><img src="04_visual_assets/clip_C1_lambda001_samples.png" alt="Phase 5 CLIP continuation samples" width="220"></td>
-    <td align="center"><b>Phase 6: clean-unique data</b><br><img src="04_visual_assets/b1_formal_clean_unique_17k_epoch200.png" alt="Phase 6 clean unique samples" width="220"></td>
-    <td align="center"><b>Phase 7: controlled SDXL</b><br><img src="04_visual_assets/sdxl_a0_epoch100.png" alt="Phase 7 controlled SDXL samples" width="220"></td>
-  </tr>
-</table>
-
-The compact montage is also available as [`qualitative_samples_compact.png`](04_visual_assets/qualitative_samples_compact.png).
-
-The SDXL pilot contact sheet is retained as a downloadable provenance artifact: [`sdxl_pilot_contact_sheet.jpg`](04_visual_assets/sdxl_pilot_contact_sheet.jpg).
-
-## Metric comparability
-
-No: the project does not use one universally interchangeable metric table.
-
-- Historical training phases use the project’s Legacy Inception-v3 FID path.
-- Deployment Task 3/4/5 also report a Standard Inception-v3 FID protocol.
-- Phase 7 uses a fixed within-study Legacy FID and Coverage comparison with a 4K real pool and 5K fake features.
-- CLIP-MMD, the AlexNet feature-distance proxy, diversity, blur rate, Laplacian variance, and edge density are supporting diagnostics, not replacements for a standardized FID benchmark.
-- Most historical comparisons use one seed and one evaluation draw.
-- Real images are primarily from the training distribution rather than a strict held-out test set.
-
-See [`metric_protocol.md`](metric_protocol.md), [`docs/baseline_map.md`](docs/baseline_map.md), and [`docs/reproduction_boundary.md`](docs/reproduction_boundary.md).
-
-The historical experiment index is [`results_summary.csv`](results_summary.csv); deployment-specific tables are under [`03_metrics_and_logs/deployment_optimization`](03_metrics_and_logs/deployment_optimization/).
-
-The deployment evidence index is [`deployment_task_status.csv`](03_metrics_and_logs/deployment_optimization/deployment_task_status.csv), with quantitative details in [`deployment_quantization_summary.csv`](03_metrics_and_logs/deployment_optimization/deployment_quantization_summary.csv).
-
-Additional process documents: [`docs/data_quality_and_sdxl_extension.md`](docs/data_quality_and_sdxl_extension.md), [`docs/experiment_process.md`](docs/experiment_process.md), [`docs/baseline_map.md`](docs/baseline_map.md), [`docs/interview_playbook.md`](docs/interview_playbook.md), [`docs/sdxl_controlled_study.md`](docs/sdxl_controlled_study.md), [`docs/month1_audit_2026-08.md`](docs/month1_audit_2026-08.md), and [`docs/next_phase_deployment_plan.md`](docs/next_phase_deployment_plan.md).
+- Cross-stage FID values are not a universal ranking because the historical and deployment protocols differ.
+- Loss magnitudes are not comparable across BCE, Hinge, R1, CLIP, and auxiliary-loss objectives.
+- LPIPS, Laplacian variance, edge density, blur rate, and CLIP MMD2 are supporting diagnostics, not replacements for a standardized held-out FID benchmark.
+- The 38.88 generator result is a multi-factor candidate, not a single-module ablation.
+- The source figure directory contained 33 SVGs while its manifest referenced more; deleted loss figures are recorded as intentionally excluded rather than silently recreated.
+- The complete stage map is [`stage_figures_map.csv`](03_metrics_and_logs/stage_figures_map.csv), and the detailed DCGAN audit is [`dcgan_core_experiment_record.md`](docs/dcgan_core_experiment_record.md).
 
 ## Repository map
 
 | Path | Purpose |
 |---|---|
-| `01_public_core/` | Public baseline, Exp11 recipe, and data-audit entry points |
-| `02_selected_experiments/` | Selected training sources plus the deployment source archive |
-| `03_metrics_and_logs/` | Curated metrics, logs, manifests, deployment tables, and stress evidence |
-| `04_visual_assets/` | Interview figures, sample grids, and deployment charts |
-| `docs/` | Protocols, audit findings, baseline relationships, and interview framing |
+| `01_public_core/` | Public baseline and selected entry points |
+| `02_selected_experiments/` | Curated training and deployment source archive |
+| `03_metrics_and_logs/` | Metrics, manifests, audit tables, and raw-evidence extracts |
+| `04_visual_assets/stage_figures/` | Re-generated Chinese single-metric charts organized by stage |
+| `04_visual_assets/source_figures/` | Source-folder chart archive and provenance-only figures |
+| `docs/` | Protocols, stage record, audit, and interview framing |
 | `tests/` | Snapshot integrity checks |
-| `tools/` | Deterministic figure builders |
-| `03_metrics_and_logs/dcgan_core/` | DCGAN-only metric catalog and figure provenance audit |
-| `docs/source_figure_gallery.md` | Gallery of all 33 physically present source SVGs |
+| `tools/build_stage_figures.js` | Result-driven chart rebuild script |
 
 ## Reproduction boundary
 
-This is a Kaggle experiment archive:
+The original work depends on Kaggle-mounted datasets, checkpoints, GPU libraries, and evaluation assets. This public freeze preserves the scripts, result tables, charts, provenance, and claim boundaries; it does not claim one-command local reproduction.
 
-- datasets, FID image dumps, model weights, ONNX files, and TensorRT engines are not included;
-- representative entry points expect Kaggle-mounted datasets and GPU/Internet settings;
-- `requirements.txt` is a compatibility floor, not a lockfile;
-- optional service utilities are listed in [`requirements-deployment.txt`](requirements-deployment.txt), while TensorRT remains platform-specific;
-- the deployment summaries preserve runtime and engine metadata, but CPU RSS and whole-device CUDA snapshots are different memory measurements;
-- the service stress archive documents one staged run and does not replace a long soak test.
-
-Run the snapshot integrity checks with:
+Run the snapshot checks with:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-## Claim boundary
+## Historical records
 
-This snapshot supports claims about applied experimentation, metric-aware decision-making, cross-backend benchmarking, quantization trade-offs, and staged service stress. It does not support claims of a novel GAN architecture, SOTA performance, successful whole-graph fusion acceleration, strict QAT high-frequency superiority, or completed long-run leak testing.
-
-See [`docs/deployment_optimization.md`](docs/deployment_optimization.md), [`docs/month1_audit_2026-08.md`](docs/month1_audit_2026-08.md), [`docs/interview_playbook.md`](docs/interview_playbook.md), and [`CHANGELOG.md`](CHANGELOG.md).
+See [`metric_protocol.md`](metric_protocol.md), [`baseline_map.md`](docs/baseline_map.md), [`experiment_process.md`](docs/experiment_process.md), [`interview_playbook.md`](docs/interview_playbook.md), [`month1_audit_2026-08.md`](docs/month1_audit_2026-08.md), [`next_phase_deployment_plan.md`](docs/next_phase_deployment_plan.md), and [`CHANGELOG.md`](CHANGELOG.md).

@@ -34,35 +34,22 @@ class SnapshotIntegrityTests(unittest.TestCase):
     def test_readme_targets_exist(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         for target in (
-            "04_visual_assets/interview_results_roadmap.svg",
-            "04_visual_assets/clip_control_sweep.svg",
-            "04_visual_assets/sdxl_fid_coverage_tradeoff.svg",
-            "04_visual_assets/deployment_quality_speed.svg",
-            "04_visual_assets/service_stress_summary.svg",
-            "04_visual_assets/dcgan_core/01_epoch_fid.svg",
-            "04_visual_assets/dcgan_core/02_augmentation_fid.svg",
-            "04_visual_assets/dcgan_core/03_generator_strengthening_fid.svg",
-            "04_visual_assets/dcgan_core/04_generator_strengthening_lpips.svg",
-            "04_visual_assets/dcgan_core/05_deep_tuning_generator_fid.svg",
-            "04_visual_assets/dcgan_core/06_deep_tuning_discriminator_fid.svg",
-            "04_visual_assets/dcgan_core/07_clip_lambda_fid.svg",
-            "04_visual_assets/qualitative_samples_compact.png",
-            "04_visual_assets/sdxl_pilot_contact_sheet.jpg",
-            "results_summary.csv",
-            "docs/data_quality_and_sdxl_extension.md",
+            "04_visual_assets/stage_figures/01_前期训练与增强/01_训练轮数_FID.svg",
+            "04_visual_assets/stage_figures/02_G_D模块调优/06_D端模块_FID.svg",
+            "04_visual_assets/stage_figures/03_G强化与训练策略/03_G结构强化_FID.svg",
+            "04_visual_assets/stage_figures/04_CLIP调优/07_CLIP_FID.svg",
+            "04_visual_assets/stage_figures/05_部署与量化/27_混合精度_FID.svg",
+            "04_visual_assets/stage_figures/06_服务压测/32_并发_P99.svg",
             "docs/experiment_process.md",
             "docs/baseline_map.md",
             "docs/interview_playbook.md",
-            "docs/sdxl_controlled_study.md",
             "docs/month1_audit_2026-08.md",
             "docs/next_phase_deployment_plan.md",
             "docs/deployment_optimization.md",
             "docs/dcgan_core_experiment_record.md",
-            "docs/source_figure_gallery.md",
             "03_metrics_and_logs/deployment_optimization/deployment_task_status.csv",
             "03_metrics_and_logs/deployment_optimization/deployment_quantization_summary.csv",
-            "03_metrics_and_logs/dcgan_core/figure_audit.csv",
-            "03_metrics_and_logs/dcgan_core/dcgan_core_metrics.csv",
+            "03_metrics_and_logs/stage_figures_map.csv",
         ):
             self.assertIn(target, readme)
             if target.endswith(".md"):
@@ -111,6 +98,16 @@ class SnapshotIntegrityTests(unittest.TestCase):
         self.assertEqual(sum(row["source_disk_status"] == "intentionally_removed_per_owner_note" for row in audit), 7)
         self.assertEqual(sum(row["source_disk_status"] == "missing_current_source" for row in audit), 2)
         self.assertTrue(all((ROOT / row["public_snapshot_file"]).exists() for row in audit if row["public_snapshot_file"]))
+
+        stage_figures = list((ROOT / "04_visual_assets/stage_figures").rglob("*.svg"))
+        self.assertEqual(len(stage_figures), 27)
+        for path in stage_figures:
+            self.assertTrue(ET.parse(path).getroot().tag.endswith("svg"), path)
+
+        with (ROOT / "03_metrics_and_logs/stage_figures_map.csv").open(newline="", encoding="utf-8") as handle:
+            stage_map = list(csv.DictReader(handle))
+        self.assertEqual(len(stage_map), 27)
+        self.assertTrue(all(row["status"] == "regenerated" for row in stage_map))
 
         deployment_figures = list((ROOT / "04_visual_assets/source_figures/deployment_quantization_service").glob("*.svg"))
         self.assertEqual(len(deployment_figures), 26)

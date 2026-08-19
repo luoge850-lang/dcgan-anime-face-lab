@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.6 - 2026-08-19
+
+- Rebuilt the public README around six chronological stages instead of a single visual-results section.
+- Regenerated 27 Chinese, single-metric bar/line figures from the scanned `dcgan_lab/results` CSV/JSON evidence.
+- Organized regenerated figures into stage folders for early tuning, G/D tuning, G strengthening, CLIP, deployment/quantization, and service stress.
+- Excluded deleted loss-trajectory charts from the new public display and recorded the decision in the figure boundary documentation.
+- Regenerated the CLIP MMD2 chart from the existing metric files; kept unavailable trajectory charts out of the current evidence.
+- Added a stage-to-source map and a v0.6 freeze record.
+
 ## v0.5 - 2026-08-19
 
 - Re-scanned the active `dcgan_lab` workspace and refreshed the public snapshot with the current deployment source archive.
