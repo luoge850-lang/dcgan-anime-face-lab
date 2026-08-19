@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "runtime": "11.2.1.2",
+  "engines": [
+    {
+      "label": "FP32",
+      "path": "/kaggle/input/datasets/louisharrington/test-engine/generator_trt_fp32.engine",
+      "sha256": "e861ed98f768944298e4b707a3a82ec27641a724e9b934818e4d064a68c97abd",
+      "bytes": 31175948,
+      "runtime": "11.2.1.2",
+      "io_names": [
+        "z",
+        "image"
+      ],
+      "status": "passed"
+    },
+    {
+      "label": "PTQ_INT8",
+      "path": "/kaggle/input/datasets/louisharrington/test-engine/generator_trt_int8.engine",
+      "sha256": "0f5cbd851756abfe1ce2e1b8897ef01f65b9947af658e62e2ce31df0e99bb4ca",
+      "bytes": 8014796,
+      "runtime": "11.2.1.2",
+      "io_names": [
+        "z",
+        "image"
+      ],
+      "status": "passed"
+    },
+    {
+      "label": "MIXED_PTQ",
+      "path": "/kaggle/input/datasets/louisharrington/mixed-preseicion/generator_trt_mixed_precision_final.engine",
+      "sha256": "19cae2c5ae3639b25272e1dadecc26a95d2f07f47b5a568819c10fad3edc695e",
+      "bytes": 9912052,
+      "runtime": "11.2.1.2",
+      "io_names": [
+        "z",
+        "image"
+      ],
+      "status": "passed"
+    }
+  ]
+}

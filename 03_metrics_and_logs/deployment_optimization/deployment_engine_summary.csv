@@ -1,0 +1,8 @@
+engine,device,precision,batch,end_to_end_mean_ms,throughput_images_per_s,memory_value_mb,memory_source,status,source
+ONNX Runtime,CPU,FP32,1,3.802870,262.959,228.875,host RSS,ok,02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv
+ONNX Runtime,CPU,FP16,1,3.868677,258.486,290.590,host RSS,ok,02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv
+TensorRT,CUDA,FP32,1,0.697729,1433.222,236.875,whole-device CUDA snapshot,ok,02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv
+TensorRT,CUDA,FP16,1,0.277130,3608.411,204.875,whole-device CUDA snapshot,ok,02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv
+TensorRT,CUDA,FP16,32,1.400351,22851.409,220.875,whole-device CUDA snapshot,ok,02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv
+OpenVINO,CPU,FP32,1,4.165421,240.072,1831.230,host RSS,ok,02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv
+OpenVINO,CPU,FP16,1,4.118698,242.795,1675.277,host RSS,ok,02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv

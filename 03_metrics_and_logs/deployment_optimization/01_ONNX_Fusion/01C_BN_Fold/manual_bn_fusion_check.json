@@ -1,0 +1,135 @@
+{
+  "raw_onnx": "/kaggle/input/datasets/louisharrington/fp32-raw-onnx/generator_fp32_raw.onnx",
+  "manual_fused_onnx": "/kaggle/working/dcgan_output/Exp11_Deployment/01C_Manual_BN_Fusion/generator_fp32_manual_bn_fused.onnx",
+  "provider": "CPUExecutionProvider",
+  "batches": [
+    1,
+    4,
+    8,
+    16
+  ],
+  "warmup": 20,
+  "iterations": 100,
+  "raw_node_count": 14,
+  "manual_fused_node_count": 10,
+  "raw_operator_counts": {
+    "BatchNormalization": 4,
+    "ConvTranspose": 5,
+    "Relu": 4,
+    "Tanh": 1
+  },
+  "manual_fused_operator_counts": {
+    "ConvTranspose": 5,
+    "Relu": 4,
+    "Tanh": 1
+  },
+  "folded_pairs": [
+    {
+      "conv_node": "/net/net.0/ConvTranspose",
+      "bn_node": "/net/net.1/BatchNormalization",
+      "weight": "net.0.weight",
+      "bias": "net.0.bias",
+      "channels": 768,
+      "epsilon": 9.999999747378752e-06
+    },
+    {
+      "conv_node": "/net/net.3/ConvTranspose",
+      "bn_node": "/net/net.4/BatchNormalization",
+      "weight": "net.3.weight",
+      "bias": "net.3.bias",
+      "channels": 384,
+      "epsilon": 9.999999747378752e-06
+    },
+    {
+      "conv_node": "/net/net.6/ConvTranspose",
+      "bn_node": "/net/net.7/BatchNormalization",
+      "weight": "net.6.weight",
+      "bias": "net.6.bias",
+      "channels": 192,
+      "epsilon": 9.999999747378752e-06
+    },
+    {
+      "conv_node": "/net/net.9/ConvTranspose",
+      "bn_node": "/net/net.10/BatchNormalization",
+      "weight": "net.9.weight",
+      "bias": "net.9.bias",
+      "channels": 96,
+      "epsilon": 9.999999747378752e-06
+    }
+  ],
+  "max_abs_output_difference": 3.069639205932617e-06,
+  "max_mean_abs_output_difference": 1.0110839099297664e-07,
+  "top_raw_operators": [
+    [
+      "ConvTranspose",
+      600,
+      517.872,
+      0.86312,
+      1.4923999999999997
+    ],
+    [
+      "BatchNormalization",
+      480,
+      15.55,
+      0.03239583333333334,
+      0.051049999999999957
+    ],
+    [
+      "Relu",
+      480,
+      8.049,
+      0.016768750000000002,
+      0.034
+    ]
+  ],
+  "top_manual_fused_operators": [
+    [
+      "ConvTranspose",
+      600,
+      511.16,
+      0.8519333333333333,
+      1.4752499999999997
+    ],
+    [
+      "Relu",
+      480,
+      8.581,
+      0.017877083333333335,
+      0.034
+    ],
+    [
+      "Tanh",
+      120,
+      2.043,
+      0.017025,
+      0.022249999999999985
+    ]
+  ],
+  "improvements": [
+    {
+      "batch": 1,
+      "mean_speedup_ratio": 0.91289120069632,
+      "mean_improvement_percent": -8.710879930367998
+    },
+    {
+      "batch": 4,
+      "mean_speedup_ratio": 1.0678139730376948,
+      "mean_improvement_percent": 6.781397303769476
+    },
+    {
+      "batch": 8,
+      "mean_speedup_ratio": 1.0229621614787263,
+      "mean_improvement_percent": 2.2962161478726317
+    },
+    {
+      "batch": 16,
+      "mean_speedup_ratio": 1.025271995706152,
+      "mean_improvement_percent": 2.5271995706152017
+    }
+  ],
+  "pass_criteria": {
+    "max_abs_difference_le_1e-5": true,
+    "at_least_two_batches_improve_mean_latency_by_5_percent": false
+  },
+  "optimization_decision": "not_passed"
+}

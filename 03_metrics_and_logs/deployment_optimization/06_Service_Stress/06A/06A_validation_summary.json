@@ -1,0 +1,32 @@
+{
+  "task": "Task6_06A_HTTP_Service_Validation",
+  "status": "passed",
+  "base_url": "http://127.0.0.1:8000",
+  "health": {
+    "status_code": 200,
+    "payload_status": "ok"
+  },
+  "generate": {
+    "requests": 10,
+    "passed": 10,
+    "failed": 0,
+    "http_latency_ms": {
+      "mean": 4.948181099996418,
+      "min": 4.343359000017699,
+      "max": 6.4016809999429825
+    },
+    "response_type": "image/png",
+    "image_size": [
+      64,
+      64
+    ]
+  },
+  "copied_previous_artifacts": [
+    "service_manifest.json",
+    "service_smoke_test.csv"
+  ],
+  "notes": [
+    "This is HTTP-level validation, not Locust load testing.",
+    "The old interrupted dependency-installation log is intentionally excluded."
+  ]
+}

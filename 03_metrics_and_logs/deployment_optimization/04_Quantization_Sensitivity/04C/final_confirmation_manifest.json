@@ -1,0 +1,43 @@
+{
+  "task": "Task4_04C_Final_Confirmation",
+  "status": "complete",
+  "independence": "This file does not import or consume 04A/04B scripts or result files.",
+  "inputs": {
+    "raw_onnx": {
+      "path": "/kaggle/input/datasets/louisharrington/fp32-raw-onnx/generator_fp32_raw.onnx",
+      "sha256": "900f400d93d1db54cc7806070b123cd3e09dde1466bb72cd57e2586502f4272f"
+    },
+    "fp32_engine": "generator_trt_fp32.engine",
+    "int8_engine": "generator_trt_int8.engine",
+    "protocol": "/kaggle/input/datasets/louisharrington/task3-03a-quantization-protocol"
+  },
+  "graph": {
+    "named_source": "final_confirmation_named.onnx",
+    "node_count": 14,
+    "fp16_layers": [
+      "net.0",
+      "net.12"
+    ]
+  },
+  "evaluation": {
+    "n_fid": 5000,
+    "n_image_eval": 1000,
+    "batch_size": 32,
+    "blur_threshold_p10": 5028.477001953125
+  },
+  "selection_policy": {
+    "selected_strategy": "net.0+net.12",
+    "fid_delta_limit": 1.5,
+    "blur_delta_pp_limit": 0.5,
+    "latency_ratio_limit_vs_int8": 1.75,
+    "quality_pass": true,
+    "speed_pass": true
+  },
+  "artifacts": [
+    "final_confirmation_summary.csv",
+    "final_confirmation_summary.png",
+    "final_confirmation_manifest.json",
+    "recommended/",
+    "mixed_variant/"
+  ]
+}

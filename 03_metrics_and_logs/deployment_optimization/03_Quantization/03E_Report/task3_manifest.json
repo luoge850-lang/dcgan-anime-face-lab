@@ -1,0 +1,45 @@
+{
+  "task": "Task3_03E_Quantization_Report",
+  "status": "complete",
+  "report_type": "local_merge_only",
+  "source_evaluation": "03D_Evaluation",
+  "source_protocol": "03A_Protocol",
+  "source_builds": ["03B_FP32_FP16", "03C_INT8_PTQ"],
+  "standard_fid_computed": true,
+  "inputs": {
+    "metrics_csv": "fp32_fp16_int8_metrics.csv",
+    "quantization_error_csv": "quantization_error.csv",
+    "frequency_band_error_csv": "frequency_band_error.csv",
+    "feature_manifest_csv": "feature_manifest.csv",
+    "evaluation_manifest_json": "evaluation_manifest.json"
+  },
+  "standard_fid": {
+    "computed_in_03d": true,
+    "implementation": "pytorch-fid InceptionV3 pool3",
+    "feature_dim": 2048,
+    "values": {
+      "FP32": 29.991052703795457,
+      "FP16": 29.994079468990247,
+      "INT8": 35.31977104978489
+    }
+  },
+  "int8_frequency_diagnosis": {
+    "absolute_error": "LL_dominated",
+    "relative_error": "high_frequency_bands_more_distorted",
+    "high_to_ll_relative_error_ratio": 10.038,
+    "conclusion": "high-frequency relative distortion is a contributing mechanism, not the sole proven cause"
+  },
+  "npz_downloaded": false,
+  "npz_required_for_report": false,
+  "npz_note": "03D already persisted standard FID values in the metrics CSV; NPZ files are intermediate feature caches.",
+  "counts": {
+    "calibration_real_images": 100,
+    "latent_calibration": 512,
+    "latent_evaluation": 5000,
+    "real_evaluation": 5000,
+    "metric_images_per_precision": 1000,
+    "lpips_pairs": 1000
+  },
+  "upstream_engine_hashes_verified_in_03d": true,
+  "audit_conclusion": "Task 3 is complete; INT8 is a speed/quality tradeoff baseline and should be followed by mixed precision or QAT."
+}

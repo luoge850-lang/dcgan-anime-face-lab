@@ -1,0 +1,99 @@
+﻿{
+    "task":  "Task2_Engine_Benchmark",
+    "status":  "complete",
+    "input_root":  "C:\\Users\\32875\\OneDrive\\Desktop\\image_generator\\dcgan_lab\\results\\Deployment_Optimization_Results\\02_Engine_Benchmark",
+    "common_model":  "01A generator_fp32_raw.onnx",
+    "benchmark_protocol":  {
+                               "precisions":  [
+                                                  "FP32",
+                                                  "FP16"
+                                              ],
+                               "default_batches":  [
+                                                       1,
+                                                       4,
+                                                       8,
+                                                       16,
+                                                       32
+                                                   ],
+                               "latency":  "mean/p50/p95 in milliseconds",
+                               "throughput":  "batch divided by mean latency",
+                               "warmup_and_iterations":  "recorded in source CSV",
+                               "fixed_noise_seed":  "42 + batch"
+                           },
+    "coverage":  {
+                     "OpenVINO":  {
+                                      "precisions":  [
+                                                         "FP16",
+                                                         "FP32"
+                                                     ],
+                                      "batches":  [
+                                                      1,
+                                                      4,
+                                                      8,
+                                                      16,
+                                                      32
+                                                  ]
+                                  },
+                     "ONNX Runtime":  {
+                                          "precisions":  [
+                                                             "FP16",
+                                                             "FP32"
+                                                         ],
+                                          "batches":  [
+                                                          1,
+                                                          4,
+                                                          8,
+                                                          16,
+                                                          32
+                                                      ]
+                                      },
+                     "TensorRT":  {
+                                      "precisions":  [
+                                                         "FP16",
+                                                         "FP32"
+                                                     ],
+                                      "batches":  [
+                                                      1,
+                                                      4,
+                                                      8,
+                                                      16,
+                                                      32
+                                                  ]
+                                  }
+                 },
+    "memory_notes":  {
+                         "ort":  "host_rss_mb; gpu allocator value is NaN in the retained CPU run",
+                         "tensorrt":  "cuda_* fields are whole-device mem_get_info snapshots; peak_allocated_mb is PyTorch-only",
+                         "openvino":  "host_rss_mb"
+                     },
+    "evidence_files":  {
+                           "ort_benchmark":  "02A_ORT/ort_benchmark.csv",
+                           "ort_operator_summary":  "02A_ORT/ort_operator_summary.csv",
+                           "ort_profiles":  [
+
+                                            ],
+                           "ort_profile_status":  "not_retained_summary_available",
+                           "tensorrt_benchmark":  "02B_TensorRT/tensorrt_benchmark.csv",
+                           "tensorrt_layer_profile":  "02B_TensorRT/tensorrt_layer_profile.csv",
+                           "openvino_benchmark":  "02C_OpenVINO/openvino_benchmark.csv",
+                           "openvino_operator_profile":  "02C_OpenVINO/openvino_operator_profile.csv",
+                           "torch_trace":  "02D_Torch_Reference/torch_trace.json",
+                           "torch_operator_summary":  "02D_Torch_Reference/torch_operator_summary.csv",
+                           "layer_trace":  "02F_Layer_Profile/layer_profiler_trace.json",
+                           "layer_operator_summary":  "02F_Layer_Profile/layer_operator_summary.csv"
+                       },
+    "outputs":  {
+                    "comparison_csv":  "task2_engine_comparison.csv",
+                    "operator_evidence_csv":  "task2_operator_evidence.csv",
+                    "top3_csv":  "task2_top3_operators.csv",
+                    "report":  "task2_report.md",
+                    "manifest":  "task2_manifest.json",
+                    "archive":  "Task2_02E_Report.zip"
+                },
+    "merged_rows":  30,
+    "operator_evidence_rows":  331,
+    "top3_rows":  15,
+    "missing":  [
+
+                ]
+}

@@ -1,0 +1,57 @@
+{
+  "task": "Task3_03D_Quality_Evaluation",
+  "protocol_source": "/kaggle/input/datasets/louisharrington/task3-03a-quantization-protocol",
+  "protocol_source_type": "extracted_directory",
+  "protocol_source_sha256": null,
+  "engines": {
+    "FP32": {
+      "path": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/03_Quantization/03B_FP32_FP16/generator_trt_fp32.engine",
+      "sha256": "1ac6d8b75064fd7dea6a1e8a1b9c2b53658b5b2692d409a6d71b11a0644a48fd",
+      "manifest": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/03_Quantization/03B_FP32_FP16/fp32_fp16_build_manifest.json",
+      "hash_match": true,
+      "expected_sha256": "1ac6d8b75064fd7dea6a1e8a1b9c2b53658b5b2692d409a6d71b11a0644a48fd",
+      "bytes": 31206004
+    },
+    "FP16": {
+      "path": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/03_Quantization/03B_FP32_FP16/generator_trt_fp16.engine",
+      "sha256": "8d0b92893d47dbb9f2733ead43df44b8d74bdca038950b854df52d53a8ce9350",
+      "manifest": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/03_Quantization/03B_FP32_FP16/fp32_fp16_build_manifest.json",
+      "hash_match": true,
+      "expected_sha256": "8d0b92893d47dbb9f2733ead43df44b8d74bdca038950b854df52d53a8ce9350",
+      "bytes": 15711196
+    },
+    "INT8": {
+      "path": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/03_Quantization/03C_INT8_PTQ/generator_trt_int8.engine",
+      "sha256": "75254a482ca41eac24f281cc2a85cacfa474fbbdeb409fe9a40f03cb9da9858e",
+      "manifest": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/03_Quantization/03C_INT8_PTQ/int8_build_manifest.json",
+      "hash_match": true,
+      "expected_sha256": "75254a482ca41eac24f281cc2a85cacfa474fbbdeb409fe9a40f03cb9da9858e",
+      "bytes": 8014772
+    }
+  },
+  "latent_eval_count": 5000,
+  "latent_shape": [
+    5000,
+    128,
+    1,
+    1
+  ],
+  "real_eval_count": 5000,
+  "metric_image_count": 1000,
+  "lpips_pairs": 1000,
+  "batch_size": 64,
+  "warmup_batches": 3,
+  "seed": 20260811,
+  "fid_protocol": "project legacy torchvision Inception-v3: resize 299, normalize (x-0.5)/0.5, pool3/FC identity features",
+  "standard_fid_protocol": "pytorch-fid Inception-v3 pool3 block: input [0,1], library TensorFlow-compatible resize/normalization, 2048 dimensions",
+  "blur_protocol": "real_eval Laplacian p10 threshold; same threshold applied to FP32/FP16/INT8",
+  "lpips_protocol": "LPIPS-Alex pairwise diversity on fixed pairs plus fixed-index fake-real supplementary distortion",
+  "standard_fid": "computed for FP32/FP16/INT8; see fid_standard_inception_v3 in fp32_fp16_int8_metrics.csv",
+  "standard_fid_computed": true,
+  "standard_fid_feature_dim": 2048,
+  "standard_fid_implementation": "pytorch-fid InceptionV3 pool3 block",
+  "standard_fid_stats_file": "real_fid_standard_stats.npz",
+  "frequency_error_protocol": "one-level orthonormal Haar LL/LH/HL/HH error on the same fixed metric images against FP32",
+  "frequency_band_error_file": "frequency_band_error.csv",
+  "note": "All three engines receive identical latent_eval arrays; FP32/FP16/INT8 differences are attributed to inference precision."
+}

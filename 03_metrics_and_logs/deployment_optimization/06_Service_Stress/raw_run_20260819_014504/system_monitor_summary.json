@@ -1,0 +1,10 @@
+{
+  "task": "Task6C_System_Monitor",
+  "samples": 100,
+  "service_pid": 58,
+  "gpu_name": "Tesla T4",
+  "interval_seconds": 5.0,
+  "gpu_memory_peak_mb": 677.1875,
+  "rss_peak_mb": 1077.83984375,
+  "monitor_csv": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/06_Service_Stress/Run_20260819_014504/system_monitor_5s.csv"
+}

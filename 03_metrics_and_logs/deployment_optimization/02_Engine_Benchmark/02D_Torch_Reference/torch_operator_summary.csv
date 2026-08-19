@@ -1,0 +1,29 @@
+operator,calls,self_cpu_ms,self_device_ms,self_cpu_memory_bytes,self_device_memory_bytes
+Exp11_Generator_Inference,20,0.0,95.05381400000005,0,0
+aten::cudnn_convolution_transpose,100,2.983963999999983,76.06956300000003,0,131072000
+"void cudnn::detail::dgrad_engine<float, 512, 6, 5, 3, 3, 3, false>(int, int, int, float const*, int, float const*, int, float*, kernel_grad_params, unsigned long long, int, unsigned long long, int, float, int, int, int)",100,0.0,74.60350200000002,0,0
+cudaDeviceSynchronize,1,53.435412,0.0,0,0
+Exp11_Generator_Inference,20,11.411145999999958,0.0,0,-244580352
+aten::cudnn_batch_norm,80,8.125491000000046,1.8133889999999337,0,0
+cudaLaunchKernel,480,3.775121000000144,0.0,0,0
+aten::_convolution,100,3.1378099999999742,0.0,0,0
+aten::relu_,80,2.8588350000000644,0.0,0,0
+aten::tanh,20,1.910083999999977,0.09084600000003047,0,7864320
+"void cudnn::bn_fw_inf_1C11_kernel_NCHW<float, float, true, 1>(float, float, cudnnTensorStruct, float const*, cudnnTensorStruct, float*, cudnnTensorStruct, float const*, float const*, float const*, float const*, float)",80,0.0,1.8133889999999337,0,0
+aten::convolution,100,1.7288640000000683,0.0,0,0
+aten::add_,100,1.0506799999999075,1.5848809999999702,0,0
+"void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<float> >(at::TensorIteratorBase&, at::native::CUDAFunctor_add<float> const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<float> >(at::TensorIteratorBase&, at::native::CUDAFunctor_add<float> const&)::{lambda(int)#1})",100,0.0,1.5848809999999702,0,0
+aten::empty_like,80,1.5604669999999605,0.0,0,0
+"void cudnn::engines_precompiled::scalePackedTensor_kernel<float, float>(long, float*, float)",100,0.0,1.4660609999999996,0,0
+aten::_batch_norm_impl_index,80,1.4202260000000024,0.0,0,0
+aten::empty,320,1.23698599999999,0.0,0,117964800
+aten::batch_norm,80,1.0493080000000155,0.0,0,0
+aten::clamp_min_,80,0.7411189999999187,0.718872999999996,0,0
+"void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::launch_clamp_scalar(at::TensorIteratorBase&, c10::Scalar, c10::Scalar, at::native::detail::ClampLimits)::{lambda()#1}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::(anonymous namespace)::launch_clamp_scalar(at::TensorIteratorBase&, c10::Scalar, c10::Scalar, at::native::detail::ClampLimits)::{lambda()#1}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>)",80,0.0,0.718872999999996,0,0
+Activity Buffer Request,1,0.5829120000000002,0.4893059999999996,0,0
+cudaMalloc,3,0.46987099999999554,0.0,0,0
+aten::conv_transpose2d,100,0.33909599999996953,0.0,0,0
+aten::view,180,0.2871830000000209,0.0,0,0
+aten::reshape,100,0.184270999999997,0.0,0,0
+"void at::native::vectorized_elementwise_kernel<4, at::native::tanh_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::tanh_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>)",20,0.0,0.09084600000003047,0,0
+cudaStreamIsCapturing,3,0.004807999999997264,0.0,0,0

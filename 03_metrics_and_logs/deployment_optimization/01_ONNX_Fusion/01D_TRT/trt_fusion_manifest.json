@@ -1,0 +1,64 @@
+{
+  "task": "Task1_01D_TRT_Targeted_Fusion",
+  "status": "pass",
+  "operator_block_status": "pass",
+  "whole_generator_status": "not_passed",
+  "status_interpretation": "pass means at least one real ConvTranspose+BN+ReLU block is numerically equivalent and at least 5 percent faster; whole_generator_status separately reports end-to-end TRT speed.",
+  "input_raw_onnx": "/kaggle/input/datasets/louisharrington/fp32-raw-onnx/generator_fp32_raw.onnx",
+  "input_raw_onnx_sha256": "900f400d93d1db54cc7806070b123cd3e09dde1466bb72cd57e2586502f4272f",
+  "precisions": [
+    "FP32"
+  ],
+  "folded_pairs": [
+    {
+      "conv_node": "/net/net.0/ConvTranspose",
+      "bn_node": "/net/net.1/BatchNormalization",
+      "channels": 768,
+      "epsilon": 9.999999747378752e-06
+    },
+    {
+      "conv_node": "/net/net.3/ConvTranspose",
+      "bn_node": "/net/net.4/BatchNormalization",
+      "channels": 384,
+      "epsilon": 9.999999747378752e-06
+    },
+    {
+      "conv_node": "/net/net.6/ConvTranspose",
+      "bn_node": "/net/net.7/BatchNormalization",
+      "channels": 192,
+      "epsilon": 9.999999747378752e-06
+    },
+    {
+      "conv_node": "/net/net.9/ConvTranspose",
+      "bn_node": "/net/net.10/BatchNormalization",
+      "channels": 96,
+      "epsilon": 9.999999747378752e-06
+    }
+  ],
+  "graph_nodes": {
+    "raw": 14,
+    "fused": 10
+  },
+  "speed_gate": {
+    "minimum_batches_at_least_5_percent": 2,
+    "actual_batches": 0
+  },
+  "numerical_gate": {
+    "fp32_tolerance": 1e-05,
+    "fp16_tolerance": 0.002,
+    "pass": true
+  },
+  "operator_block_gate": {
+    "minimum_speedup_percent": 5.0,
+    "actual_pass_rows": 12,
+    "rows": 24,
+    "numerical_pass": true
+  },
+  "report_artifacts": [
+    "generator_fp32_manual_bn_fused.onnx",
+    "trt_fusion_benchmark.csv",
+    "trt_fusion_layer_profile.csv",
+    "numerical_equivalence.csv",
+    "operator_block_fusion_benchmark.csv"
+  ]
+}

@@ -1,0 +1,91 @@
+engine,batch,layer,time_ms
+generator_trt_fp32.engine,1,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.1034879982471466
+generator_trt_fp32.engine,1,Reformatting CopyNode for Input Tensor 0 to /net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.0049600000493228436
+generator_trt_fp32.engine,1,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.3375999927520752
+generator_trt_fp32.engine,1,Reformatting CopyNode for Input Tensor 0 to /net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.0055680000223219395
+generator_trt_fp32.engine,1,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.07391999661922455
+generator_trt_fp32.engine,1,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,0.08886399865150452
+generator_trt_fp32.engine,1,/net/net.12/ConvTranspose,0.04886399954557419
+generator_trt_fp32.engine,1,__mye43_0_myl7_0,0.001888000057078898
+generator_trt_fp32.engine,1,__myl_Tanh_myl7_1,0.003903999924659729
+generator_trt_fp32.engine,4,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.3961920142173767
+generator_trt_fp32.engine,4,Reformatting CopyNode for Input Tensor 0 to /net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.005824000108987093
+generator_trt_fp32.engine,4,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.36691200733184814
+generator_trt_fp32.engine,4,Reformatting CopyNode for Input Tensor 0 to /net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.006144000217318535
+generator_trt_fp32.engine,4,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.18636800348758698
+generator_trt_fp32.engine,4,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,0.20230400562286377
+generator_trt_fp32.engine,4,/net/net.12/ConvTranspose,0.13152000308036804
+generator_trt_fp32.engine,4,__mye43_0_myl7_0,0.002047999994829297
+generator_trt_fp32.engine,4,__myl_Tanh_myl7_1,0.005632000043988228
+generator_trt_fp32.engine,8,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.48127999901771545
+generator_trt_fp32.engine,8,Reformatting CopyNode for Input Tensor 0 to /net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.0081599997356534
+generator_trt_fp32.engine,8,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.4355520009994507
+generator_trt_fp32.engine,8,Reformatting CopyNode for Input Tensor 0 to /net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.00684799998998642
+generator_trt_fp32.engine,8,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.35948801040649414
+generator_trt_fp32.engine,8,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,0.3736959993839264
+generator_trt_fp32.engine,8,/net/net.12/ConvTranspose,0.26156800985336304
+generator_trt_fp32.engine,8,__mye43_0_myl7_0,0.0021440000273287296
+generator_trt_fp32.engine,8,__myl_Tanh_myl7_1,0.0055680000223219395
+generator_trt_fp32.engine,16,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.5486080050468445
+generator_trt_fp32.engine,16,Reformatting CopyNode for Input Tensor 0 to /net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.008448000065982342
+generator_trt_fp32.engine,16,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.7901120185852051
+generator_trt_fp32.engine,16,Reformatting CopyNode for Input Tensor 0 to /net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.012671999633312225
+generator_trt_fp32.engine,16,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.7086399793624878
+generator_trt_fp32.engine,16,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,0.7413759827613831
+generator_trt_fp32.engine,16,/net/net.12/ConvTranspose,0.48947200179100037
+generator_trt_fp32.engine,16,__mye43_0_myl7_0,0.002047999994829297
+generator_trt_fp32.engine,16,__myl_Tanh_myl7_1,0.006144000217318535
+generator_trt_fp32.engine,32,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.595583975315094
+generator_trt_fp32.engine,32,Reformatting CopyNode for Input Tensor 0 to /net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.012575999833643436
+generator_trt_fp32.engine,32,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,1.231552004814148
+generator_trt_fp32.engine,32,Reformatting CopyNode for Input Tensor 0 to /net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.02377600036561489
+generator_trt_fp32.engine,32,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,1.422111988067627
+generator_trt_fp32.engine,32,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,1.4520319700241089
+generator_trt_fp32.engine,32,/net/net.12/ConvTranspose,0.98716801404953
+generator_trt_fp32.engine,32,__mye43_0_myl7_0,0.002047999994829297
+generator_trt_fp32.engine,32,__myl_Tanh_myl7_1,0.009920000098645687
+generator_trt_fp16.engine,1,Reformatting CopyNode for Input Tensor 0 to /net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.0
+generator_trt_fp16.engine,1,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.07516799867153168
+generator_trt_fp16.engine,1,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.08294399827718735
+generator_trt_fp16.engine,1,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.04505600035190582
+generator_trt_fp16.engine,1,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,0.043007999658584595
+generator_trt_fp16.engine,1,/net/net.12/ConvTranspose,0.031808000057935715
+generator_trt_fp16.engine,1,Reformatting CopyNode for Input Tensor 0 to PWN(/net/net.13/Tanh),0.003008000086992979
+generator_trt_fp16.engine,1,__mye47_0_myl7_0,0.002047999994829297
+generator_trt_fp16.engine,1,__myl_CastTanhCast_myl7_1,0.008191999979317188
+generator_trt_fp16.engine,4,Reformatting CopyNode for Input Tensor 0 to /net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.0
+generator_trt_fp16.engine,4,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.3357119858264923
+generator_trt_fp16.engine,4,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.0883840024471283
+generator_trt_fp16.engine,4,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.04899200052022934
+generator_trt_fp16.engine,4,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,0.04444799944758415
+generator_trt_fp16.engine,4,/net/net.12/ConvTranspose,0.043776001781225204
+generator_trt_fp16.engine,4,Reformatting CopyNode for Input Tensor 0 to PWN(/net/net.13/Tanh),0.004095999989658594
+generator_trt_fp16.engine,4,__mye47_0_myl7_0,0.0019519999623298645
+generator_trt_fp16.engine,4,__myl_CastTanhCast_myl7_1,0.007807999849319458
+generator_trt_fp16.engine,8,Reformatting CopyNode for Input Tensor 0 to /net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.0
+generator_trt_fp16.engine,8,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.16793599724769592
+generator_trt_fp16.engine,8,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.11427199840545654
+generator_trt_fp16.engine,8,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.0631679967045784
+generator_trt_fp16.engine,8,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,0.07360000163316727
+generator_trt_fp16.engine,8,/net/net.12/ConvTranspose,0.07459200173616409
+generator_trt_fp16.engine,8,Reformatting CopyNode for Input Tensor 0 to PWN(/net/net.13/Tanh),0.006144000217318535
+generator_trt_fp16.engine,8,__mye47_0_myl7_0,0.002047999994829297
+generator_trt_fp16.engine,8,__myl_CastTanhCast_myl7_1,0.004095999989658594
+generator_trt_fp16.engine,16,Reformatting CopyNode for Input Tensor 0 to /net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.0
+generator_trt_fp16.engine,16,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.34406399726867676
+generator_trt_fp16.engine,16,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.1454080045223236
+generator_trt_fp16.engine,16,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.1268479973077774
+generator_trt_fp16.engine,16,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,0.12003199756145477
+generator_trt_fp16.engine,16,/net/net.12/ConvTranspose,0.1268800050020218
+generator_trt_fp16.engine,16,Reformatting CopyNode for Input Tensor 0 to PWN(/net/net.13/Tanh),0.0071680000983178616
+generator_trt_fp16.engine,16,__mye47_0_myl7_0,0.002047999994829297
+generator_trt_fp16.engine,16,__myl_CastTanhCast_myl7_1,0.005824000108987093
+generator_trt_fp16.engine,32,Reformatting CopyNode for Input Tensor 0 to /net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.0
+generator_trt_fp16.engine,32,/net/net.0/ConvTranspose + /net/net.1/BatchNormalization + /net/net.2/Relu,0.4567039906978607
+generator_trt_fp16.engine,32,/net/net.3/ConvTranspose + /net/net.4/BatchNormalization + /net/net.5/Relu,0.2396160066127777
+generator_trt_fp16.engine,32,/net/net.6/ConvTranspose + /net/net.7/BatchNormalization + /net/net.8/Relu,0.28038400411605835
+generator_trt_fp16.engine,32,/net/net.9/ConvTranspose + /net/net.10/BatchNormalization + /net/net.11/Relu,0.2295680046081543
+generator_trt_fp16.engine,32,/net/net.12/ConvTranspose,0.26576000452041626
+generator_trt_fp16.engine,32,Reformatting CopyNode for Input Tensor 0 to PWN(/net/net.13/Tanh),0.012512000277638435
+generator_trt_fp16.engine,32,__mye47_0_myl7_0,0.0021120000164955854
+generator_trt_fp16.engine,32,__myl_CastTanhCast_myl7_1,0.008031999692320824

@@ -1,0 +1,3 @@
+probe,replacement,onnx_file,export,checker,node_count,custom_domain_count,error
+wavelet_replacement,third-party Haar DWT -> standard Slice/Add/Sub/Mul/Concat,wavelet_replacement.onnx,passed,passed,49,0,
+dynamic_spectral_norm_replacement,dynamic power iteration -> standard MatMul/ReduceSum/Sqrt/Div/Conv,dynamic_spectral_norm_replacement.onnx,passed,passed,45,0,

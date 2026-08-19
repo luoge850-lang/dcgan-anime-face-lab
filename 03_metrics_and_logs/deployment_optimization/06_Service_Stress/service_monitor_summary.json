@@ -1,0 +1,14 @@
+{
+  "run_id": "Run_20260819_014504",
+  "mode": "staged",
+  "monitor_interval_seconds": 5.0,
+  "samples": 100,
+  "gpu": "Tesla T4",
+  "gpu_memory_peak_mb": 677.1875,
+  "service_rss_peak_mb": 1077.83984375,
+  "max_tested_concurrency": 128,
+  "failures": 0,
+  "hard_crash_observed": false,
+  "soak_run_included": false,
+  "source": "06_Service_Stress/raw_run_20260819_014504/system_monitor_summary.json"
+}

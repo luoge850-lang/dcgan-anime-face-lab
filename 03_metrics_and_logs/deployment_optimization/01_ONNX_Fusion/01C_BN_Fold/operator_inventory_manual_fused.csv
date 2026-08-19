@@ -1,0 +1,4 @@
+op_type,count
+ConvTranspose,5
+Relu,4
+Tanh,1

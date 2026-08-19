@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1240 560">
+<title id="title">Staged service stress: concurrency, P99, and throughput</title>
+<desc id="desc">Locust staged-load evidence on a Tesla T4. All tested stages returned zero failed requests.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="620.0" y="38" font-family="Arial, sans-serif" font-size="22px" text-anchor="middle" font-weight="700" fill="#0f172a">Staged service stress: concurrency, P99, and throughput</text>
+<text x="330.0" y="73" font-family="Arial, sans-serif" font-size="17px" text-anchor="middle" font-weight="700" fill="#0f172a">P99 latency</text>
+<text x="90" y="473" font-family="Arial, sans-serif" font-size="12px" text-anchor="start" font-weight="400" fill="#64748b">milliseconds</text>
+<line x1="90" y1="100" x2="90" y2="425" stroke="#334155" stroke-width="1.5"/>
+<line x1="90" y1="425" x2="570" y2="425" stroke="#334155" stroke-width="1.5"/>
+<line x1="90" y1="425.0" x2="570" y2="425.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="429.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">0</text>
+<line x1="90" y1="343.75" x2="570" y2="343.75" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="347.75" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">130</text>
+<line x1="90" y1="262.5" x2="570" y2="262.5" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="266.5" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">260</text>
+<line x1="90" y1="181.25" x2="570" y2="181.25" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="185.25" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">390</text>
+<line x1="90" y1="100.0" x2="570" y2="100.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="104.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">520</text>
+<path d="M 90.0 421.9 L 93.8 420.0 L 101.3 414.4 L 116.5 406.2 L 146.7 390.0 L 207.2 350.0 L 267.6 275.0 L 328.1 237.5 L 388.6 206.2 L 449.1 175.0 L 570.0 118.8" fill="none" stroke="#dc2626" stroke-width="3"/>
+<circle cx="90.0" cy="421.9" r="5" fill="#dc2626"/>
+<text x="90.0" y="409.875" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">5</text>
+<circle cx="93.8" cy="420.0" r="5" fill="#dc2626"/>
+<text x="93.77952755905511" y="408.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">8</text>
+<circle cx="101.3" cy="414.4" r="5" fill="#dc2626"/>
+<text x="101.33858267716535" y="402.375" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">17</text>
+<circle cx="116.5" cy="406.2" r="5" fill="#dc2626"/>
+<text x="116.45669291338582" y="394.25" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">30</text>
+<circle cx="146.7" cy="390.0" r="5" fill="#dc2626"/>
+<text x="146.69291338582678" y="378.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">56</text>
+<circle cx="207.2" cy="350.0" r="5" fill="#dc2626"/>
+<text x="207.16535433070868" y="338.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">120</text>
+<circle cx="267.6" cy="275.0" r="5" fill="#dc2626"/>
+<text x="267.6377952755905" y="263.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">240</text>
+<circle cx="328.1" cy="237.5" r="5" fill="#dc2626"/>
+<text x="328.1102362204724" y="225.5" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">300</text>
+<circle cx="388.6" cy="206.2" r="5" fill="#dc2626"/>
+<text x="388.5826771653543" y="194.25" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">350</text>
+<circle cx="449.1" cy="175.0" r="5" fill="#dc2626"/>
+<text x="449.0551181102362" y="163.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">400</text>
+<circle cx="570.0" cy="118.8" r="5" fill="#dc2626"/>
+<text x="570.0" y="106.75" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">490</text>
+<text x="90.0" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">1</text>
+<text x="146.69291338582678" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">16</text>
+<text x="207.16535433070868" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">32</text>
+<text x="328.1102362204724" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">64</text>
+<text x="570.0" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">128</text>
+<text x="570" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="500" fill="#0f172a">concurrency</text>
+<text x="900.0" y="73" font-family="Arial, sans-serif" font-size="17px" text-anchor="middle" font-weight="700" fill="#0f172a">Throughput</text>
+<text x="660" y="473" font-family="Arial, sans-serif" font-size="12px" text-anchor="start" font-weight="400" fill="#64748b">requests/s</text>
+<line x1="660" y1="100" x2="660" y2="425" stroke="#334155" stroke-width="1.5"/>
+<line x1="660" y1="425" x2="1140" y2="425" stroke="#334155" stroke-width="1.5"/>
+<line x1="660" y1="425.0" x2="1140" y2="425.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="429.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">230</text>
+<line x1="660" y1="343.75" x2="1140" y2="343.75" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="347.75" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">260</text>
+<line x1="660" y1="262.5" x2="1140" y2="262.5" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="266.5" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">290</text>
+<line x1="660" y1="181.25" x2="1140" y2="181.25" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="185.25" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">320</text>
+<line x1="660" y1="100.0" x2="1140" y2="100.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="104.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">350</text>
+<path d="M 660.0 373.0 L 663.8 177.7 L 671.3 160.7 L 686.5 134.6 L 716.7 125.8 L 777.2 147.1 L 837.6 121.1 L 898.1 128.3 L 958.6 132.8 L 1019.1 128.1 L 1140.0 140.3" fill="none" stroke="#2563eb" stroke-width="3"/>
+<circle cx="660.0" cy="373.0" r="5" fill="#2563eb"/>
+<text x="660.0" y="360.959375" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">249</text>
+<circle cx="663.8" cy="177.7" r="5" fill="#2563eb"/>
+<text x="663.7795275590552" y="165.71562499999996" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">321</text>
+<circle cx="671.3" cy="160.7" r="5" fill="#2563eb"/>
+<text x="671.3385826771654" y="148.6883333333334" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">328</text>
+<circle cx="686.5" cy="134.6" r="5" fill="#2563eb"/>
+<text x="686.4566929133858" y="122.55562500000002" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">337</text>
+<circle cx="716.7" cy="125.8" r="5" fill="#2563eb"/>
+<text x="716.6929133858267" y="113.77520833333335" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">340</text>
+<circle cx="777.2" cy="147.1" r="5" fill="#2563eb"/>
+<text x="777.1653543307086" y="135.14395833333327" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">333</text>
+<circle cx="837.6" cy="121.1" r="5" fill="#2563eb"/>
+<text x="837.6377952755905" y="109.09250000000003" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">342</text>
+<circle cx="898.1" cy="128.3" r="5" fill="#2563eb"/>
+<text x="898.1102362204724" y="116.33729166666672" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">340</text>
+<circle cx="958.6" cy="132.8" r="5" fill="#2563eb"/>
+<text x="958.5826771653543" y="120.78166666666664" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">338</text>
+<circle cx="1019.1" cy="128.1" r="5" fill="#2563eb"/>
+<text x="1019.0551181102362" y="116.09083333333336" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">340</text>
+<circle cx="1140.0" cy="140.3" r="5" fill="#2563eb"/>
+<text x="1140.0" y="128.34333333333336" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">335</text>
+<text x="660.0" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">1</text>
+<text x="716.6929133858267" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">16</text>
+<text x="777.1653543307086" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">32</text>
+<text x="898.1102362204724" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">64</text>
+<text x="1140.0" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">128</text>
+<text x="1140" y="447" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="500" fill="#0f172a">concurrency</text>
+<text x="620.0" y="536" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="400" fill="#64748b">Staged run: concurrency 1–128, zero failures; no hard crash observed at the tested maximum.</text>
+</svg>

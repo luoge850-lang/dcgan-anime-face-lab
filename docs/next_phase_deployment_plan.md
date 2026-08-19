@@ -1,6 +1,20 @@
 # Next phase: generator export and inference evaluation
 
-This document is a planned engineering phase, not a completed experiment. It is kept separate from the frozen training evidence so that future deployment work does not rewrite historical claims.
+This document was originally a future-work plan. The active Kaggle workspace now contains measured results for most of the planned deployment chain. It is retained for traceability; the current public status is summarized in [`docs/deployment_optimization.md`](deployment_optimization.md) and [`deployment_task_status.csv`](../03_metrics_and_logs/deployment_optimization/deployment_task_status.csv).
+
+## Current status
+
+| Area | Status |
+|---|---|
+| ONNX export/checker | Measured and passed |
+| Numerical equivalence and block-level fusion | Measured; whole-generator speed gate not passed |
+| ORT/TensorRT/OpenVINO benchmark | Measured |
+| FP32/FP16/INT8 PTQ | Measured |
+| Layer sensitivity and mixed precision | Measured; final `net.0 + net.12` selected |
+| QAT | Measured under revised acceptance; strict high-frequency claim not passed |
+| HTTP service preflight | Measured |
+| Locust staged stress | Measured through concurrency 128 with zero failures |
+| 30-minute soak and long-run memory leak conclusion | Not measured in this snapshot |
 
 ## Goal
 
@@ -45,6 +59,10 @@ For ConvTranspose, the channel axis differs from Conv2d. A folding implementatio
 ### 4. Precision study
 
 Treat FP16 as the first practical comparison. Treat INT8 as a quality-risk experiment requiring a calibration set and a full image-quality report. Protect the Tanh output and compare FID, coverage, blur rate, edge density, and qualitative samples in addition to latency.
+
+## Service stress boundary
+
+The staged run used HTTP request concurrency with TensorRT dynamic batch fixed at 1. It collected P99, RPS, failures, GPU memory, GPU SM, and service RSS at a 5-second interval. Latency pressure increased with concurrency, but no hard crash occurred at the tested maximum of 128. A staged run is not a substitute for a long soak; future work, if compute becomes available, is limited to the soak protocol rather than re-running the historical training experiments.
 
 ## Required artifacts
 

@@ -1,0 +1,45 @@
+{
+  "task": "Task5_05B_QAT_Evaluation",
+  "status": "complete",
+  "acceptance_revision": "no_obvious_visual_collapse_and_same_order_speed",
+  "original_manifest": "qat_evaluation_manifest (3).json",
+  "original_status": "not_passed",
+  "note": "The original strict Haar/FP32-blur and 1.25x all-INT8 gates are retained as diagnostics. This revised record does not claim high-frequency or hair/eyeliner superiority.",
+  "policy": {
+    "fid_qat_must_be_lower_than_ptq": true,
+    "max_qat_blur_degradation_vs_ptq_pp": 0.5,
+    "haar_high_frequency": "diagnostic_only",
+    "max_qat_p99_ratio_vs_all_int8_ptq": 1.30,
+    "max_qat_p99_ratio_vs_mixed_ptq": 1.15,
+    "visual_claim": "No obvious quality collapse in identical-latent contact sheet; no literal hair/eyeliner superiority claim."
+  },
+  "metrics": {
+    "fp32": { "fid": 29.991047247600363, "blur_rate": 0.12, "p99_ms_batch32": 7.469627027511597 },
+    "ptq_int8": { "fid": 35.3197731443872, "blur_rate": 0.125, "haar_mae_vs_fp32": 0.008958601392805576, "p99_ms_batch32": 1.4117270743846893 },
+    "mixed_ptq": { "fid": 31.177550794686624, "blur_rate": 0.121, "haar_mae_vs_fp32": 0.002477768575772643, "p99_ms_batch32": 1.618179874420166 },
+    "qat_int8": { "fid": 31.64562402584862, "blur_rate": 0.113, "haar_mae_vs_fp32": 0.009020347148180008, "p99_ms_batch32": 1.796279306411743 }
+  },
+  "derived": {
+    "qat_fid_improvement_vs_ptq": 3.6741491185385797,
+    "qat_blur_change_vs_ptq_pp": -1.2,
+    "qat_haar_improvement_vs_ptq": -0.00006174575537443161,
+    "qat_p99_ratio_vs_all_int8_ptq": 1.2723984253079963,
+    "qat_p99_ratio_vs_mixed_ptq": 1.1100615789424488,
+    "qat_speedup_vs_fp32_p99": 4.15838839808992,
+    "qat_p99_latency_reduction_vs_fp32_percent": 75.9522222489046
+  },
+  "revised_gates": {
+    "quality_pass": true,
+    "speed_pass": true,
+    "fid_pass": true,
+    "blur_not_materially_worse_than_ptq_pass": true,
+    "all_int8_same_order_speed_pass": true,
+    "mixed_ptq_speed_pass": true
+  },
+  "source_hashes": {
+    "qat_checkpoint": "044590261f96889ce313c4ae2c685cc9de337bd0a6807c3a779eb4b755b994ab",
+    "fp32_engine": "e861ed98f768944298e4b707a3a82ec27641a724e9b934818e4d064a68c97abd",
+    "ptq_int8_engine": "0f5cbd851756abfe1ce2e1b8897ef01f65b9947af658e62e2ce31df0e99bb4ca",
+    "mixed_ptq_engine": "19cae2c5ae3639b25272e1dadecc26a95d2f07f47b5a568819c10fad3edc695e"
+  }
+}

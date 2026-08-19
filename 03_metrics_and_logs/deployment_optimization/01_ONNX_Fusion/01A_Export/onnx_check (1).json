@@ -1,0 +1,35 @@
+{
+  "experiment": "Exp11_Deployment",
+  "checkpoint": "/kaggle/input/datasets/louisharrington/exp11-weights/generator_ema_final.pth",
+  "checkpoint_sha256": "1dafbbe767d1bb1e93d895ccd894eb3b92ba9eec4fb8c8e4815c9e36d2a20ba1",
+  "onnx": "/kaggle/working/dcgan_output/Exp11_Deployment/generator_fp32_raw.onnx",
+  "opset": 17,
+  "input": {
+    "name": "z",
+    "shape": [
+      "batch",
+      128,
+      1,
+      1
+    ]
+  },
+  "output": {
+    "name": "image",
+    "shape": [
+      "batch",
+      3,
+      64,
+      64
+    ]
+  },
+  "node_count": 14,
+  "operator_counts": {
+    "BatchNormalization": 4,
+    "ConvTranspose": 5,
+    "Relu": 4,
+    "Tanh": 1
+  },
+  "custom_nodes": [],
+  "checker": "passed",
+  "shape_inference_checker": "passed"
+}

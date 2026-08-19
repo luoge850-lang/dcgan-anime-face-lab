@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1240 620">
+<title id="title">Deployment quality-speed snapshot</title>
+<desc id="desc">Standard FID and throughput from the archived quantization tables; benchmark scope labels are preserved in the repository CSV.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="620.0" y="38" font-family="Arial, sans-serif" font-size="22px" text-anchor="middle" font-weight="700" fill="#0f172a">Deployment quality-speed snapshot</text>
+<text x="330.0" y="73" font-family="Arial, sans-serif" font-size="17px" text-anchor="middle" font-weight="700" fill="#0f172a">Standard FID</text>
+<text x="90" y="518" font-family="Arial, sans-serif" font-size="12px" text-anchor="start" font-weight="400" fill="#64748b">lower is better</text>
+<line x1="90" y1="100" x2="90" y2="470" stroke="#334155" stroke-width="1.5"/>
+<line x1="90" y1="470" x2="570" y2="470" stroke="#334155" stroke-width="1.5"/>
+<line x1="90" y1="470.0" x2="570" y2="470.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="474.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">28.0</text>
+<line x1="90" y1="377.5" x2="570" y2="377.5" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="381.5" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">30.2</text>
+<line x1="90" y1="285.0" x2="570" y2="285.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="289.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">32.5</text>
+<line x1="90" y1="192.5" x2="570" y2="192.5" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="196.5" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">34.8</text>
+<line x1="90" y1="100.0" x2="570" y2="100.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="80" y="104.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">37.0</text>
+<rect x="110.2" y="388.1" width="55.7" height="81.9" fill="#64748b"/>
+<text x="138.0" y="380.14559888888886" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">29.99</text>
+<text x="138.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">FP32</text>
+<rect x="206.2" y="388.0" width="55.7" height="82.0" fill="#2563eb"/>
+<text x="234.0" y="380.0211966666667" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">29.99</text>
+<text x="234.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">FP16</text>
+<rect x="302.2" y="169.1" width="55.7" height="300.9" fill="#475569"/>
+<text x="330.0" y="161.07608111111102" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">35.32</text>
+<text x="330.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">INT8 PTQ</text>
+<rect x="398.2" y="339.4" width="55.7" height="130.6" fill="#16a34a"/>
+<text x="426.0" y="331.3673477777777" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">31.18</text>
+<text x="426.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">Mixed PTQ</text>
+<rect x="494.2" y="320.1" width="55.7" height="149.9" fill="#ea580c"/>
+<text x="522.0" y="312.1243466666666" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">31.65</text>
+<text x="522.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">QAT INT8</text>
+<text x="900.0" y="73" font-family="Arial, sans-serif" font-size="17px" text-anchor="middle" font-weight="700" fill="#0f172a">Throughput</text>
+<text x="660" y="518" font-family="Arial, sans-serif" font-size="12px" text-anchor="start" font-weight="400" fill="#64748b">images/s, higher is better</text>
+<line x1="660" y1="100" x2="660" y2="470" stroke="#334155" stroke-width="1.5"/>
+<line x1="660" y1="470" x2="1140" y2="470" stroke="#334155" stroke-width="1.5"/>
+<line x1="660" y1="470.0" x2="1140" y2="470.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="474.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">0</text>
+<line x1="660" y1="377.5" x2="1140" y2="377.5" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="381.5" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">6750</text>
+<line x1="660" y1="285.0" x2="1140" y2="285.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="289.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">13500</text>
+<line x1="660" y1="192.5" x2="1140" y2="192.5" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="196.5" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">20250</text>
+<line x1="660" y1="100.0" x2="1140" y2="100.0" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="650" y="104.0" font-family="Arial, sans-serif" font-size="11px" text-anchor="end" font-weight="400" fill="#64748b">27000</text>
+<rect x="680.2" y="410.3" width="55.7" height="59.7" fill="#64748b"/>
+<text x="708.0" y="402.3249611111111" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">4,355</text>
+<text x="708.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">FP32</text>
+<rect x="776.2" y="257.7" width="55.7" height="212.3" fill="#2563eb"/>
+<text x="804.0" y="249.66128925925932" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">15,495</text>
+<text x="804.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">FP16</text>
+<rect x="872.2" y="180.8" width="55.7" height="289.2" fill="#475569"/>
+<text x="900.0" y="172.7686566666667" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">21,106</text>
+<text x="900.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">INT8 PTQ</text>
+<rect x="968.2" y="165.4" width="55.7" height="304.6" fill="#16a34a"/>
+<text x="996.0" y="157.39514296296295" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">22,228</text>
+<text x="996.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">Mixed PTQ</text>
+<rect x="1064.2" y="208.4" width="55.7" height="261.6" fill="#ea580c"/>
+<text x="1092.0" y="200.3592688888889" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="700" fill="#0f172a">19,093</text>
+<text x="1092.0" y="492" font-family="Arial, sans-serif" font-size="11px" text-anchor="middle" font-weight="500" fill="#0f172a">QAT INT8</text>
+<text x="620.0" y="596" font-family="Arial, sans-serif" font-size="12px" text-anchor="middle" font-weight="400" fill="#64748b">Task 3/4/5 benchmark scopes are documented separately; do not treat every latency row as one identical protocol.</text>
+</svg>

@@ -1,0 +1,8 @@
+stage,label,precision,benchmark_scope,standard_fid,legacy_fid,blur_rate,latency_mean_ms,latency_p99_ms,throughput_images_per_s,quality_role,source
+Task3,FP32,FP32,03E quality and engine benchmark,29.991053,40.206157,0.120000,14.696882,,4354.665,reference,03_Quantization/03E_Report/fp32_fp16_int8_metrics.csv
+Task3,FP16,FP16,03E quality and engine benchmark,29.994079,40.203526,0.120000,4.130368,,15494.987,near_lossless_precision,03_Quantization/03E_Report/fp32_fp16_int8_metrics.csv
+Task3,INT8,INT8 PTQ,03E quality and engine benchmark,35.319771,45.081794,0.125000,3.032303,,21106.071,faster_quality_loss,03_Quantization/03E_Report/fp32_fp16_int8_metrics.csv
+Task4,Mixed_net0_net12,Mixed FP16/INT8,04C final confirmation,31.177551,,0.121000,1.334908,,23971.694,selected_quality_speed_tradeoff,04_Quantization_Sensitivity/04C/final_confirmation_summary.csv
+Task5,PTQ_INT8,INT8 PTQ,05B batch32 quality-speed comparison,35.319773,,0.125000,1.288757,1.411727,24830.120,pre_QAT_baseline,05_QAT/05B/qat_vs_ptq_summary.csv
+Task5,Mixed_PTQ,Mixed FP16/INT8,05B batch32 quality-speed comparison,31.177551,,0.121000,1.439631,1.618180,22227.922,comparison_baseline,05_QAT/05B/qat_vs_ptq_summary.csv
+Task5,QAT_INT8,QAT INT8,05B batch32 quality-speed comparison,31.645624,,0.113000,1.676033,1.796279,19092.702,revised_acceptance_pass,05_QAT/05B/qat_vs_ptq_summary.csv

@@ -1,5 +1,11 @@
 # One-month project audit and application packaging
 
+## Snapshot update: 2026-08-19
+
+The active workspace was re-scanned after the initial month-one packaging. It now contains 2,504 files, 87 Python scripts, 99 JSON records, and 100 CSV files. All 87 Python scripts passed an AST parse; the only JSON parse exception was a UTF-8 BOM in a deployment manifest, which is valid JSON after BOM-aware decoding.
+
+The deployment phase now has measured evidence beyond preflight: ONNX/engine/quantization artifacts, layer sensitivity and QAT results, plus a staged service run at concurrency 1–128 with zero failures and 5-second GPU/RSS monitoring. The staged run did not include the planned 30-minute soak, so the public snapshot reports no hard crash through the tested maximum but does not claim long-run leak verification.
+
 ## Audit scope
 
 The local internship snapshot was scanned on 2026-08-10:

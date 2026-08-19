@@ -1,0 +1,128 @@
+{
+  "task": "Task5_05A_QAT_Training",
+  "status": "complete",
+  "device": "cuda",
+  "architecture": "Exp11 Generator ConvTranspose 128->768->384->192->96->3",
+  "policy": {
+    "selected_strategy": "net.0+net.12",
+    "fp16_layers": [
+      "net.0",
+      "net.12"
+    ],
+    "source": "04C confirmed policy"
+  },
+  "qat_layout_version": 4,
+  "fake_quant": {
+    "activation": "per_tensor_symmetric int8 [-128,127] on ConvTranspose input",
+    "weight": "per_tensor_symmetric int8 [-128,127], scalar scale",
+    "quantized_layers": [
+      "net.3",
+      "net.6",
+      "net.9"
+    ],
+    "protected_layers": [
+      "net.0",
+      "net.12"
+    ],
+    "trailing_output_fake_quant": false
+  },
+  "training_objective": {
+    "default_profile": "output_l1_mse + Haar detail + image_gradient",
+    "pixel_l1": "output distillation",
+    "pixel_mse": "output distillation",
+    "highfreq": "Haar LH/HL/HH detail L1",
+    "gradient": "horizontal/vertical first-order gradient L1",
+    "feature9": "pre-final 32x32 ConvTranspose feature L1",
+    "feature12": "pre-Tanh final ConvTranspose feature L1",
+    "optional_terms": "feature9, feature12, Laplacian, and weight anchor are disabled unless their CLI weights are positive",
+    "selection_rule": "minimum weighted objective on a held-out latent_calibration split; latent_eval is reserved for final 05B testing"
+  },
+  "training_revision": 3,
+  "inputs": {
+    "baseline_checkpoint": "/kaggle/input/datasets/louisharrington/exp11-weights/generator_ema_final.pth",
+    "baseline_sha256": "1dafbbe767d1bb1e93d895ccd894eb3b92ba9eec4fb8c8e4815c9e36d2a20ba1",
+    "protocol": "/kaggle/input/datasets/louisharrington/task3-03a-quantization-protocol",
+    "latent_calibration_count": 512,
+    "latent_eval_count_available": 5000,
+    "train_latent_count": 384,
+    "selection_latent_count": 128,
+    "train_latent_source": "latent_calibration prefix; selection split excluded",
+    "selection_latent_source": "latent_calibration holdout; latent_eval excluded"
+  },
+  "training": {
+    "checkpoint": "",
+    "protocol_path": "",
+    "policy_manifest": "",
+    "output_dir": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/05_QAT/05A_QAT_Training",
+    "steps": 2500,
+    "batch_size": 32,
+    "lr": 5e-06,
+    "weight_decay": 0.0,
+    "distill_l1_weight": 1.0,
+    "distill_mse_weight": 0.25,
+    "highfreq_weight": 0.5,
+    "laplacian_weight": 0.0,
+    "gradient_weight": 0.1,
+    "feature9_weight": 0.0,
+    "feature12_weight": 0.0,
+    "weight_anchor_weight": 0.0,
+    "train_pool": 384,
+    "selection_count": 128,
+    "eval_every": 100,
+    "observer_calibration_batches": 16,
+    "early_stop_patience": 600,
+    "seed": 20260817,
+    "no_zip": false
+  },
+  "selection": {
+    "best_step": 900,
+    "pre_qat_objective": 0.04022922685689991,
+    "best_objective": 0.03916837166325422,
+    "rollback_to_step_0_if_not_improved": true,
+    "selection_set_is_disjoint_from_final_latent_eval": true
+  },
+  "metrics": {
+    "pre_qat": {
+      "l1": 0.02790637407451868,
+      "mse": 0.001966849056771025,
+      "highfreq": 0.01850574091076851,
+      "laplacian": 0.0,
+      "gradient": 0.02578270062804222,
+      "feature9": 0.0,
+      "feature12": 0.0,
+      "objective": 0.04022922685689991
+    },
+    "qat_best": {
+      "l1": 0.027207141742110252,
+      "mse": 0.0018640128255356103,
+      "highfreq": 0.01798022584989667,
+      "laplacian": 0.0,
+      "gradient": 0.025051137898117304,
+      "feature9": 0.0,
+      "feature12": 0.0,
+      "objective": 0.03916837166325422
+    }
+  },
+  "outputs": {
+    "qat_pre.pth": {
+      "sha256": "3647f3674fd83f63632bbb171b0d3d7a92c16618e47b48c873542e430eb0a19c",
+      "bytes": 31133643
+    },
+    "qat_best.pth": {
+      "sha256": "044590261f96889ce313c4ae2c685cc9de337bd0a6807c3a779eb4b755b994ab",
+      "bytes": 31134681
+    }
+  },
+  "plot": {
+    "status": "created",
+    "file": "qat_training_curves.png"
+  },
+  "artifacts": [
+    "qat_pre.pth",
+    "qat_best.pth",
+    "qat_training_log.csv",
+    "qat_training_curves.png",
+    "qat_manifest.json"
+  ],
+  "deployment_note": "05B must export/build both qat_pre.pth and qat_best.pth; 05A intentionally does not call TensorRT."
+}

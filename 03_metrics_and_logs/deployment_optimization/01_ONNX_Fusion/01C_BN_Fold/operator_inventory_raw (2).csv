@@ -1,0 +1,5 @@
+op_type,count
+BatchNormalization,4
+ConvTranspose,5
+Relu,4
+Tanh,1

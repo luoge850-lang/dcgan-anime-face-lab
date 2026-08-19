@@ -1,0 +1,822 @@
+{
+  "task": "Task5_05B_QAT_Evaluation",
+  "status": "not_passed",
+  "inputs": {
+    "pre_qat_checkpoint": {
+      "path": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/05_QAT/05A_QAT_Training/qat_pre.pth",
+      "sha256": "3647f3674fd83f63632bbb171b0d3d7a92c16618e47b48c873542e430eb0a19c"
+    },
+    "qat_checkpoint": {
+      "path": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/05_QAT/05A_QAT_Training/qat_best.pth",
+      "sha256": "044590261f96889ce313c4ae2c685cc9de337bd0a6807c3a779eb4b755b994ab"
+    },
+    "fp32_engine": {
+      "path": "/kaggle/input/datasets/louisharrington/test-engine/generator_trt_fp32.engine",
+      "sha256": "e861ed98f768944298e4b707a3a82ec27641a724e9b934818e4d064a68c97abd"
+    },
+    "ptq_int8_engine": {
+      "path": "/kaggle/input/datasets/louisharrington/test-engine/generator_trt_int8.engine",
+      "sha256": "0f5cbd851756abfe1ce2e1b8897ef01f65b9947af658e62e2ce31df0e99bb4ca"
+    },
+    "mixed_ptq_engine": {
+      "path": "/kaggle/input/datasets/louisharrington/mixed-preseicion/generator_trt_mixed_precision_final.engine",
+      "sha256": "19cae2c5ae3639b25272e1dadecc26a95d2f07f47b5a568819c10fad3edc695e"
+    },
+    "protocol": "/kaggle/input/datasets/louisharrington/task3-03a-quantization-protocol"
+  },
+  "runtime_preflight": {
+    "status": "passed",
+    "runtime": "11.2.1.2",
+    "engines": [
+      {
+        "label": "FP32",
+        "path": "/kaggle/input/datasets/louisharrington/test-engine/generator_trt_fp32.engine",
+        "sha256": "e861ed98f768944298e4b707a3a82ec27641a724e9b934818e4d064a68c97abd",
+        "bytes": 31175948,
+        "runtime": "11.2.1.2",
+        "io_names": [
+          "z",
+          "image"
+        ],
+        "status": "passed"
+      },
+      {
+        "label": "PTQ_INT8",
+        "path": "/kaggle/input/datasets/louisharrington/test-engine/generator_trt_int8.engine",
+        "sha256": "0f5cbd851756abfe1ce2e1b8897ef01f65b9947af658e62e2ce31df0e99bb4ca",
+        "bytes": 8014796,
+        "runtime": "11.2.1.2",
+        "io_names": [
+          "z",
+          "image"
+        ],
+        "status": "passed"
+      },
+      {
+        "label": "MIXED_PTQ",
+        "path": "/kaggle/input/datasets/louisharrington/mixed-preseicion/generator_trt_mixed_precision_final.engine",
+        "sha256": "19cae2c5ae3639b25272e1dadecc26a95d2f07f47b5a568819c10fad3edc695e",
+        "bytes": 9912052,
+        "runtime": "11.2.1.2",
+        "io_names": [
+          "z",
+          "image"
+        ],
+        "status": "passed"
+      }
+    ]
+  },
+  "runtime_install": {
+    "requested_version": "11.2.1.2",
+    "pip_package": "tensorrt-cu12",
+    "skip_install": false,
+    "install_happens_before_first_tensorrt_import": true
+  },
+  "protocol": {
+    "n_fid": 5000,
+    "n_image_eval": 1000,
+    "batch_size": 32,
+    "latent_shape": [
+      5000,
+      128,
+      1,
+      1
+    ],
+    "fid": "pytorch-fid Inception-v3 pool3 2048-d",
+    "blur": "real_eval Laplacian p10 threshold",
+    "high_frequency": "one-level Haar LH/HL/HH MAE against FP32 on identical latent_eval",
+    "benchmark_warmup": 50,
+    "benchmark_iters": 200,
+    "benchmark_repeats": 3
+  },
+  "deployment_policy": {
+    "fp16_layers": [
+      "net.0",
+      "net.12"
+    ],
+    "int8_layers": [
+      "net.3",
+      "net.6",
+      "net.9"
+    ],
+    "weight_scale_mode": "per_tensor_scalar",
+    "trailing_output_fake_quant": false,
+    "tensorrt_version": "11.2.1.2",
+    "strongly_typed_builder_for_10_12_plus": true,
+    "topology_mode": "05B_explicit_qdq_rewrite",
+    "mixed_ptq_baseline_is_engine_only": true
+  },
+  "builds": [
+    {
+      "label": "PRE_QAT",
+      "checkpoint": "qat_pre.pth",
+      "checkpoint_sha256": "3647f3674fd83f63632bbb171b0d3d7a92c16618e47b48c873542e430eb0a19c",
+      "raw_onnx": {
+        "file": "generator_pre_qat_qat_raw.onnx",
+        "sha256": "f9f52e45c44f6bd373fb6b429c9119179d1aaf349058f023138cd04b72746faf",
+        "node_count": 37,
+        "operator_counts": {
+          "Identity": 5,
+          "ConvTranspose": 5,
+          "BatchNormalization": 4,
+          "Relu": 4,
+          "Cast": 6,
+          "QuantizeLinear": 6,
+          "DequantizeLinear": 6,
+          "Tanh": 1
+        },
+        "conv_weight_dq_candidates": 3
+      },
+      "mixed_onnx": {
+        "file": "generator_pre_qat_qat_mixed.onnx",
+        "sha256": "80e0806255995a62f6fc709ebeec326f010718e142717c70133fa43c822a65c3",
+        "materialized_weights": [
+          {
+            "layer": "/net/net.3/ConvTranspose",
+            "weight": "net.3.weight",
+            "initializer": "net.3.weight__qat_int8",
+            "shape": [
+              768,
+              384,
+              4,
+              4
+            ],
+            "scale_count": 1,
+            "scale_mode": "per_tensor"
+          },
+          {
+            "layer": "/net/net.6/ConvTranspose",
+            "weight": "net.6.weight",
+            "initializer": "net.6.weight__qat_int8",
+            "shape": [
+              384,
+              192,
+              4,
+              4
+            ],
+            "scale_count": 1,
+            "scale_mode": "per_tensor"
+          },
+          {
+            "layer": "/net/net.9/ConvTranspose",
+            "weight": "net.9.weight",
+            "initializer": "net.9.weight__qat_int8",
+            "shape": [
+              192,
+              96,
+              4,
+              4
+            ],
+            "scale_count": 1,
+            "scale_mode": "per_tensor"
+          }
+        ],
+        "protected_layers": [
+          {
+            "layer": "net.0",
+            "input_dtype": "FLOAT16",
+            "weight_dtype": "FLOAT16",
+            "compute_output_dtype": "FLOAT16",
+            "boundary_dtype": "FLOAT32"
+          },
+          {
+            "layer": "net.12",
+            "input_dtype": "FLOAT16",
+            "weight_dtype": "FLOAT16",
+            "compute_output_dtype": "FLOAT16",
+            "boundary_dtype": "FLOAT32"
+          }
+        ],
+        "operator_counts": {
+          "Identity": 5,
+          "Cast": 10,
+          "ConvTranspose": 5,
+          "BatchNormalization": 4,
+          "Relu": 4,
+          "QuantizeLinear": 3,
+          "DequantizeLinear": 6,
+          "Tanh": 1
+        }
+      },
+      "graph_audit": {
+        "checker": "passed",
+        "rows": [
+          {
+            "layer": "net.0",
+            "input_from_dq": false,
+            "weight_from_dq": false,
+            "weight_scale_count": null,
+            "fp16_cast_boundary": true,
+            "expected": "FP16",
+            "passed": true
+          },
+          {
+            "layer": "net.3",
+            "input_from_dq": true,
+            "weight_from_dq": true,
+            "weight_scale_count": 1,
+            "fp16_cast_boundary": false,
+            "expected": "INT8",
+            "passed": true
+          },
+          {
+            "layer": "net.6",
+            "input_from_dq": true,
+            "weight_from_dq": true,
+            "weight_scale_count": 1,
+            "fp16_cast_boundary": false,
+            "expected": "INT8",
+            "passed": true
+          },
+          {
+            "layer": "net.9",
+            "input_from_dq": true,
+            "weight_from_dq": true,
+            "weight_scale_count": 1,
+            "fp16_cast_boundary": false,
+            "expected": "INT8",
+            "passed": true
+          },
+          {
+            "layer": "net.12",
+            "input_from_dq": false,
+            "weight_from_dq": false,
+            "weight_scale_count": null,
+            "fp16_cast_boundary": true,
+            "expected": "FP16",
+            "passed": true
+          }
+        ],
+        "quantize_linear": 3,
+        "dequantize_linear": 6,
+        "cast": 10,
+        "operator_counts": {
+          "Identity": 5,
+          "Cast": 10,
+          "ConvTranspose": 5,
+          "BatchNormalization": 4,
+          "Relu": 4,
+          "QuantizeLinear": 3,
+          "DequantizeLinear": 6,
+          "Tanh": 1
+        }
+      },
+      "engine": {
+        "file": "generator_trt_pre_qat.engine",
+        "sha256": "ddbafb27eab3537749170bcf82b99faa1294e65e4f21ca3d8544af9bb6a90937",
+        "bytes": 9588764,
+        "tensorrt": "11.2.1.2",
+        "strongly_typed": true
+      }
+    },
+    {
+      "label": "QAT_INT8",
+      "checkpoint": "qat_best.pth",
+      "checkpoint_sha256": "044590261f96889ce313c4ae2c685cc9de337bd0a6807c3a779eb4b755b994ab",
+      "raw_onnx": {
+        "file": "generator_qat_int8_qat_raw.onnx",
+        "sha256": "0249e1b1d9b561574fac9cc60cfc782b6964d6202954f2c1b7a4d3978f423c96",
+        "node_count": 37,
+        "operator_counts": {
+          "Identity": 5,
+          "ConvTranspose": 5,
+          "BatchNormalization": 4,
+          "Relu": 4,
+          "Cast": 6,
+          "QuantizeLinear": 6,
+          "DequantizeLinear": 6,
+          "Tanh": 1
+        },
+        "conv_weight_dq_candidates": 3
+      },
+      "mixed_onnx": {
+        "file": "generator_qat_int8_qat_mixed.onnx",
+        "sha256": "5bcc18e16c6c39654bb2f58e1e857b608eb7d62ee42fd05bf19c2cb436ae11a4",
+        "materialized_weights": [
+          {
+            "layer": "/net/net.3/ConvTranspose",
+            "weight": "net.3.weight",
+            "initializer": "net.3.weight__qat_int8",
+            "shape": [
+              768,
+              384,
+              4,
+              4
+            ],
+            "scale_count": 1,
+            "scale_mode": "per_tensor"
+          },
+          {
+            "layer": "/net/net.6/ConvTranspose",
+            "weight": "net.6.weight",
+            "initializer": "net.6.weight__qat_int8",
+            "shape": [
+              384,
+              192,
+              4,
+              4
+            ],
+            "scale_count": 1,
+            "scale_mode": "per_tensor"
+          },
+          {
+            "layer": "/net/net.9/ConvTranspose",
+            "weight": "net.9.weight",
+            "initializer": "net.9.weight__qat_int8",
+            "shape": [
+              192,
+              96,
+              4,
+              4
+            ],
+            "scale_count": 1,
+            "scale_mode": "per_tensor"
+          }
+        ],
+        "protected_layers": [
+          {
+            "layer": "net.0",
+            "input_dtype": "FLOAT16",
+            "weight_dtype": "FLOAT16",
+            "compute_output_dtype": "FLOAT16",
+            "boundary_dtype": "FLOAT32"
+          },
+          {
+            "layer": "net.12",
+            "input_dtype": "FLOAT16",
+            "weight_dtype": "FLOAT16",
+            "compute_output_dtype": "FLOAT16",
+            "boundary_dtype": "FLOAT32"
+          }
+        ],
+        "operator_counts": {
+          "Identity": 5,
+          "Cast": 10,
+          "ConvTranspose": 5,
+          "BatchNormalization": 4,
+          "Relu": 4,
+          "QuantizeLinear": 3,
+          "DequantizeLinear": 6,
+          "Tanh": 1
+        }
+      },
+      "graph_audit": {
+        "checker": "passed",
+        "rows": [
+          {
+            "layer": "net.0",
+            "input_from_dq": false,
+            "weight_from_dq": false,
+            "weight_scale_count": null,
+            "fp16_cast_boundary": true,
+            "expected": "FP16",
+            "passed": true
+          },
+          {
+            "layer": "net.3",
+            "input_from_dq": true,
+            "weight_from_dq": true,
+            "weight_scale_count": 1,
+            "fp16_cast_boundary": false,
+            "expected": "INT8",
+            "passed": true
+          },
+          {
+            "layer": "net.6",
+            "input_from_dq": true,
+            "weight_from_dq": true,
+            "weight_scale_count": 1,
+            "fp16_cast_boundary": false,
+            "expected": "INT8",
+            "passed": true
+          },
+          {
+            "layer": "net.9",
+            "input_from_dq": true,
+            "weight_from_dq": true,
+            "weight_scale_count": 1,
+            "fp16_cast_boundary": false,
+            "expected": "INT8",
+            "passed": true
+          },
+          {
+            "layer": "net.12",
+            "input_from_dq": false,
+            "weight_from_dq": false,
+            "weight_scale_count": null,
+            "fp16_cast_boundary": true,
+            "expected": "FP16",
+            "passed": true
+          }
+        ],
+        "quantize_linear": 3,
+        "dequantize_linear": 6,
+        "cast": 10,
+        "operator_counts": {
+          "Identity": 5,
+          "Cast": 10,
+          "ConvTranspose": 5,
+          "BatchNormalization": 4,
+          "Relu": 4,
+          "QuantizeLinear": 3,
+          "DequantizeLinear": 6,
+          "Tanh": 1
+        }
+      },
+      "engine": {
+        "file": "generator_trt_qat_int8.engine",
+        "sha256": "b24e799fc5e32a7392bb587e23c314f290c6f314934d00f1cd4cde9e92bf5282",
+        "bytes": 9570452,
+        "tensorrt": "11.2.1.2",
+        "strongly_typed": true
+      }
+    }
+  ],
+  "metrics": [
+    {
+      "label": "FP32",
+      "status": "ok",
+      "role": "reference",
+      "fid_standard": 29.991047247600363,
+      "blur_rate": 0.12,
+      "blur_delta_pp_vs_fp32": 0.0,
+      "highfreq_haar_mae_vs_fp32": 0.0,
+      "image_mae_vs_fp32": 0.0,
+      "image_rmse_vs_fp32": 0.0,
+      "feature_count": 5000,
+      "engine": "generator_trt_fp32.engine",
+      "engine_sha256": "e861ed98f768944298e4b707a3a82ec27641a724e9b934818e4d064a68c97abd",
+      "latency_mean_ms_batch": 7.22789743979772,
+      "latency_p99_ms_batch": 7.469627027511597,
+      "throughput_images_per_s": 4427.2902689243965
+    },
+    {
+      "label": "PTQ_INT8",
+      "status": "ok",
+      "role": "all_int8_ptq_baseline",
+      "fid_standard": 35.3197731443872,
+      "blur_rate": 0.125,
+      "blur_delta_pp_vs_fp32": 0.5000000000000004,
+      "highfreq_haar_mae_vs_fp32": 0.008958601392805576,
+      "image_mae_vs_fp32": 0.012811562046408653,
+      "image_rmse_vs_fp32": 0.02627856470644474,
+      "feature_count": 5000,
+      "engine": "generator_trt_int8.engine",
+      "engine_sha256": "0f5cbd851756abfe1ce2e1b8897ef01f65b9947af658e62e2ce31df0e99bb4ca",
+      "latency_mean_ms_batch": 1.2887573319673538,
+      "latency_p99_ms_batch": 1.4117270743846893,
+      "throughput_images_per_s": 24830.120617936947
+    },
+    {
+      "label": "MIXED_PTQ",
+      "status": "ok",
+      "role": "04C_mixed_ptq_baseline",
+      "fid_standard": 31.177550794686624,
+      "blur_rate": 0.121,
+      "blur_delta_pp_vs_fp32": 0.10000000000000009,
+      "highfreq_haar_mae_vs_fp32": 0.002477768575772643,
+      "image_mae_vs_fp32": 0.003634503111243248,
+      "image_rmse_vs_fp32": 0.011498408392071724,
+      "feature_count": 5000,
+      "engine": "generator_trt_mixed_precision_final.engine",
+      "engine_sha256": "19cae2c5ae3639b25272e1dadecc26a95d2f07f47b5a568819c10fad3edc695e",
+      "latency_mean_ms_batch": 1.4396307742595673,
+      "latency_p99_ms_batch": 1.618179874420166,
+      "throughput_images_per_s": 22227.921611677328
+    },
+    {
+      "label": "PRE_QAT",
+      "status": "ok",
+      "role": "calibrated_before_qat",
+      "fid_standard": 31.055869633545267,
+      "blur_rate": 0.102,
+      "blur_delta_pp_vs_fp32": -1.8000000000000003,
+      "highfreq_haar_mae_vs_fp32": 0.009236355312168598,
+      "image_mae_vs_fp32": 0.013923189602792263,
+      "image_rmse_vs_fp32": 0.021974068135023117,
+      "feature_count": 5000,
+      "engine": "generator_trt_pre_qat.engine",
+      "engine_sha256": "ddbafb27eab3537749170bcf82b99faa1294e65e4f21ca3d8544af9bb6a90937",
+      "latency_mean_ms_batch": 1.6897486937046051,
+      "latency_p99_ms_batch": 1.8121654546260835,
+      "throughput_images_per_s": 18937.727319583362
+    },
+    {
+      "label": "QAT_INT8",
+      "status": "ok",
+      "role": "trained_after_qat",
+      "fid_standard": 31.64562402584862,
+      "blur_rate": 0.113,
+      "blur_delta_pp_vs_fp32": -0.6999999999999993,
+      "highfreq_haar_mae_vs_fp32": 0.009020347148180008,
+      "image_mae_vs_fp32": 0.013607174158096313,
+      "image_rmse_vs_fp32": 0.021485354751348495,
+      "feature_count": 5000,
+      "engine": "generator_trt_qat_int8.engine",
+      "engine_sha256": "b24e799fc5e32a7392bb587e23c314f290c6f314934d00f1cd4cde9e92bf5282",
+      "latency_mean_ms_batch": 1.6760330655177433,
+      "latency_p99_ms_batch": 1.796279306411743,
+      "throughput_images_per_s": 19092.702082291486
+    }
+  ],
+  "benchmark": [
+    {
+      "label": "FP32",
+      "batch": 1,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 0.9604098130265871,
+      "latency_p50_ms": 0.8479040265083313,
+      "latency_p99_ms": 1.7113389098644256,
+      "latency_std_ms": 0.2646580689419271,
+      "throughput_images_per_s": 1041.222180819509,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "FP32",
+      "batch": 8,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 2.0619274139404298,
+      "latency_p50_ms": 2.0543519258499146,
+      "latency_p99_ms": 2.176699502468109,
+      "latency_std_ms": 0.037201755604007035,
+      "throughput_images_per_s": 3879.864997144426,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "FP32",
+      "batch": 32,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 7.22789743979772,
+      "latency_p50_ms": 7.240767955780029,
+      "latency_p99_ms": 7.469627027511597,
+      "latency_std_ms": 0.10178057701210438,
+      "throughput_images_per_s": 4427.2902689243965,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "FP32",
+      "batch": 64,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 14.091911160151163,
+      "latency_p50_ms": 14.083439826965332,
+      "latency_p99_ms": 14.557574100494385,
+      "latency_std_ms": 0.18961982108591008,
+      "throughput_images_per_s": 4541.61250895322,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "PTQ_INT8",
+      "batch": 1,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 0.36455946654081345,
+      "latency_p50_ms": 0.3590559959411621,
+      "latency_p99_ms": 0.4674591898918151,
+      "latency_std_ms": 0.025724806441275633,
+      "throughput_images_per_s": 2743.0367108243704,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "PTQ_INT8",
+      "batch": 8,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 0.5135787208378315,
+      "latency_p50_ms": 0.5094079971313477,
+      "latency_p99_ms": 0.5841919708251953,
+      "latency_std_ms": 0.019931874914784785,
+      "throughput_images_per_s": 15576.969363039661,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "PTQ_INT8",
+      "batch": 32,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 1.2887573319673538,
+      "latency_p50_ms": 1.2824479937553406,
+      "latency_p99_ms": 1.4117270743846893,
+      "latency_std_ms": 0.03261536322058416,
+      "throughput_images_per_s": 24830.120617936947,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "PTQ_INT8",
+      "batch": 64,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 2.2429620802402495,
+      "latency_p50_ms": 2.2392160892486572,
+      "latency_p99_ms": 2.3455052947998047,
+      "latency_std_ms": 0.033320626776355916,
+      "throughput_images_per_s": 28533.69683055221,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "MIXED_PTQ",
+      "batch": 1,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 0.36902474691470466,
+      "latency_p50_ms": 0.36531201004981995,
+      "latency_p99_ms": 0.43032321274280544,
+      "latency_std_ms": 0.019257981812418844,
+      "throughput_images_per_s": 2709.8453650078304,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "MIXED_PTQ",
+      "batch": 8,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 0.5522124794125557,
+      "latency_p50_ms": 0.54721599817276,
+      "latency_p99_ms": 0.6343398630619048,
+      "latency_std_ms": 0.021440148567611974,
+      "throughput_images_per_s": 14487.177125208053,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "MIXED_PTQ",
+      "batch": 32,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 1.4396307742595673,
+      "latency_p50_ms": 1.4265599846839905,
+      "latency_p99_ms": 1.618179874420166,
+      "latency_std_ms": 0.049481928223226064,
+      "throughput_images_per_s": 22227.921611677328,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "MIXED_PTQ",
+      "batch": 64,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 2.622501705487569,
+      "latency_p50_ms": 2.6189119815826416,
+      "latency_p99_ms": 2.7759621286392213,
+      "latency_std_ms": 0.03838259031226891,
+      "throughput_images_per_s": 24404.178600181796,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "PRE_QAT",
+      "batch": 1,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 0.3695777599016825,
+      "latency_p50_ms": 0.36399999260902405,
+      "latency_p99_ms": 0.4427187085151672,
+      "latency_std_ms": 0.025787106193515822,
+      "throughput_images_per_s": 2705.7905223139687,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "PRE_QAT",
+      "batch": 8,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 0.5977773869037628,
+      "latency_p50_ms": 0.5948639810085297,
+      "latency_p99_ms": 0.6535513812303543,
+      "latency_std_ms": 0.01605925112840864,
+      "throughput_images_per_s": 13382.90837904836,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "PRE_QAT",
+      "batch": 32,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 1.6897486937046051,
+      "latency_p50_ms": 1.6859840154647827,
+      "latency_p99_ms": 1.8121654546260835,
+      "latency_std_ms": 0.033686112063773005,
+      "throughput_images_per_s": 18937.727319583362,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "PRE_QAT",
+      "batch": 64,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 3.0842475171883903,
+      "latency_p50_ms": 3.0793919563293457,
+      "latency_p99_ms": 3.1985318088531494,
+      "latency_std_ms": 0.036028191464935515,
+      "throughput_images_per_s": 20750.604367298834,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "QAT_INT8",
+      "batch": 1,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 0.39357765356699626,
+      "latency_p50_ms": 0.3880000114440918,
+      "latency_p99_ms": 0.46937855780124665,
+      "latency_std_ms": 0.023728192894601367,
+      "throughput_images_per_s": 2540.794658784601,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "QAT_INT8",
+      "batch": 8,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 0.627535733183225,
+      "latency_p50_ms": 0.6196159720420837,
+      "latency_p99_ms": 0.8237052637338638,
+      "latency_std_ms": 0.036944939584413215,
+      "throughput_images_per_s": 12748.278029395016,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "QAT_INT8",
+      "batch": 32,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 1.6760330655177433,
+      "latency_p50_ms": 1.6710240244865417,
+      "latency_p99_ms": 1.796279306411743,
+      "latency_std_ms": 0.0337210686342493,
+      "throughput_images_per_s": 19092.702082291486,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    },
+    {
+      "label": "QAT_INT8",
+      "batch": 64,
+      "benchmark_repeats": 3,
+      "benchmark_samples": 600,
+      "latency_mean_ms": 3.0659873028596243,
+      "latency_p50_ms": 3.054975986480713,
+      "latency_p99_ms": 3.2771850204467774,
+      "latency_std_ms": 0.05047154222547463,
+      "throughput_images_per_s": 20874.18951158332,
+      "cuda_allocated_mb": 84.79736328125,
+      "cuda_reserved_mb": 1424.0
+    }
+  ],
+  "comparison": {
+    "pre_to_post": {
+      "fid_pre": 31.055869633545267,
+      "fid_post": 31.64562402584862,
+      "fid_improvement": -0.5897543923033517,
+      "blur_pre": 0.102,
+      "blur_post": 0.113,
+      "blur_distance_change_pp": 1.100000000000001,
+      "highfreq_mae_pre": 0.009236355312168598,
+      "highfreq_mae_post": 0.009020347148180008
+    },
+    "qat_vs_ptq": {
+      "fid_improvement": 3.6741491185385797,
+      "blur_distance_improvement_pp": -0.19999999999999885,
+      "highfreq_mae_improvement": -6.174575537443161e-05,
+      "speed_ratio_p99_vs_all_int8_ptq": 1.2723984253079963,
+      "speed_ratio_p99_vs_mixed_ptq": 1.1100615789424488
+    }
+  },
+  "gates": {
+    "quality_pass": false,
+    "speed_pass": false,
+    "max_blur_delta_pp": 0.5,
+    "max_speed_ratio_all_int8_ptq": 1.25,
+    "max_speed_ratio_mixed_ptq": 1.15,
+    "roi_status": "not_available; global Haar metric plus contact sheet used; no literal hair/eyeliner ROI claim"
+  },
+  "artifacts": [
+    "qat_runtime_preflight.json",
+    "qat_vs_ptq_summary.csv",
+    "qat_before_after_summary.csv",
+    "qat_dynamic_benchmark.csv",
+    "qat_quality_speed_curves.png",
+    "qat_visual_comparison.png",
+    "qat_evaluation_manifest.json",
+    "generator_trt_pre_qat.engine",
+    "generator_trt_qat_int8.engine"
+  ]
+}

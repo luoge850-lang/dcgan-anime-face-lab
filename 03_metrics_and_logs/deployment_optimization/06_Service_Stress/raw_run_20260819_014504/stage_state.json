@@ -1,0 +1,63 @@
+{
+  "phase": "stage_11_u0128",
+  "status": "passed",
+  "stage_index": 11,
+  "concurrency": 128,
+  "finished_at": "2026-08-19T01:53:27.959020+00:00",
+  "result": {
+    "phase": "stage_11_u0128",
+    "concurrency": 128,
+    "duration_seconds": 30,
+    "elapsed_seconds": 31.66004104600006,
+    "spawn_rate": 8,
+    "status": "passed",
+    "locust_returncode": 0,
+    "health_ok": true,
+    "health_detail": {
+      "status_code": 200,
+      "status": "ok",
+      "engine": {
+        "engine_file": "generator_trt_qat_int8 (1).engine",
+        "engine_sha256": "b24e799fc5e32a7392bb587e23c314f290c6f314934d00f1cd4cde9e92bf5282",
+        "engine_bytes": 9570452,
+        "tensorrt_version": "11.2.1.2",
+        "gpu_index": 0,
+        "gpu_name": "Tesla T4",
+        "gpu_total_memory_mb": 14911.69,
+        "cuda_version": "12.8",
+        "torch_version": "2.10.0+cu128",
+        "input_name": "z",
+        "output_name": "image",
+        "input_dtype": "<class 'numpy.float32'>",
+        "output_dtype": "<class 'numpy.float32'>",
+        "expected_input_shape": [
+          1,
+          128,
+          1,
+          1
+        ],
+        "expected_output_shape": [
+          1,
+          3,
+          64,
+          64
+        ],
+        "pid": 58,
+        "hostname": "dea8ce5e3415",
+        "request_count": 30
+      }
+    },
+    "stats_file": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/06_Service_Stress/Run_20260819_014504/stage_11_u0128_stats.csv",
+    "log_file": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/06_Service_Stress/Run_20260819_014504/stage_11_u0128.locust.log",
+    "requests": 9736,
+    "failures": 0,
+    "failure_rate": 0.0,
+    "p50_ms": 350.0,
+    "p95_ms": 470.0,
+    "p99_ms": 490.0,
+    "mean_ms": 280.7049412933476,
+    "min_ms": 10.520266000185075,
+    "max_ms": 669.062047999887,
+    "rps": 335.10406155055665
+  }
+}

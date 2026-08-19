@@ -31,6 +31,19 @@ This B1 value must not be plotted as a direct architecture improvement over the 
 6. The Phase 7 A0-A50 script collects fewer real than fake evaluation features because the real pool contains 4K images while N_FID=5000; the asymmetry is constant across the five groups but is not a standardized FID protocol.
 7. Phase 7 D_real_eval/D_fake_eval fields are not used for the headline comparison because the A0 record contains an implausible magnitude and the evaluation path is not a clean cross-group discriminator-health protocol.
 
+## Deployment protocol added on 2026-08-19
+
+The deployment archive contains a second, explicitly labeled quality protocol: Standard Inception-v3 FID from the Task 3/4/5 evaluation pipeline. It must not be merged numerically with the historical Legacy FID leaderboard.
+
+| Deployment scope | Main quality metric | Runtime metric | Boundary |
+|---|---|---|---|
+| Task 3 FP32/FP16/INT8 | Standard FID, blur rate, LPIPS-like diagnostics, Haar-band error | Mean latency and throughput | Fixed deployment calibration/evaluation protocol |
+| Task 4 mixed precision | Standard FID, blur rate, numerical error | Mean latency and throughput | Final confirmation used n_fid=5000; screening used n_fid=1000 |
+| Task 5 QAT | Standard FID, blur rate, Haar MAE | Batch-32 dynamic benchmark P99 and throughput | Revised acceptance passed; strict high-frequency superiority did not |
+| Task 6 staged service | Not a generation-quality comparison | HTTP P99, RPS, error rate, GPU/RSS samples | Staged run only; no 30-minute soak conclusion |
+
+Memory fields also have different meanings: TensorRT reports whole-device CUDA snapshots in Task 2, while ORT/OpenVINO report host RSS. They are retained as separate fields and should not be compared as one common memory unit.
+
 ## Required next protocol
 
 Future experiments should add these fields without overwriting the legacy values:

@@ -23,7 +23,7 @@ class SnapshotIntegrityTests(unittest.TestCase):
         files = list((ROOT / "03_metrics_and_logs").rglob("*.json"))
         self.assertGreater(len(files), 20)
         for path in files:
-            with path.open(encoding="utf-8") as handle:
+            with path.open(encoding="utf-8-sig") as handle:
                 json.load(handle)
 
     def test_canonical_figures_are_valid_svg(self):
@@ -37,6 +37,8 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "04_visual_assets/interview_results_roadmap.svg",
             "04_visual_assets/clip_control_sweep.svg",
             "04_visual_assets/sdxl_fid_coverage_tradeoff.svg",
+            "04_visual_assets/deployment_quality_speed.svg",
+            "04_visual_assets/service_stress_summary.svg",
             "04_visual_assets/qualitative_samples_compact.png",
             "04_visual_assets/sdxl_pilot_contact_sheet.jpg",
             "results_summary.csv",
@@ -47,6 +49,9 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "docs/sdxl_controlled_study.md",
             "docs/month1_audit_2026-08.md",
             "docs/next_phase_deployment_plan.md",
+            "docs/deployment_optimization.md",
+            "03_metrics_and_logs/deployment_optimization/deployment_task_status.csv",
+            "03_metrics_and_logs/deployment_optimization/deployment_quantization_summary.csv",
         ):
             self.assertIn(target, readme)
             if target.endswith(".md"):
@@ -94,6 +99,26 @@ class SnapshotIntegrityTests(unittest.TestCase):
             self.assertAlmostEqual(metrics["Coverage"], expected_coverage, places=4)
             self.assertTrue((ROOT / "04_visual_assets" / f"sdxl_{group.lower()}_epoch100.png").exists())
         self.assertTrue((ROOT / "04_visual_assets/sdxl_ratio_contact_sheet.png").exists())
+
+    def test_deployment_evidence_and_staged_stress_are_present(self):
+        with (ROOT / "03_metrics_and_logs/deployment_optimization/deployment_quantization_summary.csv").open(newline="", encoding="utf-8") as handle:
+            rows = list(csv.DictReader(handle))
+        mixed = next(row for row in rows if row["label"] == "Mixed_net0_net12")
+        self.assertAlmostEqual(float(mixed["standard_fid"]), 31.177551, places=5)
+        self.assertAlmostEqual(float(mixed["throughput_images_per_s"]), 23971.694, places=2)
+
+        with (ROOT / "03_metrics_and_logs/deployment_optimization/06_Service_Stress/service_stress_summary.csv").open(newline="", encoding="utf-8") as handle:
+            stress = list(csv.DictReader(handle))
+        self.assertEqual(len(stress), 11)
+        self.assertEqual(stress[-1]["concurrency"], "128")
+        self.assertEqual(sum(int(row["failures"]) for row in stress), 0)
+        self.assertAlmostEqual(float(stress[-1]["p99_ms"]), 490.0, places=2)
+
+        with (ROOT / "03_metrics_and_logs/deployment_optimization/06_Service_Stress/service_monitor_summary.json").open(encoding="utf-8") as handle:
+            monitor = json.load(handle)
+        self.assertEqual(monitor["max_tested_concurrency"], 128)
+        self.assertFalse(monitor["hard_crash_observed"])
+        self.assertFalse(monitor["soak_run_included"])
 
 
 if __name__ == "__main__":

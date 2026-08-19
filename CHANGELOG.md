@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5 - 2026-08-19
+
+- Re-scanned the active `dcgan_lab` workspace and refreshed the public snapshot with the current deployment source archive.
+- Added ONNX export/fusion, three-backend benchmark, PTQ, layer-sensitivity, mixed-precision, QAT, and service-stress evidence from the latest workspace.
+- Added normalized deployment status, quantization, engine, and staged-service summary tables.
+- Added a staged Locust stress-run archive covering concurrency 1–128 with zero failures and 5-second GPU/RSS monitoring.
+- Added deployment quality-speed and service-stress SVG figures generated from copied evidence tables.
+- Updated the README to distinguish complete, partial, revised-acceptance, and staged-only claims.
+- Added explicit boundaries for whole-graph fusion, QAT high-frequency claims, and long-run memory-leak testing.
+
 ## v0.4 - 2026-08-10
 
 - Rebuilt the public README around the complete experiment progression instead of a final-checkpoint narrative.

@@ -1,0 +1,4 @@
+﻿precision,count,legacy_feature_dim,standard_feature_dim
+FP32,5000,2048,2048
+FP16,5000,2048,2048
+INT8,5000,2048,2048

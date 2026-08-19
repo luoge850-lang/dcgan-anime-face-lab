@@ -23,3 +23,19 @@ The following values were captured in the Phase 5 experiment configuration JSON 
 `requirements.txt` is intentionally a compatibility floor because the active project was run in Kaggle. It is not a lockfile. A future public release should add a tested lockfile or environment specification, including the exact pretrained feature-extractor weights and their licenses.
 
 Do not infer that installing the requirements locally is sufficient to reproduce the historical numbers. The dataset manifest, Kaggle-mounted model artifacts, runtime, and evaluation protocol are equally important.
+
+## Deployment runtime evidence
+
+The latest service preflight and staged stress manifest records the following Kaggle runtime:
+
+| Component | Recorded value |
+|---|---|
+| Python | 3.12.13 |
+| PyTorch | 2.10.0+cu128 |
+| CUDA | 12.8 |
+| TensorRT | 11.2.1.2 |
+| GPU | Tesla T4, approximately 14.9 GiB total memory |
+| Service | FastAPI/Uvicorn, one worker, batch 1 |
+| Stress monitor | 5-second interval; GPU memory, SM, RSS, health |
+
+The optional utility dependencies are listed in [`requirements-deployment.txt`](../requirements-deployment.txt). TensorRT remains platform-specific and is intentionally not treated as a portable local requirement.

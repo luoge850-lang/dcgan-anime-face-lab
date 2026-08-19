@@ -1,0 +1,51 @@
+{
+  "task": "Task4_04A_Layer_Sensitivity",
+  "status": "complete",
+  "graph_scope": "Current Generator graph has ConvTranspose/BatchNorm/ReLU/Tanh; no wavelet or dynamic-SN node is claimed or tested.",
+  "method": "ModelOpt INT8 PTQ on the named raw graph, one exact ConvTranspose node excluded per variant, excluded node restored to FP16.",
+  "raw_onnx": {
+    "path": "/kaggle/input/datasets/louisharrington/fp32-raw-onnx/generator_fp32_raw.onnx",
+    "sha256": "900f400d93d1db54cc7806070b123cd3e09dde1466bb72cd57e2586502f4272f"
+  },
+  "named_source": {
+    "file": "sensitivity_source_named.onnx",
+    "sha256": "3ee019d9e78fd6e4539d5099cb91d4e3bb8cbf840bfe353f587a123009187966",
+    "node_count": 14
+  },
+  "candidates": {
+    "net.0": "net.0.ConvTranspose",
+    "net.3": "net.3.ConvTranspose",
+    "net.6": "net.6.ConvTranspose",
+    "net.9": "net.9.ConvTranspose",
+    "net.12": "net.12.ConvTranspose"
+  },
+  "requested_layers": [
+    "net.0",
+    "net.3",
+    "net.6",
+    "net.9",
+    "net.12"
+  ],
+  "calibration": {
+    "file": "latent_calibration.npy",
+    "count": 512,
+    "method": "entropy"
+  },
+  "evaluation": {
+    "n_fid": 1000,
+    "n_image_eval": 256,
+    "batch_size": 32,
+    "real_blur_threshold_p10": 5247.3740234375
+  },
+  "baselines": {
+    "FP32": "generator_trt_fp32.engine",
+    "INT8": "generator_trt_int8.engine"
+  },
+  "artifacts": [
+    "layer_sensitivity_summary.csv",
+    "layer_index_precision_loss.png",
+    "sensitivity_source_named.onnx"
+  ],
+  "next_step": "Use the lowest-loss and fastest rows to define 04B mixed-precision combinations, then confirm with n_fid=5000.",
+  "plot_created": true
+}

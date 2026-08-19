@@ -23,3 +23,18 @@ The remaining historical metrics are retained under `03_metrics_and_logs` for tr
 The repository contains several baselines with different purposes. Use `docs/baseline_map.md` when presenting them; `00_baseline`, Exp11/B0, and B1 are not interchangeable checkpoints or data protocols.
 
 Phase 7 is a separate fine-tuning comparison scope. Its A0/A10/A20/A30/A50 results should be read together with `docs/sdxl_controlled_study.md`, not appended to the older 20K FID leaderboard.
+
+## Deployment source added in v0.5
+
+`02_selected_experiments/full_process/deployment_optimization/` mirrors the current deployment source families found in the active workspace:
+
+- ONNX export, ORT optimization, manual BN folding, subpixel probe, and targeted TensorRT fusion;
+- ORT/TensorRT/OpenVINO benchmark and profiler entry points;
+- FP32/FP16/INT8 PTQ and evaluation;
+- layer sensitivity, mixed precision, and final confirmation;
+- FakeQuantize QAT training/evaluation;
+- HTTP service preflight, staged Locust stress, 5-second monitoring, soak-test entry point, and local report builder.
+
+The source archive includes scripts even when the corresponding measured result is partial or absent. The public claim status is controlled by `03_metrics_and_logs/deployment_optimization/deployment_task_status.csv`.
+
+The additional Phase 3 sources `12_G_AA_ADA_EMA_21K.py` and `DCGAN_Improve_Standalone_21K.py` are included as source evidence. The former does not have a matching final result row in the active results tree and is therefore not presented as a completed quantitative experiment.

@@ -1,0 +1,49 @@
+{
+  "task": "Task3_03C_INT8_PTQ_TensorRT11_ModelOpt",
+  "raw_onnx": "/kaggle/input/datasets/louisharrington/fp32-raw-onnx/generator_fp32_raw.onnx",
+  "raw_onnx_sha256": "900f400d93d1db54cc7806070b123cd3e09dde1466bb72cd57e2586502f4272f",
+  "latent_calibration": "/kaggle/input/datasets/louisharrington/task3-03a-quantization-protocol/latent_calibration.npy",
+  "latent_shape": [
+    512,
+    128,
+    1,
+    1
+  ],
+  "latent_count": 512,
+  "real_calibration_manifest": "/kaggle/input/datasets/louisharrington/task3-03a-quantization-protocol/real_calibration_100_manifest.csv",
+  "real_calibration_count": 100,
+  "calibration_input_boundary": "The 100 real anime images are retained as the requested calibration/reference audit set; Generator activation PTQ itself uses latent_calibration.npy because Generator input is z, not RGB images.",
+  "calibration_method": "entropy",
+  "quantization_method": "TensorRT ModelOpt offline explicit INT8 Q/DQ",
+  "quantized_onnx": {
+    "file": "generator_int8_qdq.onnx",
+    "sha256": "2bb8d3fcdbd36367b4acb16ad82c1a50a187387cc09cf8b0bcbce8961111a4d9",
+    "bytes": 15579458,
+    "opset": 19,
+    "node_count": 36,
+    "quantize_linear": 10,
+    "dequantize_linear": 10,
+    "operators": {
+      "Cast": 2,
+      "QuantizeLinear": 10,
+      "DequantizeLinear": 10,
+      "ConvTranspose": 5,
+      "BatchNormalization": 4,
+      "Relu": 4,
+      "Tanh": 1
+    }
+  },
+  "opt_batch": 8,
+  "max_batch": 64,
+  "workspace_gb": 2.0,
+  "cuda": "12.8",
+  "gpu": "Tesla T4",
+  "tensorrt": "11.2.1.2",
+  "engine": {
+    "file": "generator_trt_int8.engine",
+    "sha256": "75254a482ca41eac24f281cc2a85cacfa474fbbdeb409fe9a40f03cb9da9858e",
+    "bytes": 8014772
+  },
+  "important_boundary": "100 real images are evaluation/reference data; latent arrays calibrate Generator activations.",
+  "migration_note": "TensorRT 11 removed IInt8Calibrator and int8_calibrator; Q/DQ explicit quantization is used instead."
+}

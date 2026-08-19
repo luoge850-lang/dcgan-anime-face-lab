@@ -1,0 +1,67 @@
+{
+  "task": "Task4_04B_Mixed_Precision_Combinations",
+  "status": "complete",
+  "method": "Independent mixed-precision experiment: same named raw ONNX + ModelOpt INT8 PTQ; selected ConvTranspose nodes excluded together and retained as FP16; each Q/DQ graph compiled by TensorRT.",
+  "graph_scope": "Current Generator graph contains ConvTranspose/BatchNorm/ReLU/Tanh. No wavelet or dynamic-SN node is assumed.",
+  "inputs": {
+    "raw_onnx": {
+      "path": "/kaggle/input/datasets/louisharrington/fp32-raw-onnx/generator_fp32_raw.onnx",
+      "sha256": "900f400d93d1db54cc7806070b123cd3e09dde1466bb72cd57e2586502f4272f"
+    },
+    "fp32_engine": "generator_trt_fp32.engine",
+    "int8_engine": "generator_trt_int8.engine",
+    "protocol": "/kaggle/input/datasets/louisharrington/task3-03a-quantization-protocol"
+  },
+  "candidates": {
+    "net.0": "net.0.ConvTranspose",
+    "net.3": "net.3.ConvTranspose",
+    "net.6": "net.6.ConvTranspose",
+    "net.9": "net.9.ConvTranspose",
+    "net.12": "net.12.ConvTranspose"
+  },
+  "combinations_requested": [
+    "fp32",
+    "all_int8",
+    "net.0+net.12",
+    "net.9+net.12",
+    "net.0+net.9",
+    "net.0+net.9+net.12",
+    "net.0+net.3+net.12"
+  ],
+  "design_rationale": {
+    "net.0+net.12": "Primary combination: net.0 had the lowest single-layer speed cost and net.12 had the strongest single-layer FID recovery in the preceding screening.",
+    "net.9+net.12": "Interaction test for net.9's blur improvement versus its FID degradation.",
+    "net.0+net.9": "No-final-layer control for whether net.9's blur behavior is independent of the output block.",
+    "net.0+net.9+net.12": "Three-layer complementary strategy candidate.",
+    "net.0+net.3+net.12": "Overhead control: tests whether adding a weak single-layer candidate is justified."
+  },
+  "evaluation": {
+    "n_fid": 1000,
+    "n_image_eval": 256,
+    "batch_size": 32,
+    "real_blur_threshold_p10": 5247.3740234375,
+    "calibration_method": "entropy"
+  },
+  "selection_policy": {
+    "max_fid_delta": 1.5,
+    "max_blur_delta_pp": 0.5,
+    "max_latency_ratio_vs_int8": 1.75,
+    "selected_strategy": "net.0+net.12",
+    "reason": "quality and speed gates passed"
+  },
+  "successful_count": 7,
+  "failed_count": 0,
+  "artifacts": [
+    "mixed_precision_summary.csv",
+    "mixed_precision_summary.png",
+    "recommended_strategy.txt",
+    "sensitivity_source_named.onnx",
+    "recommended/"
+  ],
+  "recommended_copied_artifacts": [
+    "generator_trt_mixed_precision_best.engine",
+    "generator_mixed_precision_best.onnx"
+  ],
+  "final_note": "For the report, rerun with --n-fid 5000 and retain this CSV, plot, manifest, recommendation, and selected engine as the final evidence.",
+  "plot_created": true
+}

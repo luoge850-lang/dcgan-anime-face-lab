@@ -1,0 +1,79 @@
+{
+  "task": "Task6_06A_Service_Preflight",
+  "status": "ok",
+  "service_mode": "single_process_single_worker_single_context_batch1",
+  "engine_role": "QAT_Hybrid_INT8_FP16",
+  "engine": {
+    "engine_file": "generator_trt_qat_int8 (1).engine",
+    "engine_sha256": "b24e799fc5e32a7392bb587e23c314f290c6f314934d00f1cd4cde9e92bf5282",
+    "engine_bytes": 9570452,
+    "tensorrt_version": "11.2.1.2",
+    "gpu_index": 0,
+    "gpu_name": "Tesla T4",
+    "gpu_total_memory_mb": 14911.69,
+    "cuda_version": "12.8",
+    "torch_version": "2.10.0+cu128",
+    "input_name": "z",
+    "output_name": "image",
+    "input_dtype": "<class 'numpy.float32'>",
+    "output_dtype": "<class 'numpy.float32'>",
+    "expected_input_shape": [
+      1,
+      128,
+      1,
+      1
+    ],
+    "expected_output_shape": [
+      1,
+      3,
+      64,
+      64
+    ],
+    "pid": 58,
+    "hostname": "bc91cf343c10",
+    "request_count": 30
+  },
+  "runtime": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "cuda_visible_devices": "",
+    "selected_gpu_index": 0,
+    "host": "0.0.0.0",
+    "port": 8000,
+    "dependency_installation": {
+      "performed_inside_script": true,
+      "versions": {
+        "numpy": "2.0.2",
+        "torch": "2.10.0+cu128",
+        "Pillow": "11.3.0",
+        "fastapi": "0.136.1",
+        "uvicorn": "0.46.0",
+        "requests": "2.32.4",
+        "TensorRT distributions": "tensorrt-cu12==11.2.1.2"
+      },
+      "tensorrt_pip_package": "tensorrt-cu12",
+      "tensorrt_requested": "11.2.1.2"
+    }
+  },
+  "warmup": {
+    "requests": 20,
+    "total_ms": 132.19466900000043
+  },
+  "smoke": {
+    "requests": 10,
+    "passed": 10,
+    "failed": 0,
+    "csv": "service_smoke_test.csv"
+  },
+  "api": {
+    "health": "GET /health",
+    "generate": "POST /generate with JSON {\"seed\": integer}",
+    "response": "image/png",
+    "batch": 1
+  },
+  "notes": [
+    "Concurrency is HTTP request concurrency; TensorRT dynamic batch is intentionally fixed at 1.",
+    "Use one uvicorn worker. Multiple workers would load duplicate engine contexts and invalidate the memory test.",
+    "06B Locust and 06C monitoring must run as separate processes."
+  ],
+  "request_count": 40
+}

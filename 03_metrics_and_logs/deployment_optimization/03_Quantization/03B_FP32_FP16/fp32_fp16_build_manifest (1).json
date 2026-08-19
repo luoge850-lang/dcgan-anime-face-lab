@@ -1,0 +1,24 @@
+{
+  "task": "Task3_03B_FP32_FP16",
+  "raw_onnx": "/kaggle/input/datasets/louisharrington/fp32-raw-onnx/generator_fp32_raw.onnx",
+  "raw_onnx_sha256": "900f400d93d1db54cc7806070b123cd3e09dde1466bb72cd57e2586502f4272f",
+  "cuda": "12.8",
+  "gpu": "Tesla T4",
+  "tensorrt": "11.2.1.2",
+  "opt_batch": 8,
+  "max_batch": 64,
+  "workspace_gb": 2.0,
+  "engines": {
+    "FP32": {
+      "file": "generator_trt_fp32.engine",
+      "sha256": "1ac6d8b75064fd7dea6a1e8a1b9c2b53658b5b2692d409a6d71b11a0644a48fd",
+      "bytes": 31206004
+    },
+    "FP16": {
+      "file": "generator_trt_fp16.engine",
+      "sha256": "8d0b92893d47dbb9f2733ead43df44b8d74bdca038950b854df52d53a8ce9350",
+      "bytes": 15711196
+    }
+  },
+  "comparison_rule": "Both engines are built from the same 01A raw ONNX; no 01B/01C fusion graph is used."
+}

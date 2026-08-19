@@ -1,0 +1,9 @@
+# Optional service/deployment utilities used by the archived Kaggle runs.
+# TensorRT itself is platform-specific; see the deployment manifests for the
+# recorded distribution and version rather than installing it blindly locally.
+fastapi>=0.100
+uvicorn>=0.20
+locust>=2.0
+psutil>=5.9
+pynvml>=11.5
+requests>=2.31
