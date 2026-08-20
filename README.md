@@ -57,16 +57,50 @@ The two images below are separate sample grids from fixed milestone artifacts. T
 ## Technical route
 
 ~~~mermaid
-flowchart LR
-    A["Dataset audit<br/>Kaggle image paths"] --> B["Stage 1<br/>Budget + preprocessing"]
-    B --> C["Stage 2<br/>G/D stabilization"]
-    C --> D["Stage 3<br/>Capacity + data scale + EMA"]
-    D --> E["Stage 4<br/>CLIP continuation"]
-    E --> F["Stage 5<br/>Export + precision"]
-    F --> G["Stage 6<br/>Service stress"]
-    A --> H["Side study<br/>Clean-unique pool + SDXL mixing"]
-    H -. "separate data scope" .-> D
+flowchart TB
+    subgraph DATA["Data and evaluation boundary"]
+        direction LR
+        A["Kaggle image pool<br/>same core dataset"] --> B["Data audit<br/>validate · deduplicate · document"]
+        B --> P["Protocol ledger<br/>Legacy FID · LPIPS · CLIP MMD²"]
+    end
+
+    subgraph CORE["Core research track · fixed data scope"]
+        direction LR
+        C["Stage 1<br/>Training budget<br/>+ preprocessing"] --> D["Stage 2<br/>Plain DCGAN control<br/>+ module ablation"]
+        D --> E["Stage 3<br/>G capacity<br/>+ DiffAugment + EMA"]
+        E --> F["Stage 4<br/>CLIP continuation<br/>+ trade-off analysis"]
+        F --> G["Selection boundary<br/>quality · diversity<br/>protocol caveats"]
+    end
+
+    subgraph SIDE["Side study · independent data-scope branch"]
+        direction LR
+        H["SDXL candidate pool"] --> I["Style filter<br/>+ unique-content audit"]
+        I --> J["Mixing-ratio ablation<br/>A0 · A10 · A20 · A30 · A50"]
+    end
+
+    subgraph DEPLOY["Engineering track · selected checkpoint"]
+        direction LR
+        K["Stage 5<br/>ONNX export<br/>+ engine/precision matrix"] --> L["Stage 6<br/>service stress<br/>+ resource boundary"]
+    end
+
+    P --> C
+    P --> H
+    G --> K
+    J -. "separate data scope<br/>not an architecture regression" .-> G
+
+    classDef boundary fill:#e8f1fb,stroke:#2563eb,color:#0f172a,stroke-width:1.5px;
+    classDef stage fill:#f8fafc,stroke:#64748b,color:#0f172a,stroke-width:1.2px;
+    classDef decision fill:#ecfdf5,stroke:#059669,color:#064e3b,stroke-width:1.5px;
+    classDef side fill:#fffbeb,stroke:#d97706,color:#78350f,stroke-width:1.2px;
+    classDef deploy fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95,stroke-width:1.2px;
+    class A,B,P boundary;
+    class C,D,E,F stage;
+    class G decision;
+    class H,I,J side;
+    class K,L deploy;
 ~~~
+
+Solid arrows represent the main measured path. Dashed arrows mark a separate data scope or an interpretation boundary; they are intentionally not presented as direct architecture comparisons.
 
 ## Dataset and preprocessing
 
@@ -107,22 +141,37 @@ The Phase 2 baseline is the architectural control used for the module study. It 
 
 ~~~mermaid
 flowchart LR
-    subgraph G["Generator G: Phase 2 control"]
-        Z["z [B,100,1,1]"] --> G0["ConvTranspose 100→256<br/>4×4 + BN + ReLU"]
-        G0 --> G1["ConvTranspose 256→128<br/>8×8 + BN + ReLU"]
-        G1 --> G2["ConvTranspose 128→64<br/>16×16 + BN + ReLU"]
-        G2 --> G3["ConvTranspose 64→32<br/>32×32 + BN + ReLU"]
-        G3 --> G4["ConvTranspose 32→3<br/>64×64 + Tanh"]
+    subgraph GEN["Generator G · Phase 2 plain control"]
+        direction TB
+        Z["Noise z<br/>B × 100 × 1 × 1"] --> G0["4 × 4<br/>100 → 256<br/>ConvTranspose + BN + ReLU"]
+        G0 --> G1["8 × 8<br/>256 → 128<br/>ConvTranspose + BN + ReLU"]
+        G1 --> G2["16 × 16<br/>128 → 64<br/>ConvTranspose + BN + ReLU"]
+        G2 --> G3["32 × 32<br/>64 → 32<br/>ConvTranspose + BN + ReLU"]
+        G3 --> G4["64 × 64 × 3<br/>32 → 3 · Tanh"]
     end
-    subgraph D["Discriminator D: Phase 2 control"]
-        X["x [B,3,64,64]"] --> D0["Conv 3→32<br/>32×32 + LeakyReLU"]
-        D0 --> D1["Conv 32→64<br/>16×16 + LeakyReLU"]
-        D1 --> D2["Conv 64→128<br/>8×8 + LeakyReLU"]
-        D2 --> D3["Conv 128→256<br/>4×4 + LeakyReLU"]
-        D3 --> D4["Flatten → Linear 4096→256<br/>LeakyReLU"]
-        D4 --> D5["Linear 256→1<br/>Sigmoid"]
+
+    subgraph DISC["Discriminator D · Phase 2 plain control"]
+        direction TB
+        XR["Real image x<br/>B × 3 × 64 × 64"] --> D0["32 × 32<br/>3 → 32 · Conv + LeakyReLU"]
+        XF["Generated image<br/>from G(z)"] --> D0
+        D0 --> D1["16 × 16<br/>32 → 64 · Conv + LeakyReLU"]
+        D1 --> D2["8 × 8<br/>64 → 128 · Conv + LeakyReLU"]
+        D2 --> D3["4 × 4<br/>128 → 256 · Conv + LeakyReLU"]
+        D3 --> D4["Flatten<br/>4096 → 256 · LeakyReLU"]
+        D4 --> D5["Real/fake score<br/>256 → 1 · Sigmoid"]
     end
-    G4 -. "generated image" .-> D
+
+    G4 -->|fake image| XF
+    D5 --> LOSS["BCE objective<br/>alternating G/D updates<br/>Adam: 1e-4 · β=(0.5, 0.99)"]
+
+    classDef io fill:#e8f1fb,stroke:#2563eb,color:#0f172a,stroke-width:1.2px;
+    classDef layer fill:#f8fafc,stroke:#64748b,color:#0f172a,stroke-width:1.1px;
+    classDef output fill:#ecfdf5,stroke:#059669,color:#064e3b,stroke-width:1.3px;
+    classDef objective fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95,stroke-width:1.3px;
+    class Z,XR io;
+    class G0,G1,G2,G3,D0,D1,D2,D3,D4 layer;
+    class G4,D5,XF output;
+    class LOSS objective;
 ~~~
 
 ### Baseline training configuration
@@ -286,15 +335,65 @@ Move the current Generator toward inference use and measure the quality cost of 
 ### System path
 
 ~~~mermaid
-flowchart LR
-    A["Latent z<br/>[B,128,1,1]"] --> B["Exported Generator"]
-    B --> C["ONNX graph"]
-    C --> D["ONNX Runtime"]
-    C --> E["TensorRT GPU"]
-    C --> F["OpenVINO CPU"]
-    D --> G["Quality + latency"]
-    E --> G
-    F --> G
+flowchart TB
+    subgraph BUILD["1 · Build and validate the graph"]
+        direction LR
+        Z["Latent z<br/>B × 128 × 1 × 1"] --> G["Generator checkpoint"]
+        G --> O["ONNX export"]
+        O --> V{"Validation gate<br/>onnx.checker<br/>+ shape/parity checks"}
+    end
+
+    subgraph ENGINES["2 · Runtime matrix"]
+        direction LR
+        V --> ORT["ONNX Runtime<br/>CPU / GPU"]
+        V --> TRT["TensorRT<br/>GPU"]
+        V --> OV["OpenVINO<br/>CPU"]
+    end
+
+    subgraph PRECISION["3 · Precision variants"]
+        direction LR
+        V --> FP32["FP32<br/>reference"]
+        V --> FP16["FP16<br/>near-lossless check"]
+        V --> PTQ["INT8 PTQ<br/>calibration baseline"]
+        V --> MIX["Mixed PTQ<br/>net.0 + net.12 in FP16"]
+        V --> QAT["QAT INT8<br/>fake-quant fine-tuning"]
+    end
+
+    subgraph EVIDENCE["4 · Evidence and acceptance"]
+        direction LR
+        Q["Quality<br/>FID · blur rate · LPIPS"]
+        S["Systems<br/>latency · throughput · VRAM"]
+        T["Service<br/>batch · concurrency · P99"]
+        R["Decision record<br/>quality–speed trade-off"]
+    end
+
+    ORT --> S
+    TRT --> S
+    OV --> S
+    FP32 --> Q
+    FP16 --> Q
+    PTQ --> Q
+    MIX --> Q
+    Q --> R
+    S --> R
+    R --> T
+
+    W["Compatibility probes<br/>Haar wavelet · dynamic SN"] -. "investigation only<br/>not in deployed graph" .-> V
+
+    classDef input fill:#e8f1fb,stroke:#2563eb,color:#0f172a,stroke-width:1.2px;
+    classDef build fill:#f8fafc,stroke:#64748b,color:#0f172a,stroke-width:1.1px;
+    classDef gate fill:#fff7ed,stroke:#ea580c,color:#7c2d12,stroke-width:1.5px;
+    classDef engine fill:#eef2ff,stroke:#4f46e5,color:#1e1b4b,stroke-width:1.1px;
+    classDef precision fill:#ecfdf5,stroke:#059669,color:#064e3b,stroke-width:1.1px;
+    classDef evidence fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95,stroke-width:1.2px;
+    classDef caveat fill:#fef2f2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.1px;
+    class Z input;
+    class G,O build;
+    class V gate;
+    class ORT,TRT,OV engine;
+    class FP32,FP16,PTQ,MIX,QAT precision;
+    class Q,S,T,R evidence;
+    class W caveat;
 ~~~
 
 The actual deployed graph is a standard ConvTranspose + BatchNorm + ReLU + Tanh graph. The independent Haar-wavelet and dynamic-SN probes are compatibility investigations, not nodes in the current deployed graph.
