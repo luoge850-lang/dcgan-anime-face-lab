@@ -1,8 +1,10 @@
 # Source map and freeze status
 
-Freeze date: 2026-08-19
+Freeze date: 2026-08-20
 
-Freeze release: v0.6-stage-freeze
+Freeze release: v0.7-research-showcase
+
+Previous evidence freeze: v0.6-stage-freeze
 
 ## Included
 
@@ -16,6 +18,7 @@ Freeze release: v0.6-stage-freeze
 - JSON metrics, CSV logs, selected samples, comparison charts, and key Exp09/Exp11 model artifacts.
 - Stage-organized Chinese single-metric figures rebuilt from the scanned `dcgan_lab/results` inputs: 27 result-backed charts across six stages.
 - A stage map linking each regenerated chart to its source result scope.
+- A research-and-engineering showcase README with the problem definition, route map, baseline architecture, stage-by-stage evidence, frozen showcase recipe, evaluation protocol, deployment trade-offs, limitations, and interview summary.
 
 ## Intentionally excluded
 
@@ -28,4 +31,4 @@ Freeze release: v0.6-stage-freeze
 
 ## Current status interpretation
 
-The active project may continue to produce new experiments. This folder is a snapshot, not a replacement for the active workspace. The v0.6 freeze uses 27 result-backed single-metric charts; the current staged service evidence covers P99/RPS, while the source-folder soak/resource charts remain provenance-only because corresponding current raw tables were not available. New work should be recorded in a later snapshot or a clearly dated release so the frozen results remain auditable.
+The active project may continue to produce new experiments. This folder is a snapshot, not a replacement for the active workspace. The v0.7 showcase preserves the v0.6 evidence and uses the same 27 result-backed single-metric charts; the current staged service evidence covers P99/RPS, while the source-folder soak/resource charts remain provenance-only because corresponding current raw tables were not available. This release changes the presentation layer, not the measured experiment results. New work should be recorded in a later snapshot or a clearly dated release so the frozen results remain auditable.

@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.7 - 2026-08-20
+
+- Upgraded the README from an experiment/audit log into an AI/ML research and engineering showcase.
+- Added a 30-second project definition, technical route map, dataset/preprocessing summary, Baseline DCGAN architecture, and headline results.
+- Reorganized the complete Stage 1–6 narrative around goal, modification, control, result, conclusion, and failure interpretation.
+- Added a frozen showcase recipe, visual milestone comparison, deployment system path, quality-speed table, evaluation protocol, reproducibility boundary, limitations, future work, repository map, and interview summary.
+- Preserved the v0.6 experiment data, metrics, and stage figures without presenting documentation changes as new training evidence.
+
 ## v0.6 - 2026-08-19
 
 - Rebuilt the public README around six chronological stages instead of a single visual-results section.
