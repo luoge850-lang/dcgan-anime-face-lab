@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">固定 batch=1 与 Dynamic Batching 的吞吐量</title>
+  <desc id="desc">Dynamic Batching 在并发 8 及以上的 RPS 约为 396 到 402，高于固定 batch=1。</desc>
+  <rect width="900" height="520" fill="#ffffff"/>
+  <text x="450" y="32" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" fill="#222">吞吐量对比</text>
+  <text x="450" y="505" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="14" fill="#222">HTTP 并发数</text>
+  <text x="20" y="255" text-anchor="middle" transform="rotate(-90 20 255)" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="14" fill="#222">RPS（请求/秒）</text>
+  <g stroke="#dddddd" stroke-width="1"><line x1="90" y1="450" x2="840" y2="450"/><line x1="90" y1="363.3" x2="840" y2="363.3"/><line x1="90" y1="276.7" x2="840" y2="276.7"/><line x1="90" y1="190" x2="840" y2="190"/><line x1="90" y1="103.3" x2="840" y2="103.3"/><line x1="90" y1="60" x2="840" y2="60"/></g>
+  <g font-family="Arial, Microsoft YaHei, sans-serif" font-size="12" fill="#444" text-anchor="end"><text x="82" y="454">0</text><text x="82" y="367">100</text><text x="82" y="281">200</text><text x="82" y="194">300</text><text x="82" y="107">400</text><text x="82" y="64">450</text></g>
+  <g font-family="Arial, Microsoft YaHei, sans-serif" font-size="12" fill="#444" text-anchor="middle"><text x="90" y="470">1</text><text x="197" y="470">2</text><text x="304" y="470">4</text><text x="411" y="470">8</text><text x="518" y="470">16</text><text x="625" y="470">32</text><text x="732" y="470">64</text><text x="840" y="470">128</text></g>
+  <polyline points="90,224.2 197,165.2 304,158.4 411,149.9 518,146.5 625,144.6 732,140.2 840,146.0" fill="none" stroke="#2f6fbd" stroke-width="3"/>
+  <polyline points="90,356.2 197,299.4 304,221.6 411,102.1 518,106.3 625,101.9 732,103.1 840,105.6" fill="none" stroke="#d9772b" stroke-width="3"/>
+  <g fill="#2f6fbd"><circle cx="90" cy="224.2" r="4"/><circle cx="197" cy="165.2" r="4"/><circle cx="304" cy="158.4" r="4"/><circle cx="411" cy="149.9" r="4"/><circle cx="518" cy="146.5" r="4"/><circle cx="625" cy="144.6" r="4"/><circle cx="732" cy="140.2" r="4"/><circle cx="840" cy="146" r="4"/></g>
+  <g fill="#d9772b"><circle cx="90" cy="356.2" r="4"/><circle cx="197" cy="299.4" r="4"/><circle cx="304" cy="221.6" r="4"/><circle cx="411" cy="102.1" r="4"/><circle cx="518" cy="106.3" r="4"/><circle cx="625" cy="101.9" r="4"/><circle cx="732" cy="103.1" r="4"/><circle cx="840" cy="105.6" r="4"/></g>
+  <g font-family="Microsoft YaHei, sans-serif" font-size="13"><line x1="650" y1="25" x2="680" y2="25" stroke="#2f6fbd" stroke-width="3"/><text x="686" y="30" fill="#222">固定 batch=1</text><line x1="760" y1="25" x2="790" y2="25" stroke="#d9772b" stroke-width="3"/><text x="796" y="30" fill="#222">Dynamic Batching</text></g>
+  <text x="625" y="92" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#d9772b">32 并发 +14.01%</text>
+</svg>

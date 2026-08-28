@@ -13,8 +13,8 @@ This document was originally a future-work plan. The active Kaggle workspace now
 | Layer sensitivity and mixed precision | Measured; final `net.0 + net.12` selected |
 | QAT | Measured under revised acceptance; strict high-frequency claim not passed |
 | HTTP service preflight | Measured |
-| Locust staged stress | Measured through concurrency 128 with zero failures |
-| 30-minute soak and long-run memory leak conclusion | Not measured in this snapshot |
+| Locust staged stress | Fixed batch 1 measured through concurrency 512 with zero failures; dynamic batching measured through 128 |
+| 60-minute soak and long-run memory leak conclusion | 60-minute declared soak measured; no universal leak proof or physical saturation boundary |
 
 ## Goal
 
@@ -62,7 +62,7 @@ Treat FP16 as the first practical comparison. Treat INT8 as a quality-risk exper
 
 ## Service stress boundary
 
-The staged run used HTTP request concurrency with TensorRT dynamic batch fixed at 1. It collected P99, RPS, failures, GPU memory, GPU SM, and service RSS at a 5-second interval. Latency pressure increased with concurrency, but no hard crash occurred at the tested maximum of 128. A staged run is not a substitute for a long soak; future work, if compute becomes available, is limited to the soak protocol rather than re-running the historical training experiments.
+The fixed-batch run used HTTP request concurrency with TensorRT engine batch 1 and collected P99, RPS, failures, GPU memory, GPU SM, and service RSS at a 5-second interval through concurrency 512. A separate 60-minute steady soak at concurrency 16 served 1,226,890 requests with zero failures and stable head-tail resource checks. A dynamic-batching study used a 5 ms queue window and observed service batches up to 8, improving RPS at medium/high concurrency. These are workload-scoped operational results; future work is limited to closing the dynamic-batching packaging gaps, testing queue drain behavior, and measuring a genuine hardware saturation boundary rather than rerunning all historical training experiments.
 
 ## Required artifacts
 

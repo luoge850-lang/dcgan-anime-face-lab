@@ -1,6 +1,6 @@
 # Deployment optimization evidence
 
-This directory contains a curated, public-safe index of the deployment experiments found in the active Kaggle workspace on 2026-08-19. It does not include `.engine`, `.onnx`, or checkpoint binaries. The copied JSON/CSV files retain the measured evidence and runtime metadata needed to audit the claims.
+This directory contains a curated, public-safe index of the deployment experiments found in the active Kaggle workspace through 2026-08-27. It does not include `.engine`, `.onnx`, or checkpoint binaries. The copied JSON/CSV files retain the measured evidence and runtime metadata needed to audit the claims.
 
 ## Current evidence status
 
@@ -11,7 +11,8 @@ This directory contains a curated, public-safe index of the deployment experimen
 | PTQ baseline | Complete | FP16 was near-lossless; INT8 was faster but degraded Standard FID and blur rate. |
 | Sensitivity and mixed precision | Complete | Retaining `net.0` and `net.12` in FP16 recovered quality while preserving high throughput. |
 | QAT | Revised acceptance | QAT improved over all-INT8 PTQ, but did not beat the selected mixed-precision PTQ baseline on the archived quality-speed comparison. |
-| Service stress | Staged run complete | Locust reached concurrency 128 with zero failures and 5-second GPU/RSS monitoring; no hard crash was observed. A 30-minute soak result is not included. |
+| Service stress | Operational and soak pass; strict physical-limit status incomplete | Fixed batch 1 reached concurrency 512 with zero failures; a 60-minute steady soak served 1,226,890 requests with zero failures; no physical crash/saturation boundary was observed. |
+| Dynamic batching | Complete with packaging gaps | Batch 2/4/8 observed; all stages through concurrency 128 passed; +14.01% RPS at concurrency 32 versus fixed batch 1; downloaded archive lacks some runtime summary/log files. |
 
 ## Quantization headline
 
@@ -25,12 +26,14 @@ The Task 3 Standard FID comparison is:
 
 Task 4 final confirmation selected `net.0 + net.12` FP16 retention: Standard FID 31.1776, blur rate 12.1%, and 23,971.7 images/s in its recorded benchmark scope.
 
-The full normalized tables are [`deployment_quantization_summary.csv`](deployment_quantization_summary.csv), [`deployment_engine_summary.csv`](deployment_engine_summary.csv), and [`deployment_task_status.csv`](deployment_task_status.csv).
+The full normalized tables are [`deployment_quantization_summary.csv`](deployment_quantization_summary.csv), [`deployment_engine_summary.csv`](deployment_engine_summary.csv), [`deployment_task_status.csv`](deployment_task_status.csv), and [`service_operational_summary_v08.csv`](service_operational_summary_v08.csv).
 
 ## Service stress headline
 
-The archived staged run used a QAT hybrid TensorRT engine on a Tesla T4, with concurrency stages 1, 2, 4, 8, 16, 32, 48, 64, 80, 96, and 128. Every stage returned zero failed requests. P99 increased from 5 ms at concurrency 1 to 490 ms at concurrency 128, while RPS stayed near 335–342. Peak recorded GPU memory was 677.2 MB and service RSS was 1,077.8 MB across 100 samples at a 5-second interval.
+The fixed-batch control used a QAT hybrid TensorRT engine on a Tesla T4. Every stage from concurrency 1 through 512 returned zero failed requests; P99 increased from 5 ms to 1,600 ms and the soft latency knee was around 32. Peak GPU memory was 677.2 MB / 19% SM, and service RSS increased from approximately 1,070.9 to 1,114.8 MB.
 
-This identifies a latency-pressure region, not a hardware crash point. The run was staged, not a long soak test; therefore the snapshot does not claim long-term memory-leak absence.
+The 60-minute steady soak at concurrency 16 ran for 3,601.6 seconds, served 1,226,890 requests with zero failures, and reached P99 63 ms / 340.83 RPS. Head-tail resource checks were RSS +3.32% and GPU memory 0%. These are workload-scoped operational results, not a physical crash point or a universal leak proof.
 
-See [`06_Service_Stress/service_stress_summary.csv`](06_Service_Stress/service_stress_summary.csv), [`06_Service_Stress/service_monitor_summary.json`](06_Service_Stress/service_monitor_summary.json), and the extracted raw run under [`06_Service_Stress/raw_run_20260819_014504`](06_Service_Stress/raw_run_20260819_014504).
+The dynamic-batching comparison used a 5 ms wait window and maximum service batch 8. At concurrency 32, P99 was 90 ms versus 110 ms and RPS was 401.73 versus 352.35 (+14.01%) relative to fixed batch 1. Low concurrency pays the queue-window cost; the public status is `complete_with_packaging_gaps` because the downloaded archive does not contain every runtime summary and service log.
+
+See the current [`06E audit`](06_Service_Stress/06E/), [`06F report`](06_Service_Stress/06F/report/), [`06E/06F figures`](../../04_visual_assets/stage_figures/06_服务压测/), and the prior raw staged archive under [`raw_run_20260819_014504`](06_Service_Stress/raw_run_20260819_014504).

@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.8 - 2026-08-28
+
+- Re-scanned the active `dcgan_lab` evidence boundary and refreshed the interview/GitHub freeze without modifying the active Kaggle source workspace.
+- Added current 06E fixed-batch service evidence through concurrency 512, the 60-minute steady soak summary, and the explicit physical-limit boundary.
+- Added the 06F dynamic-batching report, manifests, raw summaries, service/soak figures, and a `complete_with_packaging_gaps` status.
+- Updated the README, deployment docs, metric protocol, source map, task status, figure notes, and interview description to match the latest evidence.
+- Copied the latest full result-folder figure catalog and expanded the public service figure set from the previous 27-chart freeze to 34 result-backed charts.
+- Preserved v0.6 and v0.7 tags as historical freezes; v0.8 is the current-state snapshot for the ongoing internship.
+
 ## v0.7 - 2026-08-20
 
 - Upgraded the README from an experiment/audit log into an AI/ML research and engineering showcase.

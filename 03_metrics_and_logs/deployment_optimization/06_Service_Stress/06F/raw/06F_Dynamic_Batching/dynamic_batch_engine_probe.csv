@@ -1,0 +1,5 @@
+batch,status,trt_batch_ms,error
+1,passed,90.55391500004362,
+2,passed,1.032428999963031,
+4,passed,1.034946000004311,
+8,passed,1.2638630000196827,

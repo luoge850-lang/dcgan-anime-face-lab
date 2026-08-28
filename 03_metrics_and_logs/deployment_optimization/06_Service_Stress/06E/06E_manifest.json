@@ -1,0 +1,143 @@
+{
+  "task": "Task3_06E_Local_Report",
+  "status": "incomplete",
+  "operational_status": "pass",
+  "generated_at": "2026-08-19T08:51:38.304Z",
+  "inputs": {
+    "service_root": "C:\\Users\\32875\\OneDrive\\Desktop\\image_generator\\dcgan_lab\\results\\Deployment_Optimization_Results\\06_Service_Stress",
+    "bc_run": "C:\\Users\\32875\\OneDrive\\Desktop\\image_generator\\dcgan_lab\\results\\Deployment_Optimization_Results\\06_Service_Stress\\06BC\\Run_20260819_063603",
+    "soak_run": "C:\\Users\\32875\\OneDrive\\Desktop\\image_generator\\dcgan_lab\\results\\Deployment_Optimization_Results\\06_Service_Stress\\06D\\Run_Soak_20260819_072959"
+  },
+  "http_validation": {
+    "task": "Task6_06A_HTTP_Service_Validation",
+    "status": "passed",
+    "base_url": "http://127.0.0.1:8000",
+    "health": {
+      "status_code": 200,
+      "payload_status": "ok"
+    },
+    "generate": {
+      "requests": 10,
+      "passed": 10,
+      "failed": 0,
+      "http_latency_ms": {
+        "mean": 4.948181099996418,
+        "min": 4.343359000017699,
+        "max": 6.4016809999429825
+      },
+      "response_type": "image/png",
+      "image_size": [
+        64,
+        64
+      ]
+    },
+    "copied_previous_artifacts": [
+      "service_manifest.json",
+      "service_smoke_test.csv"
+    ],
+    "notes": [
+      "This is HTTP-level validation, not Locust load testing.",
+      "The old interrupted dependency-installation log is intentionally excluded."
+    ]
+  },
+  "staged_classification": {
+    "hard_failure_observed": false,
+    "first_failed_stage": null,
+    "last_stable_stage": {
+      "phase": "stage_17_u0512",
+      "concurrency": 512,
+      "duration_seconds": 60,
+      "elapsed_seconds": 61.74804546400037,
+      "requests": 20238,
+      "failures": 0,
+      "failure_rate": 0,
+      "p50_ms": 1400,
+      "p95_ms": 1600,
+      "p99_ms": 1600,
+      "rps": 342.3565570951871,
+      "status": "passed",
+      "health_ok": "True",
+      "monitor_samples": 10,
+      "gpu_peak_mb": 677.1875,
+      "gpu_memory_percent_peak": 4.408772786458334,
+      "gpu_head_mb": 677.1875,
+      "gpu_tail_mb": 677.1875,
+      "rss_peak_mb": 1114.8046875,
+      "rss_head_mb": 1108.96875,
+      "rss_tail_mb": 1114.8046875,
+      "sm_peak_percent": 17,
+      "sm_mean_percent": 13.9
+    },
+    "max_tested_concurrency": 512,
+    "soft_latency_knee": {
+      "concurrency": 32,
+      "p99_ms": 110,
+      "previous_p99_ms": 55,
+      "ratio": 2,
+      "throughput_gain": 0.006244972362291897
+    }
+  },
+  "gpu_ceiling": {
+    "status": "not_observed",
+    "max_sm_percent": 19,
+    "max_gpu_memory_percent": 4.408772786458334,
+    "criteria": {
+      "sm_threshold_percent": 80,
+      "memory_threshold_percent": 90
+    }
+  },
+  "soak_classification": {
+    "strict_60min": true,
+    "steady_duration_seconds": 3601.596149486,
+    "steady_failures": 0,
+    "steady_failure_rate": 0,
+    "rss_delta_percent": 3.3186042191080207,
+    "gpu_delta_percent": 0,
+    "memory_limit_percent": 5,
+    "status": "pass",
+    "resources": {
+      "monitor_samples": 712,
+      "gpu_peak_mb": 677.1875,
+      "gpu_memory_percent_peak": 4.408772786458334,
+      "gpu_head_mb": 677.1875,
+      "gpu_tail_mb": 677.1875,
+      "rss_peak_mb": 1107.90234375,
+      "rss_head_mb": 1072.31640625,
+      "rss_tail_mb": 1107.90234375,
+      "sm_peak_percent": 14,
+      "sm_mean_percent": 12.167134831460674
+    }
+  },
+  "evidence": {
+    "bc_stages": 17,
+    "bc_total_failures": 0,
+    "d_steady_requests": 1226890,
+    "d_steady_p99_ms": 63,
+    "d_steady_rps": 340.83491714884207
+  },
+  "limitations": [
+    "最高成功并发不是硬崩溃点；本次硬失败未观察到，因此边界为大于512。",
+    "GPU SM和显存均未饱和，HTTP并发拐点不能等同于GPU理论物理极限。",
+    "60分钟soak是运行期泄漏筛查，不是数学意义上的绝对无泄漏证明。"
+  ],
+  "outputs": [
+    "06BC_stage_resource_summary.csv",
+    "06D_soak_summary.csv",
+    "06E_manifest.json",
+    "06E_report.md",
+    "concurrency_gpu_memory.svg",
+    "concurrency_gpu_memory.png",
+    "concurrency_p99.svg",
+    "concurrency_p99.png",
+    "concurrency_p99_gpu_memory_3d.svg",
+    "concurrency_p99_gpu_memory_3d.png",
+    "concurrency_rps.svg",
+    "concurrency_rps.png"
+  ],
+  "source_sha256": {
+    "bc_stage_results": "72f7a66de009d8b108e10aa1ffd6883673e683f0b4138be4cf8df1205833ddbb",
+    "bc_monitor": "b7eaa1e5c45217fc021b2c4269c1c82d5fec4ab9e738c603d394d277458b4856",
+    "d_soak_results": "06abd8fd2ff816bce3c77f0d89b40c43485e33391878dba2f76489018c52102a",
+    "d_monitor": "ead77f79a37c7f3228be6c30359e02cded29a29a17e45d6e97ae3cca5613b122"
+  }
+}

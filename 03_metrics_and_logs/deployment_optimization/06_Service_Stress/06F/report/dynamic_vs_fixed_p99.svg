@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">固定 batch=1 与 Dynamic Batching 的 P99 延迟</title>
+  <desc id="desc">Dynamic Batching 在 8 到 128 并发的 P99 低于固定 batch=1，软拐点从约 32 推迟到约 64。</desc>
+  <rect width="900" height="520" fill="#ffffff"/>
+  <text x="450" y="32" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" fill="#222">P99 延迟对比</text>
+  <text x="450" y="505" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="14" fill="#222">HTTP 并发数</text>
+  <text x="20" y="255" text-anchor="middle" transform="rotate(-90 20 255)" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="14" fill="#222">P99 延迟（ms）</text>
+  <g stroke="#dddddd" stroke-width="1">
+    <line x1="90" y1="450" x2="840" y2="450"/><line x1="90" y1="372" x2="840" y2="372"/>
+    <line x1="90" y1="294" x2="840" y2="294"/><line x1="90" y1="216" x2="840" y2="216"/>
+    <line x1="90" y1="138" x2="840" y2="138"/><line x1="90" y1="60" x2="840" y2="60"/>
+  </g>
+  <g font-family="Arial, Microsoft YaHei, sans-serif" font-size="12" fill="#444" text-anchor="end">
+    <text x="82" y="454">0</text><text x="82" y="376">100</text><text x="82" y="298">200</text>
+    <text x="82" y="220">300</text><text x="82" y="142">400</text><text x="82" y="64">500</text>
+  </g>
+  <g font-family="Arial, Microsoft YaHei, sans-serif" font-size="12" fill="#444" text-anchor="middle">
+    <text x="90" y="470">1</text><text x="197" y="470">2</text><text x="304" y="470">4</text><text x="411" y="470">8</text>
+    <text x="518" y="470">16</text><text x="625" y="470">32</text><text x="732" y="470">64</text><text x="840" y="470">128</text>
+  </g>
+  <polyline points="90,446.1 197,443.8 304,436.7 411,427.4 518,407.1 625,364.2 732,231.6 840,83.4" fill="none" stroke="#2f6fbd" stroke-width="3"/>
+  <polyline points="90,442.2 197,439.9 304,436.7 411,431.3 518,412.6 625,379.8 732,309.6 840,114.6" fill="none" stroke="#d9772b" stroke-width="3"/>
+  <g fill="#2f6fbd"><circle cx="90" cy="446.1" r="4"/><circle cx="197" cy="443.8" r="4"/><circle cx="304" cy="436.7" r="4"/><circle cx="411" cy="427.4" r="4"/><circle cx="518" cy="407.1" r="4"/><circle cx="625" cy="364.2" r="4"/><circle cx="732" cy="231.6" r="4"/><circle cx="840" cy="83.4" r="4"/></g>
+  <g fill="#d9772b"><circle cx="90" cy="442.2" r="4"/><circle cx="197" cy="439.9" r="4"/><circle cx="304" cy="436.7" r="4"/><circle cx="411" cy="431.3" r="4"/><circle cx="518" cy="412.6" r="4"/><circle cx="625" cy="379.8" r="4"/><circle cx="732" cy="309.6" r="4"/><circle cx="840" cy="114.6" r="4"/></g>
+  <line x1="625" y1="60" x2="625" y2="450" stroke="#2f6fbd" stroke-dasharray="5,5"/>
+  <line x1="732" y1="60" x2="732" y2="450" stroke="#d9772b" stroke-dasharray="5,5"/>
+  <text x="625" y="78" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#2f6fbd">固定软拐点≈32</text>
+  <text x="732" y="96" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#d9772b">动态软拐点≈64</text>
+  <g font-family="Microsoft YaHei, sans-serif" font-size="13"><line x1="650" y1="25" x2="680" y2="25" stroke="#2f6fbd" stroke-width="3"/><text x="686" y="30" fill="#222">固定 batch=1</text><line x1="760" y1="25" x2="790" y2="25" stroke="#d9772b" stroke-width="3"/><text x="796" y="30" fill="#222">Dynamic Batching</text></g>
+</svg>

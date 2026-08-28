@@ -1,0 +1,116 @@
+{
+  "task": "Task6_06F_Dynamic_Batching_Stress",
+  "status": "complete",
+  "base_url": "http://127.0.0.1:8000",
+  "stages": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "stage_seconds": 60,
+  "cooldown_seconds": 30,
+  "monitor_interval_seconds": 5.0,
+  "initial_health": {
+    "task": "Task6_06F_Dynamic_Batching_Service",
+    "status": "ok",
+    "output_dir": "/kaggle/working/dcgan_output/Deployment_Optimization_Results/06_Service_Stress/06F_Dynamic_Batching",
+    "service_mode": "single_process_single_worker_single_context_dynamic_microbatch",
+    "engine": {
+      "engine_file": "generator_trt_qat_int8 (1).engine",
+      "engine_sha256": "b24e799fc5e32a7392bb587e23c314f290c6f314934d00f1cd4cde9e92bf5282",
+      "engine_bytes": 9570452,
+      "tensorrt_version": "11.2.1.2",
+      "gpu_index": 0,
+      "gpu_name": "Tesla T4",
+      "gpu_total_memory_mb": 14911.69,
+      "cuda_version": "12.8",
+      "torch_version": "2.10.0+cu128",
+      "input_name": "z",
+      "output_name": "image",
+      "input_dtype": "<class 'numpy.float32'>",
+      "output_dtype": "<class 'numpy.float32'>",
+      "input_contract": "[B,128,1,1]",
+      "output_contract": "[B,3,64,64]",
+      "pid": 58,
+      "hostname": "8db2602e838f",
+      "request_count": 15
+    },
+    "policy": {
+      "max_batch_size": 8,
+      "batch_wait_ms": 5.0,
+      "queue_size": 2048,
+      "probe_batches": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "http_concurrency_is_not_batch_size": true
+    },
+    "dependency_versions": {
+      "tensorrt": "11.2.1.2",
+      "numpy": "2.0.2",
+      "torch": "2.10.0+cu128",
+      "Pillow": "11.3.0",
+      "fastapi": "0.136.1",
+      "uvicorn": "0.46.0",
+      "requests": "2.32.4"
+    },
+    "dynamic_batch_capability": [
+      {
+        "batch": 1,
+        "status": "passed",
+        "trt_batch_ms": 90.55391500004362
+      },
+      {
+        "batch": 2,
+        "status": "passed",
+        "trt_batch_ms": 1.032428999963031
+      },
+      {
+        "batch": 4,
+        "status": "passed",
+        "trt_batch_ms": 1.034946000004311
+      },
+      {
+        "batch": 8,
+        "status": "passed",
+        "trt_batch_ms": 1.2638630000196827
+      }
+    ],
+    "outputs": [
+      "dynamic_batch_service_manifest.json",
+      "dynamic_batch_engine_probe.csv",
+      "dynamic_batch_smoke.csv",
+      "dynamic_batch_runtime_summary.json"
+    ],
+    "claim_boundary": "This service can claim dynamic batching only when a probe batch >1 passes and runtime actual_batch_size is recorded.",
+    "batcher": {
+      "queue_depth": 0,
+      "max_batch_size": 8,
+      "batch_wait_ms": 5.0,
+      "submitted": 0,
+      "completed": 0,
+      "failed": 0,
+      "batches": 0,
+      "mean_actual_batch_size": 0.0,
+      "max_observed_batch": 0,
+      "batch_histogram": {}
+    },
+    "request_count": 15
+  },
+  "stage_count": 8,
+  "hard_failure_observed": false,
+  "outputs": [
+    "dynamic_stage_results.csv",
+    "dynamic_monitor_5s.csv",
+    "dynamic_locustfile.py",
+    "dynamic_run_manifest.json"
+  ],
+  "claim_boundary": "Concurrency is HTTP users; actual_batch_size from /health is required to claim batching occurred."
+}

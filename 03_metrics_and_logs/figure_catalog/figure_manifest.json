@@ -1,0 +1,436 @@
+{
+  "generated_at": "2026-08-19T04:59:16.691Z",
+  "design": "single_metric_single_series_line_or_bar",
+  "figures": [
+    {
+      "file": "01_前期训练轮数_FID.svg",
+      "title": "前期训练轮数与 FID",
+      "chart_type": "line",
+      "metric": "FID",
+      "unit": "legacy FID",
+      "rows": 4,
+      "source": "前期调优结果/exp1_epoch_*/metrics.json",
+      "note": "legacy 项目评估口径"
+    },
+    {
+      "file": "02_前期增强实验_FID.svg",
+      "title": "前期数据增强实验 FID",
+      "chart_type": "bar",
+      "metric": "FID",
+      "unit": "legacy FID",
+      "rows": 9,
+      "source": "前期调优结果/exp2_*、exp3_*/metrics.json",
+      "note": "legacy 项目评估口径"
+    },
+    {
+      "file": "03_G强化_FID.svg",
+      "title": "G 结构强化实验 FID",
+      "chart_type": "bar",
+      "metric": "FID",
+      "unit": "legacy FID",
+      "rows": 11,
+      "source": "G强化实验结果/*/metrics.json",
+      "note": "legacy 项目评估口径"
+    },
+    {
+      "file": "04_G强化_多样性LPIPS.svg",
+      "title": "G 结构强化实验多样性",
+      "chart_type": "bar",
+      "metric": "Diversity/LPIPS",
+      "unit": "LPIPS-Alex",
+      "rows": 11,
+      "source": "G强化实验结果/*/metrics.json",
+      "note": "仅在该阶段内部比较"
+    },
+    {
+      "file": "05_深度调优_G方法_FID.svg",
+      "title": "深度调优：G 端方法 FID",
+      "chart_type": "bar",
+      "metric": "FID",
+      "unit": "legacy FID",
+      "rows": 12,
+      "source": "深度调优结果/00_baseline、*_G_*/metrics.json",
+      "note": "legacy 项目评估口径"
+    },
+    {
+      "file": "06_深度调优_D方法_FID.svg",
+      "title": "深度调优：D 端方法 FID",
+      "chart_type": "bar",
+      "metric": "FID",
+      "unit": "legacy FID",
+      "rows": 8,
+      "source": "深度调优结果/*_D_*/metrics.json",
+      "note": "legacy 项目评估口径"
+    },
+    {
+      "file": "07_CLIP正则_FID.svg",
+      "title": "CLIP 正则强度与 FID",
+      "chart_type": "line",
+      "metric": "FID",
+      "unit": "legacy FID",
+      "rows": 5,
+      "source": "CLIP实验结果/C0–C4/final_metrics.json + config*.json",
+      "note": "C0–C4 同组消融"
+    },
+    {
+      "file": "08_CLIP正则_MMD2.svg",
+      "title": "CLIP 正则强度与 MMD²",
+      "chart_type": "line",
+      "metric": "CLIP MMD²",
+      "unit": "MMD²",
+      "rows": 5,
+      "source": "CLIP实验结果/C0–C4/final_metrics.json + config*.json",
+      "note": "与 FID 分开解释"
+    },
+    {
+      "file": "09_前期代表_D_loss.svg",
+      "title": "前期代表实验 D loss",
+      "chart_type": "line",
+      "metric": "D_loss",
+      "unit": "D loss",
+      "rows": 300,
+      "source": "前期调优结果/exp1_epoch_300/loss.csv",
+      "note": "等间隔抽样，不改变端点"
+    },
+    {
+      "file": "10_前期代表_G_loss.svg",
+      "title": "前期代表实验 G loss",
+      "chart_type": "line",
+      "metric": "G_loss",
+      "unit": "G loss",
+      "rows": 300,
+      "source": "前期调优结果/exp1_epoch_300/loss.csv",
+      "note": "等间隔抽样，不改变端点"
+    },
+    {
+      "file": "11_G强化代表_D_loss.svg",
+      "title": "G 强化代表实验 D loss",
+      "chart_type": "line",
+      "metric": "D_loss",
+      "unit": "D loss",
+      "rows": 200,
+      "source": "G强化实验结果/03_G_Width3x/loss.csv",
+      "note": "等间隔抽样，不改变端点"
+    },
+    {
+      "file": "12_G强化代表_G_loss.svg",
+      "title": "G 强化代表实验 G loss",
+      "chart_type": "line",
+      "metric": "G_loss",
+      "unit": "G loss",
+      "rows": 200,
+      "source": "G强化实验结果/03_G_Width3x/loss.csv",
+      "note": "等间隔抽样，不改变端点"
+    },
+    {
+      "file": "13_深度代表_G_adv.svg",
+      "title": "深度调优代表实验 G adversarial loss",
+      "chart_type": "line",
+      "metric": "G_adv",
+      "unit": "G adv loss",
+      "rows": 200,
+      "source": "深度调优结果/05_G_Wavelet/loss.csv",
+      "note": "等间隔抽样，不改变端点"
+    },
+    {
+      "file": "14_深度代表_G_wavelet.svg",
+      "title": "深度调优代表实验小波损失",
+      "chart_type": "line",
+      "metric": "G_wavelet",
+      "unit": "Wavelet loss",
+      "rows": 200,
+      "source": "深度调优结果/05_G_Wavelet/loss.csv",
+      "note": "等间隔抽样，不改变端点"
+    },
+    {
+      "file": "15_CLIP代表_D_loss.svg",
+      "title": "CLIP 代表实验 D loss",
+      "chart_type": "line",
+      "metric": "d_loss",
+      "unit": "D loss",
+      "rows": 50,
+      "source": "CLIP实验结果/C4_clip_L010/training_log.csv",
+      "note": "等间隔抽样，不改变端点"
+    },
+    {
+      "file": "16_CLIP代表_CLIP_MMD.svg",
+      "title": "CLIP 代表实验 CLIP MMD²",
+      "chart_type": "line",
+      "metric": "clip_mmd",
+      "unit": "CLIP MMD²",
+      "rows": 50,
+      "source": "CLIP实验结果/C4_clip_L010/training_log.csv",
+      "note": "等间隔抽样，不改变端点"
+    },
+    {
+      "file": "17_BN未融合_平均延迟.svg",
+      "title": "BN 未融合图：批量与平均延迟",
+      "chart_type": "line",
+      "metric": "mean_ms",
+      "unit": "ms",
+      "rows": 4,
+      "source": "Deployment_Optimization_Results/01_ONNX_Fusion/01C_BN_Fold/manual_bn_latency_summary.csv",
+      "note": "单图单系列"
+    },
+    {
+      "file": "18_BN融合_平均延迟.svg",
+      "title": "BN 融合图：批量与平均延迟",
+      "chart_type": "line",
+      "metric": "mean_ms",
+      "unit": "ms",
+      "rows": 4,
+      "source": "Deployment_Optimization_Results/01_ONNX_Fusion/01C_BN_Fold/manual_bn_latency_summary.csv",
+      "note": "单图单系列"
+    },
+    {
+      "file": "19_三引擎_FP32_batch32_延迟.svg",
+      "title": "三引擎 FP32 Batch=32 端到端延迟",
+      "chart_type": "bar",
+      "metric": "end-to-end latency",
+      "unit": "ms",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv",
+      "note": "同 Batch=32"
+    },
+    {
+      "file": "20_三引擎_FP32_batch32_吞吐.svg",
+      "title": "三引擎 FP32 Batch=32 吞吐量",
+      "chart_type": "bar",
+      "metric": "throughput",
+      "unit": "images/s",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv",
+      "note": "同 Batch=32"
+    },
+    {
+      "file": "21_三引擎_FP16_batch32_延迟.svg",
+      "title": "三引擎 FP16 Batch=32 端到端延迟",
+      "chart_type": "bar",
+      "metric": "end-to-end latency",
+      "unit": "ms",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv",
+      "note": "同 Batch=32"
+    },
+    {
+      "file": "22_三引擎_FP16_batch32_吞吐.svg",
+      "title": "三引擎 FP16 Batch=32 吞吐量",
+      "chart_type": "bar",
+      "metric": "throughput",
+      "unit": "images/s",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/02_Engine_Benchmark/02E_Report/task2_engine_comparison.csv",
+      "note": "同 Batch=32"
+    },
+    {
+      "file": "23_TensorRT_Top3_算子耗时.svg",
+      "title": "TensorRT Top-3 算子耗时",
+      "chart_type": "bar",
+      "metric": "total_ms",
+      "unit": "ms",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/02_Engine_Benchmark/02E_Report/task2_top3_operators.csv",
+      "note": "TensorRT IProfiler"
+    },
+    {
+      "file": "22_PTQ_FID.svg",
+      "title": "PTQ 质量基线：FID",
+      "chart_type": "bar",
+      "metric": "FID",
+      "unit": "Standard FID",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/03_Quantization/03E_Report/fp32_fp16_int8_metrics.csv",
+      "note": "Standard FID"
+    },
+    {
+      "file": "23_PTQ_模糊率.svg",
+      "title": "PTQ 质量基线：模糊率",
+      "chart_type": "bar",
+      "metric": "fake_blur_rate",
+      "unit": "%",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/03_Quantization/03E_Report/fp32_fp16_int8_metrics.csv",
+      "note": "真实集 p10 阈值"
+    },
+    {
+      "file": "24_PTQ_吞吐.svg",
+      "title": "PTQ 速度基线：吞吐量",
+      "chart_type": "bar",
+      "metric": "inference_images_per_s",
+      "unit": "images/s",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/03_Quantization/03E_Report/fp32_fp16_int8_metrics.csv",
+      "note": "原始吞吐字段"
+    },
+    {
+      "file": "25_逐层敏感度_FID.svg",
+      "title": "逐层恢复 FP16：FID",
+      "chart_type": "bar",
+      "metric": "fid_standard",
+      "unit": "Standard FID",
+      "rows": 7,
+      "source": "Deployment_Optimization_Results/04_Quantization_Sensitivity/04A/layer_sensitivity_summary.csv",
+      "note": "04A 内部比较"
+    },
+    {
+      "file": "26_逐层敏感度_延迟.svg",
+      "title": "逐层恢复 FP16：平均延迟",
+      "chart_type": "bar",
+      "metric": "latency_mean_ms_batch",
+      "unit": "ms/batch",
+      "rows": 7,
+      "source": "Deployment_Optimization_Results/04_Quantization_Sensitivity/04A/layer_sensitivity_summary.csv",
+      "note": "04A 内部比较"
+    },
+    {
+      "file": "27_混合策略_FID.svg",
+      "title": "混合精度策略：FID",
+      "chart_type": "bar",
+      "metric": "fid_standard",
+      "unit": "Standard FID",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/04_Quantization_Sensitivity/04C/final_confirmation_summary.csv",
+      "note": "04C 最终确认"
+    },
+    {
+      "file": "28_混合策略_延迟.svg",
+      "title": "混合精度策略：平均延迟",
+      "chart_type": "bar",
+      "metric": "latency_mean_ms_batch",
+      "unit": "ms/batch",
+      "rows": 3,
+      "source": "Deployment_Optimization_Results/04_Quantization_Sensitivity/04C/final_confirmation_summary.csv",
+      "note": "04C 最终确认"
+    },
+    {
+      "file": "29_QAT_FID.svg",
+      "title": "QAT 对照：FID",
+      "chart_type": "bar",
+      "metric": "fid_standard",
+      "unit": "Standard FID",
+      "rows": 5,
+      "source": "Deployment_Optimization_Results/05_QAT/05B/qat_vs_ptq_summary (3).csv",
+      "note": "05B 同一评估批次"
+    },
+    {
+      "file": "30_QAT_模糊率.svg",
+      "title": "QAT 对照：模糊率",
+      "chart_type": "bar",
+      "metric": "blur_rate",
+      "unit": "%",
+      "rows": 5,
+      "source": "Deployment_Optimization_Results/05_QAT/05B/qat_vs_ptq_summary (3).csv",
+      "note": "全局模糊率，不作 ROI 显著性结论"
+    },
+    {
+      "file": "31_QAT_P99.svg",
+      "title": "QAT 对照：P99 延迟",
+      "chart_type": "bar",
+      "metric": "latency_p99_ms_batch",
+      "unit": "ms/batch",
+      "rows": 5,
+      "source": "Deployment_Optimization_Results/05_QAT/05B/qat_vs_ptq_summary (3).csv",
+      "note": "05B 同一评估批次"
+    },
+    {
+      "file": "32_服务并发_P99.svg",
+      "title": "服务压测：并发与 P99 延迟",
+      "chart_type": "line",
+      "metric": "p99_ms",
+      "unit": "ms",
+      "rows": 11,
+      "source": "Deployment_Optimization_Results/06_Service_Stress/06D/task3_stage_summary.csv",
+      "note": "已测上界，不等于物理崩溃点"
+    },
+    {
+      "file": "33_服务并发_RPS.svg",
+      "title": "服务压测：并发与 RPS",
+      "chart_type": "line",
+      "metric": "rps",
+      "unit": "requests/s",
+      "rows": 11,
+      "source": "Deployment_Optimization_Results/06_Service_Stress/06D/task3_stage_summary.csv",
+      "note": "阶梯式加压"
+    },
+    {
+      "file": "34_服务并发_GPU显存.svg",
+      "title": "服务压测：并发与 GPU 显存",
+      "chart_type": "line",
+      "metric": "gpu_peak_mb",
+      "unit": "MB",
+      "rows": 11,
+      "source": "Deployment_Optimization_Results/06_Service_Stress/06D/task3_stage_summary.csv",
+      "note": "监控峰值"
+    },
+    {
+      "file": "35_服务并发_RSS.svg",
+      "title": "服务压测：并发与 RSS",
+      "chart_type": "line",
+      "metric": "rss_peak_mb",
+      "unit": "MB",
+      "rows": 11,
+      "source": "Deployment_Optimization_Results/06_Service_Stress/06D/task3_stage_summary.csv",
+      "note": "系统内存峰值"
+    },
+    {
+      "file": "36_服务并发_SM.svg",
+      "title": "服务压测：并发与 SM 利用率",
+      "chart_type": "line",
+      "metric": "sm_peak_percent",
+      "unit": "%",
+      "rows": 11,
+      "source": "Deployment_Optimization_Results/06_Service_Stress/06D/task3_stage_summary.csv",
+      "note": "采样峰值"
+    },
+    {
+      "file": "37_Soak阶段_P99.svg",
+      "title": "Soak Test：阶段 P99 延迟",
+      "chart_type": "bar",
+      "metric": "p99_ms",
+      "unit": "ms",
+      "rows": 2,
+      "source": "Deployment_Optimization_Results/06_Service_Stress/06D/task3_soak_summary.csv",
+      "note": "steady=1800s"
+    },
+    {
+      "file": "38_Soak阶段_RPS.svg",
+      "title": "Soak Test：阶段 RPS",
+      "chart_type": "bar",
+      "metric": "rps",
+      "unit": "requests/s",
+      "rows": 2,
+      "source": "Deployment_Optimization_Results/06_Service_Stress/06D/task3_soak_summary.csv",
+      "note": "长时间稳定性"
+    },
+    {
+      "file": "39_Soak_GPU显存头尾.svg",
+      "title": "Soak Test：GPU 显存头尾",
+      "chart_type": "bar",
+      "metric": "gpu_memory_head/tail_mb",
+      "unit": "MB",
+      "rows": 2,
+      "source": "Deployment_Optimization_Results/06_Service_Stress/06D/task3_soak_resource_summary.csv",
+      "note": "delta=0.0%"
+    },
+    {
+      "file": "40_Soak_RSS头尾.svg",
+      "title": "Soak Test：RSS 头尾均值",
+      "chart_type": "bar",
+      "metric": "rss_head/tail_mean_mb",
+      "unit": "MB",
+      "rows": 2,
+      "source": "Deployment_Optimization_Results/06_Service_Stress/06D/task3_soak_resource_summary.csv",
+      "note": "delta=2.0497127%"
+    }
+  ],
+  "excluded": [
+    "SDXL_Controlled_Study_Results：独立 SDXL 对照研究，不并入 DCGAN 主线图表"
+  ],
+  "limitations": [
+    "前期调优、G强化、深度调优、CLIP 的 FID 使用历史 legacy 项目协议；部署阶段 Standard FID 不与它们直接混合排名。",
+    "历史训练结果中的 Wavelet/SN 是训练实验方法；当前部署图的算子证据仍以 ConvTranspose、BatchNorm、ReLU、Tanh 为准。",
+    "05B 的全局模糊率与全局高频指标不支持 literal hair/eyeliner ROI 显著优于 PTQ 的结论；图表不作该超出证据范围的声称。",
+    "06D 只在已测并发范围内展示服务行为；没有失败或 OOM 时，最大已测并发不能写成理论物理崩溃点。",
+    "训练曲线最多等间隔抽样 240 个点，仅改变显示密度，不改变指标文件。"
+  ]
+}

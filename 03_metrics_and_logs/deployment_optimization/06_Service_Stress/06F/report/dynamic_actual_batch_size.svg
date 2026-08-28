@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">Dynamic Batching 实际批量大小</title>
+  <desc id="desc">随着并发增加，实际 TensorRT batch 从 1 增加到 2、4 和 8。</desc>
+  <rect width="900" height="520" fill="#ffffff"/>
+  <text x="450" y="32" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" fill="#222">实际 TensorRT Batch 大小</text>
+  <text x="450" y="505" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="14" fill="#222">HTTP 并发数</text>
+  <text x="20" y="255" text-anchor="middle" transform="rotate(-90 20 255)" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="14" fill="#222">实际 Batch 大小</text>
+  <g stroke="#dddddd" stroke-width="1"><line x1="90" y1="450" x2="840" y2="450"/><line x1="90" y1="358.2" x2="840" y2="358.2"/><line x1="90" y1="266.5" x2="840" y2="266.5"/><line x1="90" y1="174.7" x2="840" y2="174.7"/><line x1="90" y1="82.9" x2="840" y2="82.9"/></g>
+  <g font-family="Arial, Microsoft YaHei, sans-serif" font-size="12" fill="#444" text-anchor="end"><text x="82" y="454">0</text><text x="82" y="362">2</text><text x="82" y="270">4</text><text x="82" y="179">6</text><text x="82" y="87">8</text></g>
+  <g font-family="Arial, Microsoft YaHei, sans-serif" font-size="12" fill="#444" text-anchor="middle"><text x="90" y="470">1</text><text x="197" y="470">2</text><text x="304" y="470">4</text><text x="411" y="470">8</text><text x="518" y="470">16</text><text x="625" y="470">32</text><text x="732" y="470">64</text><text x="840" y="470">128</text></g>
+  <polyline points="90,404.1 197,358.2 304,266.5 411,84.0 518,88.0 625,83.1 732,82.9 840,82.9" fill="none" stroke="#2d8a57" stroke-width="3"/>
+  <g fill="#2d8a57"><circle cx="90" cy="404.1" r="5"/><circle cx="197" cy="358.2" r="5"/><circle cx="304" cy="266.5" r="5"/><circle cx="411" cy="84" r="5"/><circle cx="518" cy="88" r="5"/><circle cx="625" cy="83.1" r="5"/><circle cx="732" cy="82.9" r="5"/><circle cx="840" cy="82.9" r="5"/></g>
+  <text x="411" y="70" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#2d8a57">并发≥8 时稳定接近 Batch=8</text>
+</svg>

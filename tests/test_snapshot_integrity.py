@@ -40,6 +40,7 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "04_visual_assets/stage_figures/04_CLIP调优/07_CLIP_FID.svg",
             "04_visual_assets/stage_figures/05_部署与量化/27_混合精度_FID.svg",
             "04_visual_assets/stage_figures/06_服务压测/32_并发_P99.svg",
+            "04_visual_assets/stage_figures/06_服务压测/37_Soak阶段_P99.svg",
             "docs/experiment_process.md",
             "docs/baseline_map.md",
             "docs/interview_playbook.md",
@@ -49,6 +50,7 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "docs/dcgan_core_experiment_record.md",
             "03_metrics_and_logs/deployment_optimization/deployment_task_status.csv",
             "03_metrics_and_logs/deployment_optimization/deployment_quantization_summary.csv",
+            "03_metrics_and_logs/deployment_optimization/service_operational_summary_v08.csv",
             "03_metrics_and_logs/stage_figures_map.csv",
         ):
             self.assertIn(target, readme)
@@ -100,13 +102,13 @@ class SnapshotIntegrityTests(unittest.TestCase):
         self.assertTrue(all((ROOT / row["public_snapshot_file"]).exists() for row in audit if row["public_snapshot_file"]))
 
         stage_figures = list((ROOT / "04_visual_assets/stage_figures").rglob("*.svg"))
-        self.assertEqual(len(stage_figures), 27)
+        self.assertEqual(len(stage_figures), 34)
         for path in stage_figures:
             self.assertTrue(ET.parse(path).getroot().tag.endswith("svg"), path)
 
         with (ROOT / "03_metrics_and_logs/stage_figures_map.csv").open(newline="", encoding="utf-8") as handle:
             stage_map = list(csv.DictReader(handle))
-        self.assertEqual(len(stage_map), 27)
+        self.assertEqual(len(stage_map), 34)
         self.assertTrue(all(row["status"] == "regenerated" for row in stage_map))
 
         deployment_figures = list((ROOT / "04_visual_assets/source_figures/deployment_quantization_service").glob("*.svg"))
@@ -150,6 +152,24 @@ class SnapshotIntegrityTests(unittest.TestCase):
         self.assertEqual(monitor["max_tested_concurrency"], 128)
         self.assertFalse(monitor["hard_crash_observed"])
         self.assertFalse(monitor["soak_run_included"])
+
+    def test_current_service_freeze_evidence_is_present(self):
+        with (ROOT / "03_metrics_and_logs/deployment_optimization/06_Service_Stress/06E/06BC_stage_resource_summary.csv").open(newline="", encoding="utf-8") as handle:
+            fixed = list(csv.DictReader(handle))
+        self.assertEqual(fixed[-1]["concurrency"], "512")
+        self.assertEqual(sum(int(row["failures"]) for row in fixed), 0)
+        self.assertAlmostEqual(float(fixed[-1]["p99_ms"]), 1600.0, places=2)
+
+        with (ROOT / "03_metrics_and_logs/deployment_optimization/06_Service_Stress/06E/06D_soak_summary.csv").open(newline="", encoding="utf-8") as handle:
+            soak = list(csv.DictReader(handle))
+        steady = next(row for row in soak if row["phase"] == "soak_steady_u0016")
+        self.assertEqual(steady["failures"], "0")
+        self.assertEqual(steady["requests"], "1226890")
+        self.assertAlmostEqual(float(steady["p99_ms"]), 63.0, places=2)
+
+        dynamic_manifest = json.loads((ROOT / "03_metrics_and_logs/deployment_optimization/06_Service_Stress/06F/report/dynamic_batch_manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(dynamic_manifest["execution_status"], "complete")
+        self.assertEqual(dynamic_manifest["report_status"], "complete_with_packaging_gaps")
 
 
 if __name__ == "__main__":

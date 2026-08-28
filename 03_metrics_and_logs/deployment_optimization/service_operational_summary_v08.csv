@@ -1,0 +1,5 @@
+scope,configuration,concurrency,max_service_batch,queue_window_ms,duration_seconds,requests,failures,p99_ms,rps,gpu_memory_peak_mb,gpu_sm_peak_percent,rss_head_mb,rss_tail_mb,interpretation
+fixed_batch_staged,TensorRT QAT hybrid; single process/worker; engine batch 1,1-512,1,0,17 stages x 60 s,,0,5-1600,342-358,677.19,19,1070.91,1114.80,"Soft latency knee around 32; no hard crash or OOM observed"
+steady_soak,TensorRT QAT hybrid; concurrency 16 after 120 s warmup,16,1,0,3601.596,1226890,0,63,340.835,677.19,,,"+3.32% RSS head-tail; GPU-memory head-tail 0%; leak screening only"
+dynamic_batching,TensorRT QAT INT8; 5 ms queue window,1-128,8,5,60 s per stage,,0,"10-430","108-402",677.19,4,,,"Actual batches 2/4/8 observed; soft knee around 64; packaging gaps in downloaded archive"
+dynamic_vs_fixed_at_c32,Dynamic batching versus fixed batch 1,32,8,5,60,,0,"90 vs 110","401.732 vs 352.354",,,,"+14.01% RPS; queue-window trade-off is workload dependent"

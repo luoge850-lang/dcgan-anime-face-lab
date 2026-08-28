@@ -1,0 +1,48 @@
+{
+  "task": "Task6_06F_Dynamic_Batching",
+  "execution_status": "complete",
+  "report_status": "complete_with_packaging_gaps",
+  "source_archive": "06F_Dynamic_Batching.zip",
+  "source_archive_sha256": "7e7fa2df367d5913dbdb051943b589329b9f4a26b4794b79cf616bd2a79a5e4e",
+  "engine": {
+    "file": "generator_trt_qat_int8 (1).engine",
+    "tensorrt": "11.2.1.2",
+    "gpu": "Tesla T4",
+    "gpu_memory_mb": 14911.69,
+    "engine_sha256": "b24e799fc5e32a7392bb587e23c314f290c6f314934d00f1cd4cde9e92bf5282"
+  },
+  "dynamic_batch_probe": {
+    "tested_batches": [1, 2, 4, 8],
+    "all_passed": true,
+    "runtime_actual_batch_greater_than_one": true,
+    "maximum_observed_batch": 8
+  },
+  "stress": {
+    "stages": [1, 2, 4, 8, 16, 32, 64, 128],
+    "stage_seconds": 60,
+    "cooldown_seconds": 30,
+    "monitor_interval_seconds": 5,
+    "all_stage_status_passed": true,
+    "failure_rate": 0.0,
+    "hard_failure_observed": false,
+    "monitor_samples": 104,
+    "gpu_memory_min_mb": 677.1875,
+    "gpu_memory_max_mb": 677.1875,
+    "sm_max_percent": 4.0,
+    "rss_min_mb": 1084.0586,
+    "rss_max_mb": 1089.4492,
+    "last_queue_depth": 111
+  },
+  "soft_knee": {
+    "fixed_batch1_concurrency": 32,
+    "dynamic_batching_concurrency": 64,
+    "rule": "P99 ratio >= 2.0 and RPS gain < 5 percent over previous stage"
+  },
+  "missing_from_downloaded_archive": [
+    "dynamic_batch_smoke.csv",
+    "dynamic_batch_runtime_summary.json",
+    "dynamic_service.log",
+    "generated report files and figures"
+  ],
+  "claim_boundary": "The test found no hard crash. The safe statement is that no hard failure was observed through 128 concurrent HTTP users; this is not a physical GPU limit."
+}

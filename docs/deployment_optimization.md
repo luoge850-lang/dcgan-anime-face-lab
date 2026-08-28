@@ -26,11 +26,21 @@ Task 4 restores selected sensitive layers to FP16. The final `net.0 + net.12` st
 
 Task 5 QAT uses FakeQuantize and a perceptual/distillation-style objective. It improves over all-INT8 PTQ, but the revised acceptance does not establish superiority over mixed-precision PTQ or prove better hair/eyeliner high-frequency detail.
 
-## Service stress
+## Service stress, soak, and dynamic batching
 
-Task 6 now has measured preflight and staged-load evidence. The staged run uses a single process, single worker, single TensorRT context, HTTP request concurrency, and fixed engine batch 1. It reaches concurrency 128 with zero failures and no hard crash. P99 increases from 5 ms at concurrency 1 to 490 ms at 128, which is evidence of latency pressure rather than a crash threshold.
+Task 6 has three distinct evidence scopes. The fixed-batch staged run uses a single process, single worker, single TensorRT context, HTTP request concurrency, and engine batch 1. It reaches concurrency 512 with zero failures and no hard crash; P99 rises from 5 ms at concurrency 1 to 1,600 ms at 512, with a soft latency knee around 32. This is a measured capacity range, not a physical crash boundary.
 
-The 5-second monitor recorded 100 samples. Peak GPU memory was 677.2 MB and peak service RSS was 1,077.8 MB. Because the archived run is staged rather than a 30-minute soak, it is not sufficient to claim that long-running memory leaks have been ruled out.
+The 60-minute steady soak uses concurrency 16 after a 120-second warmup. It ran for 3,601.6 seconds, served 1,226,890 requests with zero failures, reached P99 63 ms and 340.83 RPS, and showed RSS head-tail change of +3.32% with GPU-memory head-tail change of 0%. This is operational leak-screening evidence under the declared workload, not a proof of zero long-term leaks.
+
+The dynamic-batching study uses a 5 ms queue window and service batch up to 8. Actual batches 2/4/8 were observed; all stages through concurrency 128 passed with zero failures. At concurrency 32, P99 improved from 110 to 90 ms and RPS from 352.35 to 401.73 (+14.01%) versus fixed batch 1. The queue window adds latency at low concurrency, and the study is not a hardware-saturation experiment. The downloaded archive has packaging gaps: not every runtime summary and service log is present, so the snapshot marks this evidence `complete_with_packaging_gaps`.
+
+## Evidence paths
+
+- Fixed-batch and soak audit: [`06E`](../03_metrics_and_logs/deployment_optimization/06_Service_Stress/06E/)
+- Dynamic batching report: [`06F report`](../03_metrics_and_logs/deployment_optimization/06_Service_Stress/06F/report/)
+- Normalized operational table: [`service_operational_summary_v08.csv`](../03_metrics_and_logs/deployment_optimization/service_operational_summary_v08.csv)
+- Canonical service and soak figures: [`Stage 6 figures`](../04_visual_assets/stage_figures/06_服务压测/)
+- Latest result-folder figure catalog: [`figure_catalog`](../03_metrics_and_logs/figure_catalog/)
 
 ## Reproduction boundary
 

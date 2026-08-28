@@ -1,6 +1,6 @@
 # DCGAN Anime-Face Lab
 
-![Status](https://img.shields.io/badge/status-v0.6--stage--freeze-2563eb)
+![Status](https://img.shields.io/badge/status-v0.8--current--state-2563eb)
 ![Framework](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
 ![Runtime](https://img.shields.io/badge/runtime-Kaggle%20GPU-20beff)
 ![Resolution](https://img.shields.io/badge/output-64x64-64748b)
@@ -21,7 +21,7 @@ How far can a conventional PyTorch DCGAN be improved under a constrained single-
 - A staged ablation path covering training budget, preprocessing, G/D stabilization, generator capacity, data scale, DiffAugment, EMA, and CLIP feature-distribution matching.
 - A SHA-256 data-quality audit and a controlled SDXL replacement side study.
 - An ONNX/TensorRT/precision-comparison workflow with quality-speed trade-off analysis.
-- A staged HTTP stress test with P99, throughput, error rate, GPU memory, and process RSS evidence.
+- A staged HTTP stress test, 60-minute soak, and dynamic-batching comparison with P99, throughput, error rate, GPU memory, SM utilization, and process RSS evidence.
 
 ### Headline evidence
 
@@ -32,7 +32,9 @@ How far can a conventional PyTorch DCGAN be improved under a constrained single-
 | CLIP distribution metric | C4: 0.040990 CLIP MMD² | Lowest MMD² in the same sweep; not the lowest FID |
 | Deployment Standard FID | FP32 29.9911; FP16 29.9941 | FP16 was near-lossless under the deployment protocol |
 | Selected mixed precision | 31.1776 Standard FID; 23,971.7 images/s | Quality-speed candidate retaining selected sensitive layers in FP16 |
-| Service stress | 0 failures; P99 5 → 490 ms | Behavior observed across tested concurrency 1–128; not a proven crash threshold |
+| Fixed-batch service | 0 failures through concurrency 512; P99 5 → 1,600 ms | A measured capacity range, not a proven physical crash threshold; soft latency knee around 32 |
+| 60-minute soak | 1,226,890 requests; 0 failures; P99 63 ms | Steady-state leak screening at concurrency 16; RSS head-tail +3.32%, GPU-memory head-tail 0% |
+| Dynamic batching | Max observed batch 8; +14.01% RPS at concurrency 32 | 5 ms queue window improves throughput at medium/high concurrency; low concurrency pays queueing overhead |
 
 The historical Legacy FID values, deployment Standard FID values, and CLIP MMD² values are different protocols and must not be sorted as one universal leaderboard.
 
@@ -57,16 +59,50 @@ The two images below are separate sample grids from fixed milestone artifacts. T
 ## Technical route
 
 ~~~mermaid
-flowchart LR
-    A["Dataset audit<br/>Kaggle image paths"] --> B["Stage 1<br/>Budget + preprocessing"]
-    B --> C["Stage 2<br/>G/D stabilization"]
-    C --> D["Stage 3<br/>Capacity + data scale + EMA"]
-    D --> E["Stage 4<br/>CLIP continuation"]
-    E --> F["Stage 5<br/>Export + precision"]
-    F --> G["Stage 6<br/>Service stress"]
-    A --> H["Side study<br/>Clean-unique pool + SDXL mixing"]
-    H -. "separate data scope" .-> D
+flowchart TB
+    subgraph DATA["Data and evaluation boundary"]
+        direction LR
+        A["Kaggle image pool<br/>same core dataset"] --> B["Data audit<br/>validate · deduplicate · document"]
+        B --> P["Protocol ledger<br/>Legacy FID · LPIPS · CLIP MMD²"]
+    end
+
+    subgraph CORE["Core research track · fixed data scope"]
+        direction LR
+        C["Stage 1<br/>Training budget<br/>+ preprocessing"] --> D["Stage 2<br/>Plain DCGAN control<br/>+ module ablation"]
+        D --> E["Stage 3<br/>G capacity<br/>+ DiffAugment + EMA"]
+        E --> F["Stage 4<br/>CLIP continuation<br/>+ trade-off analysis"]
+        F --> G["Selection boundary<br/>quality · diversity<br/>protocol caveats"]
+    end
+
+    subgraph SIDE["Side study · independent data-scope branch"]
+        direction LR
+        H["SDXL candidate pool"] --> I["Style filter<br/>+ unique-content audit"]
+        I --> J["Mixing-ratio ablation<br/>A0 · A10 · A20 · A30 · A50"]
+    end
+
+    subgraph DEPLOY["Engineering track · selected checkpoint"]
+        direction LR
+        K["Stage 5<br/>ONNX export<br/>+ engine/precision matrix"] --> L["Stage 6<br/>service stress<br/>+ resource boundary"]
+    end
+
+    P --> C
+    P --> H
+    G --> K
+    J -. "separate data scope<br/>not an architecture regression" .-> G
+
+    classDef boundary fill:#e8f1fb,stroke:#2563eb,color:#0f172a,stroke-width:1.5px;
+    classDef stage fill:#f8fafc,stroke:#64748b,color:#0f172a,stroke-width:1.2px;
+    classDef decision fill:#ecfdf5,stroke:#059669,color:#064e3b,stroke-width:1.5px;
+    classDef side fill:#fffbeb,stroke:#d97706,color:#78350f,stroke-width:1.2px;
+    classDef deploy fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95,stroke-width:1.2px;
+    class A,B,P boundary;
+    class C,D,E,F stage;
+    class G decision;
+    class H,I,J side;
+    class K,L deploy;
 ~~~
+
+Solid arrows represent the main measured path. Dashed arrows mark a separate data scope or an interpretation boundary; they are intentionally not presented as direct architecture comparisons.
 
 ## Dataset and preprocessing
 
@@ -107,22 +143,37 @@ The Phase 2 baseline is the architectural control used for the module study. It 
 
 ~~~mermaid
 flowchart LR
-    subgraph G["Generator G: Phase 2 control"]
-        Z["z [B,100,1,1]"] --> G0["ConvTranspose 100→256<br/>4×4 + BN + ReLU"]
-        G0 --> G1["ConvTranspose 256→128<br/>8×8 + BN + ReLU"]
-        G1 --> G2["ConvTranspose 128→64<br/>16×16 + BN + ReLU"]
-        G2 --> G3["ConvTranspose 64→32<br/>32×32 + BN + ReLU"]
-        G3 --> G4["ConvTranspose 32→3<br/>64×64 + Tanh"]
+    subgraph GEN["Generator G · Phase 2 plain control"]
+        direction TB
+        Z["Noise z<br/>B × 100 × 1 × 1"] --> G0["4 × 4<br/>100 → 256<br/>ConvTranspose + BN + ReLU"]
+        G0 --> G1["8 × 8<br/>256 → 128<br/>ConvTranspose + BN + ReLU"]
+        G1 --> G2["16 × 16<br/>128 → 64<br/>ConvTranspose + BN + ReLU"]
+        G2 --> G3["32 × 32<br/>64 → 32<br/>ConvTranspose + BN + ReLU"]
+        G3 --> G4["64 × 64 × 3<br/>32 → 3 · Tanh"]
     end
-    subgraph D["Discriminator D: Phase 2 control"]
-        X["x [B,3,64,64]"] --> D0["Conv 3→32<br/>32×32 + LeakyReLU"]
-        D0 --> D1["Conv 32→64<br/>16×16 + LeakyReLU"]
-        D1 --> D2["Conv 64→128<br/>8×8 + LeakyReLU"]
-        D2 --> D3["Conv 128→256<br/>4×4 + LeakyReLU"]
-        D3 --> D4["Flatten → Linear 4096→256<br/>LeakyReLU"]
-        D4 --> D5["Linear 256→1<br/>Sigmoid"]
+
+    subgraph DISC["Discriminator D · Phase 2 plain control"]
+        direction TB
+        XR["Real image x<br/>B × 3 × 64 × 64"] --> D0["32 × 32<br/>3 → 32 · Conv + LeakyReLU"]
+        XF["Generated image<br/>from G(z)"] --> D0
+        D0 --> D1["16 × 16<br/>32 → 64 · Conv + LeakyReLU"]
+        D1 --> D2["8 × 8<br/>64 → 128 · Conv + LeakyReLU"]
+        D2 --> D3["4 × 4<br/>128 → 256 · Conv + LeakyReLU"]
+        D3 --> D4["Flatten<br/>4096 → 256 · LeakyReLU"]
+        D4 --> D5["Real/fake score<br/>256 → 1 · Sigmoid"]
     end
-    G4 -. "generated image" .-> D
+
+    G4 -->|fake image| XF
+    D5 --> LOSS["BCE objective<br/>alternating G/D updates<br/>Adam: 1e-4 · β=(0.5, 0.99)"]
+
+    classDef io fill:#e8f1fb,stroke:#2563eb,color:#0f172a,stroke-width:1.2px;
+    classDef layer fill:#f8fafc,stroke:#64748b,color:#0f172a,stroke-width:1.1px;
+    classDef output fill:#ecfdf5,stroke:#059669,color:#064e3b,stroke-width:1.3px;
+    classDef objective fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95,stroke-width:1.3px;
+    class Z,XR io;
+    class G0,G1,G2,G3,D0,D1,D2,D3,D4 layer;
+    class G4,D5,XF output;
+    class LOSS objective;
 ~~~
 
 ### Baseline training configuration
@@ -286,15 +337,65 @@ Move the current Generator toward inference use and measure the quality cost of 
 ### System path
 
 ~~~mermaid
-flowchart LR
-    A["Latent z<br/>[B,128,1,1]"] --> B["Exported Generator"]
-    B --> C["ONNX graph"]
-    C --> D["ONNX Runtime"]
-    C --> E["TensorRT GPU"]
-    C --> F["OpenVINO CPU"]
-    D --> G["Quality + latency"]
-    E --> G
-    F --> G
+flowchart TB
+    subgraph BUILD["1 · Build and validate the graph"]
+        direction LR
+        Z["Latent z<br/>B × 128 × 1 × 1"] --> G["Generator checkpoint"]
+        G --> O["ONNX export"]
+        O --> V{"Validation gate<br/>onnx.checker<br/>+ shape/parity checks"}
+    end
+
+    subgraph ENGINES["2 · Runtime matrix"]
+        direction LR
+        V --> ORT["ONNX Runtime<br/>CPU / GPU"]
+        V --> TRT["TensorRT<br/>GPU"]
+        V --> OV["OpenVINO<br/>CPU"]
+    end
+
+    subgraph PRECISION["3 · Precision variants"]
+        direction LR
+        V --> FP32["FP32<br/>reference"]
+        V --> FP16["FP16<br/>near-lossless check"]
+        V --> PTQ["INT8 PTQ<br/>calibration baseline"]
+        V --> MIX["Mixed PTQ<br/>net.0 + net.12 in FP16"]
+        V --> QAT["QAT INT8<br/>fake-quant fine-tuning"]
+    end
+
+    subgraph EVIDENCE["4 · Evidence and acceptance"]
+        direction LR
+        Q["Quality<br/>FID · blur rate · LPIPS"]
+        S["Systems<br/>latency · throughput · VRAM"]
+        T["Service<br/>batch · concurrency · P99"]
+        R["Decision record<br/>quality–speed trade-off"]
+    end
+
+    ORT --> S
+    TRT --> S
+    OV --> S
+    FP32 --> Q
+    FP16 --> Q
+    PTQ --> Q
+    MIX --> Q
+    Q --> R
+    S --> R
+    R --> T
+
+    W["Compatibility probes<br/>Haar wavelet · dynamic SN"] -. "investigation only<br/>not in deployed graph" .-> V
+
+    classDef input fill:#e8f1fb,stroke:#2563eb,color:#0f172a,stroke-width:1.2px;
+    classDef build fill:#f8fafc,stroke:#64748b,color:#0f172a,stroke-width:1.1px;
+    classDef gate fill:#fff7ed,stroke:#ea580c,color:#7c2d12,stroke-width:1.5px;
+    classDef engine fill:#eef2ff,stroke:#4f46e5,color:#1e1b4b,stroke-width:1.1px;
+    classDef precision fill:#ecfdf5,stroke:#059669,color:#064e3b,stroke-width:1.1px;
+    classDef evidence fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95,stroke-width:1.2px;
+    classDef caveat fill:#fef2f2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.1px;
+    class Z input;
+    class G,O build;
+    class V gate;
+    class ORT,TRT,OV engine;
+    class FP32,FP16,PTQ,MIX,QAT precision;
+    class Q,S,T,R evidence;
+    class W caveat;
 ~~~
 
 The actual deployed graph is a standard ConvTranspose + BatchNorm + ReLU + Tanh graph. The independent Haar-wavelet and dynamic-SN probes are compatibility investigations, not nodes in the current deployed graph.
@@ -327,26 +428,33 @@ Validate the service path under staged concurrency and observe latency, throughp
 
 ### Modification and control
 
-The archived run uses a single-process, single-worker TensorRT service with fixed engine batch 1 and HTTP request concurrency. The stages are 1, 2, 4, 8, 16, 32, 48, 64, 80, 96, and 128.
+The archived runs use a single-process, single-worker TensorRT service on a Kaggle Tesla T4. The fixed-batch control uses engine batch 1 and HTTP request concurrency. A separate dynamic-batching study uses a 5 ms queue window and a maximum service batch of 8; it is reported as a serving-policy comparison, not as a new training experiment.
 
 ### Results
 
 | Observation | Recorded value |
 |---|---:|
-| Tested concurrency | 1–128 |
-| Failed requests | 0 at every tested stage |
-| P99 latency | 5 ms → 490 ms |
-| Throughput | Approximately 335–342 requests/s |
-| Peak GPU memory | 677.2 MB |
-| Peak service RSS | 1,077.8 MB |
+| Fixed-batch tested concurrency | 1–512 |
+| Fixed-batch failed requests | 0 at every tested stage |
+| Fixed-batch P99 latency | 5 ms → 1,600 ms |
+| Fixed-batch soft latency knee | Around concurrency 32 |
+| Fixed-batch peak GPU memory / SM | 677.2 MB / 19% |
+| Fixed-batch service RSS | Approximately 1,070.9 → 1,114.8 MB |
+| 60-minute steady soak | 3,601.6 s; 1,226,890 requests; 0 failures; P99 63 ms; 340.83 RPS |
+| Dynamic batching | Batch 2/4/8 observed; 0 failures through concurrency 128; soft knee around 64 |
+| Dynamic batching at concurrency 32 | P99 90 vs 110 ms; 401.73 vs 352.35 RPS; +14.01% RPS |
 
 ### Conclusion and boundary
 
-The run demonstrates stable behavior across the tested staged range, but 128 is only the maximum tested concurrency. No hard crash or OOM was observed, so it is not a proven physical crash point. The archive does not contain a completed long-soak table, so this snapshot does not claim that long-running memory leaks have been ruled out.
+The fixed-batch run demonstrates stable HTTP behavior through concurrency 512, but no hard crash or OOM was observed; the physical crash boundary is therefore only known to be above the tested range. The 60-minute steady soak passed its declared request/failure and head-tail resource checks, which is useful leak-screening evidence but not a mathematical proof of no memory leak. Dynamic batching improved throughput at medium/high concurrency, with the expected queue-window trade-off at low concurrency.
 
 ![Service concurrency and P99](04_visual_assets/stage_figures/06_服务压测/32_并发_P99.svg)
 
-Evidence: [service stress summary](03_metrics_and_logs/deployment_optimization/06_Service_Stress/service_stress_summary.csv), [Stage 6 charts](04_visual_assets/stage_figures/06_服务压测/), [deployment report](docs/deployment_optimization.md).
+![60-minute soak P99](04_visual_assets/stage_figures/06_服务压测/37_Soak阶段_P99.svg)
+
+Dynamic-batching figures and raw summaries are kept under [06F dynamic batching evidence](03_metrics_and_logs/deployment_optimization/06_Service_Stress/06F/). The downloaded dynamic-batching archive has packaging gaps (runtime summary/log files are not all present), so the public claim is based on the available source report, manifest, summary tables, and figures; this is marked as `complete_with_packaging_gaps`.
+
+Evidence: [06E fixed-batch and soak audit](03_metrics_and_logs/deployment_optimization/06_Service_Stress/06E/), [06F dynamic-batching evidence](03_metrics_and_logs/deployment_optimization/06_Service_Stress/06F/), [normalized operational table](03_metrics_and_logs/deployment_optimization/service_operational_summary_v08.csv), [Stage 6 charts](04_visual_assets/stage_figures/06_服务压测/), [deployment report](docs/deployment_optimization.md).
 
 ## Side study — data quality and SDXL replacement
 
@@ -367,7 +475,7 @@ Evidence: [controlled SDXL study](docs/sdxl_controlled_study.md), [reproduction 
 
 ## Frozen showcase Final Recipe
 
-The following is the final recipe of this public v0.6 showcase snapshot. “Final” means the selected archived candidate for explaining the project; it does not mean a final production checkpoint for the still-evolving internship or a universally optimal model.
+The following is the final recipe of this public v0.8 current-state snapshot. “Final” means the selected archived candidate for explaining the project; it does not mean a final production checkpoint for the still-evolving internship or a universally optimal model.
 
 ### Training candidate: 11_G_DiffAug_EMA_20K
 
@@ -421,7 +529,7 @@ For the deployment work, the current graph is treated as a standard ConvTranspos
 
 ### What can be reproduced from this repository
 
-- The public figure rebuild can regenerate the 27 stage-organized single-metric SVGs when the corresponding result root is available.
+- The public figure rebuild can regenerate the 34 stage-organized single-metric SVGs when the corresponding result root is available.
 - The integrity suite checks metric tables, figure provenance, README targets, and SVG validity.
 - The archived scripts, configuration snapshots, result tables, and checksums allow a reviewer to inspect the experiment decisions.
 
@@ -452,7 +560,7 @@ This project demonstrates the following engineering behaviors:
 
 ## Limitations
 
-The project should not be presented as a publication, SOTA benchmark, or production-ready service. The main limitations are Kaggle-only execution, one-month compute constraints, mostly single-seed comparisons, non-held-out historical evaluation, legacy FID dependence, incomplete raw service-soak evidence, and multi-factor changes in the 38.88 candidate. The internship is also a group effort; the public snapshot should be described using contribution-accurate language.
+The project should not be presented as a publication, SOTA benchmark, or production-ready service. The main limitations are Kaggle-only execution, one-month compute constraints, mostly single-seed comparisons, non-held-out historical evaluation, legacy FID dependence, multi-factor changes in the 38.88 candidate, no observed physical GPU saturation/crash boundary, and packaging gaps in the downloaded dynamic-batching archive. The 60-minute soak is a declared operational screening result, not proof of zero long-term leaks. The internship is also a group effort; the public snapshot should be described using contribution-accurate language.
 
 ## Future work
 
@@ -463,7 +571,7 @@ The next scientifically meaningful additions would be:
 3. Run at least three seeds and report mean, standard deviation, and uncertainty.
 4. Add nearest-neighbor and memorization checks.
 5. Separate DiffAugment and EMA in a matched ablation.
-6. Complete a real long-soak table with a declared duration and leak criterion.
+6. Close the deployment evidence package by preserving the dynamic-batching runtime summary and service log, then repeat the capacity test with an explicit queue-drain criterion.
 7. Refactor repeated Kaggle scripts into shared train, evaluate, and sample entry points with shape smoke tests.
 
 ## Repository map
@@ -473,6 +581,7 @@ The next scientifically meaningful additions would be:
 | 01_public_core/ | Public baseline model and clean entry points |
 | 02_selected_experiments/ | Selected source scripts organized by experiment stage |
 | 03_metrics_and_logs/ | Curated metrics, manifests, audits, deployment tables, and stage map |
+| 03_metrics_and_logs/figure_catalog/ | Latest full result-folder figure manifest and data inventory |
 | 04_visual_assets/stage_figures/ | Canonical Chinese single-metric charts organized by stage |
 | 04_visual_assets/source_figures/ | Preserved source-folder deployment chart archive |
 | 06_model_artifacts/ | Artifact inventory and checksums; large binaries excluded |
@@ -487,7 +596,7 @@ Further reading: [experiment process](docs/experiment_process.md), [baseline map
 
 ## 90-second interview description
 
-> I contributed to a resource-constrained PyTorch DCGAN study for unconditional 64 × 64 anime-face generation on Kaggle. I organized the work as staged experiments: first selecting a training budget and input policy, then comparing G/D stabilization methods, then separating generator capacity and data scale from the combined effects of DiffAugment and EMA. The strongest historical candidate reached Legacy FID 38.88, but I treat it as a multi-factor result rather than attributing the gain to one module. I then ran a matched CLIP continuation sweep with a no-CLIP control, audited 21,551 image paths down to 17,029 unique contents, and evaluated ONNX/TensorRT precision trade-offs. The deployment evidence shows that FP16 was near-lossless, full INT8 degraded quality, and selective FP16 retention recovered quality at high throughput. The main limitations are Kaggle-only execution, single-seed historical runs, a non-held-out real distribution, separate FID protocols, and incomplete long-soak evidence.
+> I contributed to a resource-constrained PyTorch DCGAN study for unconditional 64 × 64 anime-face generation on Kaggle. I organized the work as staged experiments: first selecting a training budget and input policy, then comparing G/D stabilization methods, then separating generator capacity and data scale from the combined effects of DiffAugment and EMA. The strongest historical candidate reached project-Legacy FID 38.88, but I treat it as a multi-factor result rather than attributing the gain to one module. I then ran a matched CLIP continuation sweep with a no-CLIP control, audited 21,551 image paths down to 17,029 unique contents, and evaluated ONNX/TensorRT precision trade-offs. The deployment evidence shows that FP16 was near-lossless, full INT8 degraded quality, selective FP16 retention recovered quality, and the current service passed fixed-batch tests through concurrency 512 plus a 60-minute soak. Dynamic batching improved RPS by 14.01% at concurrency 32 in the recorded comparison. The main limitations are Kaggle-only execution, single-seed historical runs, a non-held-out real distribution, separate FID protocols, no observed physical crash boundary, and packaging gaps in one dynamic-batching archive.
 
 ## Method references
 
@@ -498,6 +607,6 @@ Further reading: [experiment process](docs/experiment_process.md), [baseline map
 
 ## Freeze status
 
-This README and its stage-organized evidence belong to the public freeze tag v0.7-research-showcase. The underlying experiment evidence remains the v0.6-stage-freeze data snapshot; this release adds a richer research-and-engineering presentation without claiming new experiments. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting either freeze.
+This README and its stage-organized evidence belong to the public freeze tag v0.8-current-state. It preserves the previous v0.6 evidence freeze and v0.7 presentation release, while adding the newly verified 06E fixed-batch/60-minute-soak evidence, 06F dynamic-batching evidence, seven additional canonical service figures, and the latest result-folder figure catalog. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
 
 Freeze record: [source_map_and_freeze_status.md](99_source_map/source_map_and_freeze_status.md). Changelog: [CHANGELOG.md](CHANGELOG.md).

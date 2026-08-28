@@ -40,7 +40,7 @@ The deployment archive contains a second, explicitly labeled quality protocol: S
 | Task 3 FP32/FP16/INT8 | Standard FID, blur rate, LPIPS-like diagnostics, Haar-band error | Mean latency and throughput | Fixed deployment calibration/evaluation protocol |
 | Task 4 mixed precision | Standard FID, blur rate, numerical error | Mean latency and throughput | Final confirmation used n_fid=5000; screening used n_fid=1000 |
 | Task 5 QAT | Standard FID, blur rate, Haar MAE | Batch-32 dynamic benchmark P99 and throughput | Revised acceptance passed; strict high-frequency superiority did not |
-| Task 6 staged service | Not a generation-quality comparison | HTTP P99, RPS, error rate, GPU/RSS samples | Staged run only; no 30-minute soak conclusion |
+| Task 6 service and soak | Not a generation-quality comparison | HTTP P99, RPS, error rate, GPU/RSS/SM samples; fixed batch 1, 60-minute soak, and dynamic batching are separate scopes | Fixed-batch 1–512 and 60-minute soak passed declared checks; no physical crash/saturation boundary; dynamic batching has packaging gaps |
 
 Memory fields also have different meanings: TensorRT reports whole-device CUDA snapshots in Task 2, while ORT/OpenVINO report host RSS. They are retained as separate fields and should not be compared as one common memory unit.
 

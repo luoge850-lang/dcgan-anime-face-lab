@@ -26,3 +26,10 @@ stage,chart_file,metric,source_scope,status
 05_部署与量化,31_QAT_P99.svg,P99 latency,results/Deployment_Optimization_Results/05_QAT,regenerated
 06_服务压测,32_并发_P99.svg,P99 latency,results/Deployment_Optimization_Results/06_Service_Stress/06BC staged ZIP,regenerated
 06_服务压测,33_并发_RPS.svg,RPS,results/Deployment_Optimization_Results/06_Service_Stress/06BC staged ZIP,regenerated
+06_服务压测,34_服务并发_GPU显存.svg,GPU memory,results/Deployment_Optimization_Results/06_Service_Stress/06E/06BC_stage_resource_summary.csv,regenerated
+06_服务压测,35_服务并发_RSS.svg,service RSS,results/Deployment_Optimization_Results/06_Service_Stress/06E/06BC_stage_resource_summary.csv,regenerated
+06_服务压测,36_服务并发_SM.svg,GPU SM utilization,results/Deployment_Optimization_Results/06_Service_Stress/06E/06BC_stage_resource_summary.csv,regenerated
+06_服务压测,37_Soak阶段_P99.svg,P99 latency,results/Deployment_Optimization_Results/06_Service_Stress/06E/06D_soak_summary.csv,regenerated
+06_服务压测,38_Soak阶段_RPS.svg,RPS,results/Deployment_Optimization_Results/06_Service_Stress/06E/06D_soak_summary.csv,regenerated
+06_服务压测,39_Soak_GPU显存头尾.svg,GPU memory head-tail,results/Deployment_Optimization_Results/06_Service_Stress/06E/06D_soak_summary.csv,regenerated
+06_服务压测,40_Soak_RSS头尾.svg,service RSS head-tail,results/Deployment_Optimization_Results/06_Service_Stress/06E/06D_soak_summary.csv,regenerated
