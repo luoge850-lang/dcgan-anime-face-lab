@@ -11,6 +11,8 @@ This repository is a curated public snapshot of a one-month internship study. It
 
 For a claim-by-claim review, start with the [experiment coverage audit](docs/experiment_coverage_audit_2026-09-03.md), which separates measured runs, source-only scripts, partial deployment probes, and non-comparable metric protocols.
 
+For the complete internship archive and engineering narrative, see the [Project Engineering Report](docs/PROJECT_ENGINEERING_REPORT_2026-09-03.md) and the [scanned project inventory](03_metrics_and_logs/project_inventory_2026-09-03.json).
+
 ## 30-second overview
 
 ### Problem
@@ -652,6 +654,7 @@ The next scientifically meaningful additions would be:
 | 01_public_core/ | Public baseline model and clean entry points |
 | 02_selected_experiments/ | Selected source scripts organized by experiment stage |
 | 03_metrics_and_logs/ | Curated metrics, manifests, audits, deployment tables, and stage map |
+| 03_metrics_and_logs/project_inventory_2026-09-03.json | Full source/public package inventory from the latest scan |
 | 03_metrics_and_logs/figure_catalog/ | Latest full result-folder figure manifest and data inventory |
 | 04_visual_assets/stage_figures/ | Canonical Chinese single-metric charts and selected evidence screenshots organized by stage |
 | 04_visual_assets/source_figures/ | Preserved source-folder deployment chart archive |
@@ -664,7 +667,7 @@ The next scientifically meaningful additions would be:
 
 Full chart map: [stage_figures_map.csv](03_metrics_and_logs/stage_figures_map.csv). Full DCGAN record: [dcgan_core_experiment_record.md](docs/dcgan_core_experiment_record.md).
 
-Further reading: [experiment process](docs/experiment_process.md), [baseline map](docs/baseline_map.md), [interview playbook](docs/interview_playbook.md), [month-one audit](docs/month1_audit_2026-08.md), and [next-phase deployment plan](docs/next_phase_deployment_plan.md).
+Further reading: [complete engineering report](docs/PROJECT_ENGINEERING_REPORT_2026-09-03.md), [experiment process](docs/experiment_process.md), [baseline map](docs/baseline_map.md), [interview playbook](docs/interview_playbook.md), [month-one audit](docs/month1_audit_2026-08.md), and [next-phase deployment plan](docs/next_phase_deployment_plan.md).
 
 ## 90-second interview description
 
@@ -679,6 +682,6 @@ Further reading: [experiment process](docs/experiment_process.md), [baseline map
 
 ## Freeze status
 
-This README and its stage-organized evidence belong to the public v0.9-current-state freeze. It preserves the previous v0.8 evidence freeze and adds the newly verified Stage 7 observability and Stage 8 hot-update/A-B evidence, three separate Stage 8 charts, and an explicit experiment coverage audit. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
+This README and its stage-organized evidence belong to the public v0.9-current-state freeze. It preserves the previous v0.8 evidence freeze and adds the newly verified Stage 7 observability and Stage 8 hot-update/A-B evidence, three separate Stage 8 charts, an explicit experiment coverage audit, and the complete project engineering report. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
 
 Freeze record: [source_map_and_freeze_status.md](99_source_map/source_map_and_freeze_status.md). Changelog: [CHANGELOG.md](CHANGELOG.md).
