@@ -7,6 +7,7 @@
 - Added three readable single-metric Stage 8 SVGs generated from the curated evidence CSVs.
 - Added an experiment coverage audit that separates measured results, source-only scripts, historical manifests, and non-comparable metric protocols.
 - Added the complete internship Project Engineering Report and a machine-readable source/public inventory for handoff, interviews, and future updates.
+- Added a dedicated `00_HANDOFF/` entry point with a file/evidence index, current status, claim boundaries, and handoff manifest.
 - Updated deployment source/result indexes and the README freeze language to v0.9-current-state.
 - Kept the active Kaggle workspace, dataset, checkpoints, ONNX/TensorRT engines, and large service artifacts outside the public Git history.
 

@@ -13,6 +13,8 @@ For a claim-by-claim review, start with the [experiment coverage audit](docs/exp
 
 For the complete internship archive and engineering narrative, see the [Project Engineering Report](docs/PROJECT_ENGINEERING_REPORT_2026-09-03.md) and the [scanned project inventory](03_metrics_and_logs/project_inventory_2026-09-03.json).
 
+For handoff, start with the [00_HANDOFF entry point](00_HANDOFF/README.md), which gives the reading order, file map, current status, claim boundaries, and safe update procedure.
+
 ## 30-second overview
 
 ### Problem
@@ -652,6 +654,7 @@ The next scientifically meaningful additions would be:
 | Path | Purpose |
 |---|---|
 | 01_public_core/ | Public baseline model and clean entry points |
+| 00_HANDOFF/ | First-read handoff guide, file/evidence index, and handoff manifest |
 | 02_selected_experiments/ | Selected source scripts organized by experiment stage |
 | 03_metrics_and_logs/ | Curated metrics, manifests, audits, deployment tables, and stage map |
 | 03_metrics_and_logs/project_inventory_2026-09-03.json | Full source/public package inventory from the latest scan |

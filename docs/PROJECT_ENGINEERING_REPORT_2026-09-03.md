@@ -81,7 +81,7 @@ The 2026-09-03 scan found:
 | SDXL controlled study | 11 | SDXL_Controlled_Study_Results | Synthetic-data candidate and mixing-ratio study |
 | Deployment optimization | 30 | Deployment_Optimization_Results | Export, engines, quantization, service and operations |
 
-The public snapshot contains **654 curated files** (about 36 MiB), including selected scripts, normalized tables, reports, samples, stage charts, tests, and small evidence packages. No file larger than 50 MiB is included in the public package.
+The public snapshot contains **657 curated files** (about 36 MiB), including selected scripts, normalized tables, reports, samples, stage charts, tests, and small evidence packages. No file larger than 50 MiB is included in the public package.
 
 ## 4. Canonical naming and organization
 

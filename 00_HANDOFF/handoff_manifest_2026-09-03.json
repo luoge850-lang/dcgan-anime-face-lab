@@ -1,0 +1,57 @@
+{
+  "project": "DCGAN Anime-Face Lab",
+  "handoff_release": "v0.9-current-state",
+  "prepared_on": "2026-09-03",
+  "source_workspace_label": "dcgan_lab",
+  "public_snapshot_label": "DCGAN_Interview_GitHub_Snapshot_2026-08-04",
+  "source_scan": {
+    "files": 2864,
+    "bytes": 718513136,
+    "python": 93,
+    "csv": 297,
+    "json": 129,
+    "png": 2162,
+    "svg": 45,
+    "checkpoints": 8,
+    "tensorrt_engines": 7,
+    "onnx": 2,
+    "python_ast_parse_errors": 0,
+    "json_parse_errors": 0,
+    "csv_shape_errors": 0,
+    "csv_data_rows": 47522
+  },
+  "research_tracks": {
+    "R01_budget_preprocessing": "measured",
+    "R02_gd_module_ablation": "measured_non_factorial",
+    "R03_generator_recipe": "measured_with_source_only_follow_up",
+    "R04_clip_continuation": "measured_single_seed",
+    "R05_sdxl_data_side_study": "measured_negative_result"
+  },
+  "deployment_tracks": {
+    "D01_onnx_fusion": "partial",
+    "D02_engine_benchmark": "complete",
+    "D03_ptq_baseline": "complete",
+    "D04_mixed_precision": "complete",
+    "D05_qat": "complete_revised_quality_gate",
+    "D06_serving": "operational_evidence_with_dynamic_batch_packaging_gaps",
+    "D07_observability": "complete_single_node",
+    "D08_hot_update_ab": "complete_single_node"
+  },
+  "public_package_policy": {
+    "datasets_included": false,
+    "checkpoints_included": false,
+    "onnx_included": false,
+    "tensorrt_engines_included": false,
+    "large_logs_included": false,
+    "source_only_scripts_are_labelled": true,
+    "metric_protocols_are_separated": true,
+    "negative_results_are_preserved": true
+  },
+  "handoff_entry_points": [
+    "00_HANDOFF/README.md",
+    "00_HANDOFF/file_and_evidence_index.md",
+    "docs/PROJECT_ENGINEERING_REPORT_2026-09-03.md",
+    "docs/experiment_coverage_audit_2026-09-03.md",
+    "03_metrics_and_logs/project_inventory_2026-09-03.json"
+  ]
+}

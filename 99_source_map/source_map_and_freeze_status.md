@@ -22,6 +22,7 @@ Previous evidence freeze: v0.6-stage-freeze
 - A stage map linking each regenerated chart to its source result scope.
 - A research-and-engineering showcase README with the problem definition, route map, baseline architecture, stage-by-stage evidence, frozen showcase recipe, evaluation protocol, deployment trade-offs, limitations, and interview summary.
 - A complete project engineering report and machine-readable inventory covering the active source boundary, public package, naming aliases, stage status, metric protocols, and update policy.
+- A dedicated `00_HANDOFF/` entry point with reading order, source-to-evidence mapping, current status, and handoff manifest.
 
 ## Intentionally excluded
 

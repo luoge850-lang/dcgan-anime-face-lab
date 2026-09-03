@@ -213,6 +213,15 @@ class SnapshotIntegrityTests(unittest.TestCase):
         self.assertEqual(inventory["source_workspace"]["python_ast_parse_errors"], 0)
         self.assertEqual(inventory["public_package"]["files_over_50mb"], 0)
 
+    def test_handoff_entry_point_is_present(self):
+        handoff = ROOT / "00_HANDOFF"
+        self.assertTrue((handoff / "README.md").exists())
+        self.assertTrue((handoff / "file_and_evidence_index.md").exists())
+        manifest = json.loads((handoff / "handoff_manifest_2026-09-03.json").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["handoff_release"], "v0.9-current-state")
+        self.assertEqual(len(manifest["handoff_entry_points"]), 5)
+        self.assertTrue((ROOT / "README.md").read_text(encoding="utf-8").find("00_HANDOFF/README.md") >= 0)
+
 
 if __name__ == "__main__":
     unittest.main()

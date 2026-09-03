@@ -32,10 +32,10 @@
     {"alias": "D01_to_D08_deployment", "source_scripts": 30, "evidence_scope": "export, benchmark, quantization, serving and operations"}
   ],
   "public_package": {
-    "file_count": 654,
-    "total_bytes": 38051670,
+    "file_count": 657,
+    "total_bytes": 38063497,
     "python_files": 108,
-    "json_files": 118,
+    "json_files": 119,
     "csv_files": 205,
     "svg_files": 86,
     "png_files": 44,
