@@ -6,6 +6,7 @@
 - Added the current Stage 8 hot-update/A/B evidence: same-PID candidate loading, traffic-split accuracy, version-level P99, sampled quality metrics, and rollback events.
 - Added three readable single-metric Stage 8 SVGs generated from the curated evidence CSVs.
 - Added an experiment coverage audit that separates measured results, source-only scripts, historical manifests, and non-comparable metric protocols.
+- Added the complete internship Project Engineering Report and a machine-readable source/public inventory for handoff, interviews, and future updates.
 - Updated deployment source/result indexes and the README freeze language to v0.9-current-state.
 - Kept the active Kaggle workspace, dataset, checkpoints, ONNX/TensorRT engines, and large service artifacts outside the public Git history.
 
