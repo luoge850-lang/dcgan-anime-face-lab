@@ -21,6 +21,7 @@ Previous evidence freeze: v0.6-stage-freeze
 - Newly verified 06E fixed-batch/soak audit, 06F dynamic-batching report, Stage 7 observability evidence, Stage 8 hot-update/A-B evidence, figures, summaries, and manifests.
 - A stage map linking each regenerated chart to its source result scope.
 - A research-and-engineering showcase README with the problem definition, route map, baseline architecture, stage-by-stage evidence, frozen showcase recipe, evaluation protocol, deployment trade-offs, limitations, and interview summary.
+- A complete project engineering report and machine-readable inventory covering the active source boundary, public package, naming aliases, stage status, metric protocols, and update policy.
 
 ## Intentionally excluded
 
