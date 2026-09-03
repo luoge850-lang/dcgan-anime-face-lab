@@ -1,0 +1,60 @@
+{
+  "project_name": "DCGAN Anime-Face Lab",
+  "release": "v0.9-current-state",
+  "scan_date": "2026-09-03",
+  "source_workspace_label": "dcgan_lab",
+  "source_workspace": {
+    "file_count": 2864,
+    "total_bytes": 718513136,
+    "python_files": 93,
+    "json_files": 129,
+    "csv_files": 297,
+    "csv_data_rows": 47522,
+    "png_jpg_files": 2163,
+    "svg_files": 45,
+    "checkpoint_files": 8,
+    "tensorrt_engine_files": 7,
+    "onnx_files": 2,
+    "zip_files": 11,
+    "python_ast_parse_errors": 0,
+    "json_parse_errors": 0,
+    "csv_shape_errors": 0,
+    "kaggle_path_occurrences": 20915,
+    "personal_absolute_path_occurrences": 3,
+    "note": "Kaggle paths are expected in the active workspace; public packaging removes personal absolute paths."
+  },
+  "experiment_families": [
+    {"alias": "R01_budget_preprocessing", "source_scripts": 5, "evidence_scope": "early tuning and preprocessing"},
+    {"alias": "R02_gd_module_ablation", "source_scripts": 20, "evidence_scope": "plain baseline and G/D module study"},
+    {"alias": "R03_generator_recipe", "source_scripts": 13, "evidence_scope": "capacity, data scale, DiffAugment and EMA"},
+    {"alias": "R04_clip_continuation", "source_scripts": 6, "evidence_scope": "CLIP control and weight sweep"},
+    {"alias": "R05_sdxl_data_side_study", "source_scripts": 11, "evidence_scope": "SDXL candidate and mixing ratios"},
+    {"alias": "D01_to_D08_deployment", "source_scripts": 30, "evidence_scope": "export, benchmark, quantization, serving and operations"}
+  ],
+  "public_package": {
+    "file_count": 654,
+    "total_bytes": 38051670,
+    "python_files": 108,
+    "json_files": 118,
+    "csv_files": 205,
+    "svg_files": 86,
+    "png_files": 44,
+    "files_over_50mb": 0,
+    "markdown_local_link_audit": "pass",
+    "snapshot_integrity_tests": "12 passed"
+  },
+  "status_policy": {
+    "measured": "A corresponding metric, manifest, log, sample, or validation evidence exists.",
+    "partial": "Some requested checks have evidence, but the full acceptance gate was not met.",
+    "source_only": "A script exists without a matching result directory or accepted metric evidence.",
+    "non_comparable": "The value uses a different data pool, checkpoint, sample count, or metric protocol."
+  },
+  "public_exclusions": [
+    "raw image datasets",
+    "large checkpoints",
+    "ONNX binaries",
+    "TensorRT engine binaries",
+    "large service logs",
+    "full SDXL generated image pool"
+  ]
+}

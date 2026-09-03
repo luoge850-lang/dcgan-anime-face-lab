@@ -203,6 +203,16 @@ class SnapshotIntegrityTests(unittest.TestCase):
         b = next(row for row in latency if row["version"] == "B")
         self.assertAlmostEqual(float(b["p99_ms"]), 186.739214, places=3)
 
+    def test_project_engineering_report_and_inventory_are_present(self):
+        report_path = ROOT / "docs/PROJECT_ENGINEERING_REPORT_2026-09-03.md"
+        report = report_path.read_text(encoding="utf-8")
+        for marker in ("## 1. Executive summary", "## 4. Canonical naming and organization", "## 5. Research track", "## 6. Deployment and systems track", "## 7. Evaluation protocol and comparability", "## 10. Interview-safe project description"):
+            self.assertIn(marker, report)
+        inventory = json.loads((ROOT / "03_metrics_and_logs/project_inventory_2026-09-03.json").read_text(encoding="utf-8"))
+        self.assertEqual(inventory["source_workspace"]["file_count"], 2864)
+        self.assertEqual(inventory["source_workspace"]["python_ast_parse_errors"], 0)
+        self.assertEqual(inventory["public_package"]["files_over_50mb"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
