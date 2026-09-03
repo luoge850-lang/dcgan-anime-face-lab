@@ -52,5 +52,4 @@ The sampled result is A FID 35.5710 / B FID 32.0422 and A P99 98.6 ms / B P99 18
 - [`deployment_engine_summary.csv`](deployment_engine_summary.csv)
 - [`service_operational_summary_v08.csv`](service_operational_summary_v08.csv)
 - [`EXPERIMENT_INDEX.md`](EXPERIMENT_INDEX.md)
-- [`docs/experiment_coverage_audit_2026-09-03.md`](../../../docs/experiment_coverage_audit_2026-09-03.md)
-
+- [`docs/experiment_coverage_audit_2026-09-03.md`](../../docs/experiment_coverage_audit_2026-09-03.md)
