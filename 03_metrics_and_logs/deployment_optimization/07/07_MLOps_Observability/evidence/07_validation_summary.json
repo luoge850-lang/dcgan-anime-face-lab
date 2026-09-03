@@ -1,0 +1,23 @@
+{
+  "health": 200,
+  "generate": 200,
+  "metrics": 200,
+  "rules_loaded": 2,
+  "prometheus_target_up": true,
+  "firing_seen": true,
+  "resolved_seen": true,
+  "queue_alert_is_controlled_simulation": true,
+  "grafana_screenshot_exists": true,
+  "status": "complete",
+  "grafana_screenshot_detail": "/kaggle/working/07_MLOps_Observability_R5/grafana_dashboard_screenshot.png",
+  "resource_monitor_samples": 37,
+  "resource_monitor_5s_pass": true,
+  "monitoring_components": {
+    "started": [
+      "prometheus",
+      "alertmanager",
+      "grafana"
+    ],
+    "errors": {}
+  }
+}

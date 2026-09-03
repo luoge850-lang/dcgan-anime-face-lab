@@ -1,0 +1,234 @@
+{
+  "status": "complete",
+  "scope": "single-node zero-downtime engine switch and deterministic A/B routing",
+  "metrics_status": 200,
+  "hardware": {
+    "engine_file": "generator_trt_int8.engine",
+    "engine_sha256": "0f5cbd851756abfe1ce2e1b8897ef01f65b9947af658e62e2ce31df0e99bb4ca",
+    "engine_bytes": 8014796,
+    "tensorrt_version": "11.2.1.2",
+    "gpu_index": 0,
+    "gpu_name": "Tesla T4",
+    "gpu_total_memory_mb": 14911.69,
+    "cuda_version": "12.8",
+    "torch_version": "2.10.0+cu128",
+    "input_name": "z",
+    "output_name": "image",
+    "input_dtype": "<class 'numpy.float32'>",
+    "output_dtype": "<class 'numpy.float32'>",
+    "expected_input_shape": [
+      1,
+      128,
+      1,
+      1
+    ],
+    "expected_output_shape": [
+      1,
+      3,
+      64,
+      64
+    ],
+    "pid": 58,
+    "hostname": "100760a84cc5",
+    "request_count": 5852,
+    "version": "A",
+    "loaded_at": 1788410453.2132308
+  },
+  "models": {
+    "A": {
+      "engine_file": "generator_trt_int8.engine",
+      "engine_sha256": "0f5cbd851756abfe1ce2e1b8897ef01f65b9947af658e62e2ce31df0e99bb4ca",
+      "engine_bytes": 8014796,
+      "tensorrt_version": "11.2.1.2",
+      "gpu_index": 0,
+      "gpu_name": "Tesla T4",
+      "gpu_total_memory_mb": 14911.69,
+      "cuda_version": "12.8",
+      "torch_version": "2.10.0+cu128",
+      "input_name": "z",
+      "output_name": "image",
+      "input_dtype": "<class 'numpy.float32'>",
+      "output_dtype": "<class 'numpy.float32'>",
+      "expected_input_shape": [
+        1,
+        128,
+        1,
+        1
+      ],
+      "expected_output_shape": [
+        1,
+        3,
+        64,
+        64
+      ],
+      "pid": 58,
+      "hostname": "100760a84cc5",
+      "request_count": 5852,
+      "version": "A",
+      "loaded_at": 1788410453.2132308
+    },
+    "B_path": "/kaggle/input/datasets/louisharrington/qat-int8-test/generator_trt_qat_int8 (1).engine",
+    "B_sha256": "b24e799fc5e32a7392bb587e23c314f290c6f314934d00f1cd4cde9e92bf5282"
+  },
+  "health_checks": [
+    {
+      "label": "before_update",
+      "status_code": 200,
+      "pid": 58,
+      "payload": {
+        "status": "ok",
+        "pid": 58,
+        "active_ratio_b": 0.0,
+        "loaded_versions": [
+          "A"
+        ],
+        "candidate_loaded": false,
+        "engine_a": "generator_trt_int8.engine",
+        "engine_b": "generator_trt_qat_int8 (1).engine"
+      }
+    },
+    {
+      "label": "after_candidate_load",
+      "status_code": 200,
+      "pid": 58,
+      "payload": {
+        "status": "ok",
+        "pid": 58,
+        "active_ratio_b": 0.0,
+        "loaded_versions": [
+          "A",
+          "B"
+        ],
+        "candidate_loaded": true,
+        "engine_a": "generator_trt_int8.engine",
+        "engine_b": "generator_trt_qat_int8 (1).engine"
+      }
+    },
+    {
+      "label": "after_rollback",
+      "status_code": 200,
+      "pid": 58,
+      "payload": {
+        "status": "ok",
+        "pid": 58,
+        "active_ratio_b": 0.0,
+        "loaded_versions": [
+          "A",
+          "B"
+        ],
+        "candidate_loaded": true,
+        "engine_a": "generator_trt_int8.engine",
+        "engine_b": "generator_trt_qat_int8 (1).engine"
+      }
+    }
+  ],
+  "load_candidate": {
+    "status_code": 200,
+    "payload": {
+      "status": "ok",
+      "loaded_now": true,
+      "pid": 58,
+      "active_ratio_b": 0.0,
+      "loaded_versions": [
+        "A",
+        "B"
+      ],
+      "candidate_loaded": true,
+      "engine_a": "generator_trt_int8.engine",
+      "engine_b": "generator_trt_qat_int8 (1).engine"
+    }
+  },
+  "rollback": {
+    "status_code": 200,
+    "payload": {
+      "status": "ok",
+      "ratio_b": 0.0,
+      "pid": 58,
+      "active_ratio_b": 0.0,
+      "loaded_versions": [
+        "A",
+        "B"
+      ],
+      "candidate_loaded": true,
+      "engine_a": "generator_trt_int8.engine",
+      "engine_b": "generator_trt_qat_int8 (1).engine"
+    }
+  },
+  "latency_by_version": {
+    "A": {
+      "count": 842,
+      "p50_ms": 70.1126110000132,
+      "p95_ms": 80.78217599995696,
+      "p99_ms": 98.56563200014534,
+      "mean_ms": 70.35428623991164,
+      "success_rate": 1.0
+    },
+    "B": {
+      "count": 658,
+      "p50_ms": 71.55255199995736,
+      "p95_ms": 95.2765399999862,
+      "p99_ms": 186.73921399999927,
+      "mean_ms": 76.59683195288795,
+      "success_rate": 1.0
+    }
+  },
+  "traffic_split": [
+    {
+      "target_ratio_b": 0.1,
+      "observed_ratio_b": 0.12,
+      "error_pp": 1.9999999999999991,
+      "requests": 400,
+      "a_requests": 352,
+      "b_requests": 48
+    },
+    {
+      "target_ratio_b": 0.5,
+      "observed_ratio_b": 0.525,
+      "error_pp": 2.500000000000002,
+      "requests": 400,
+      "a_requests": 190,
+      "b_requests": 210
+    },
+    {
+      "target_ratio_b": 1.0,
+      "observed_ratio_b": 1.0,
+      "error_pp": 0.0,
+      "requests": 400,
+      "a_requests": 0,
+      "b_requests": 400
+    }
+  ],
+  "fid_rows": [
+    {
+      "version": "A",
+      "fid_sample": 35.57101770007136,
+      "blur_rate": 0.125,
+      "laplacian_mean": 7777.7217404052735,
+      "sample_count": 5000,
+      "blur_threshold_real_p10": 4986.694873046875
+    },
+    {
+      "version": "B",
+      "fid_sample": 32.04224304130531,
+      "blur_rate": 0.1162,
+      "laplacian_mean": 7966.443622753906,
+      "sample_count": 5000,
+      "blur_threshold_real_p10": 4986.694873046875
+    }
+  ],
+  "fid_error": null,
+  "criteria": {
+    "same_pid_and_health": true,
+    "metrics_200": true,
+    "zero_downtime": true,
+    "split_within_5pp": true,
+    "rollback_to_A": true,
+    "fid_not_worse_than_5_percent": true,
+    "blur_delta_limit_pp": 0.5,
+    "p99_limit_ms": 200.0
+  },
+  "limitations": [
+    "Kaggle single process/single GPU; not a multi-replica production cluster",
+    "FID is a sampled metric and must use the same protocol/reference set as earlier experiments"
+  ]
+}

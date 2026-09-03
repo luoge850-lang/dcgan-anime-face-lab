@@ -34,10 +34,20 @@ The 60-minute steady soak uses concurrency 16 after a 120-second warmup. It ran 
 
 The dynamic-batching study uses a 5 ms queue window and service batch up to 8. Actual batches 2/4/8 were observed; all stages through concurrency 128 passed with zero failures. At concurrency 32, P99 improved from 110 to 90 ms and RPS from 352.35 to 401.73 (+14.01%) versus fixed batch 1. The queue window adds latency at low concurrency, and the study is not a hardware-saturation experiment. The downloaded archive has packaging gaps: not every runtime summary and service log is present, so the snapshot marks this evidence `complete_with_packaging_gaps`.
 
+## Observability and rollout
+
+Stage 7 starts Prometheus, Alertmanager, and Grafana around the service. The recorded validation returned HTTP 200 for health, generation, and metrics; loaded two alert rules; observed the Prometheus target as up; recorded both firing and resolved events; and preserved 37 resource-monitor samples plus a Grafana screenshot. The queue-backlog alert is a controlled simulation used to validate the route, not a real incident or external paging proof.
+
+Stage 8 hot-loads a QAT INT8 candidate as version B while version A (PTQ INT8) continues serving. The PID remained unchanged, target B traffic ratios of 10%, 50%, and 100% stayed within 2.5 percentage points, and rollback returned traffic to A. In the separate 5,000-sample rollout evaluation, B recorded FID 32.0422 versus A 35.5710 and blur 11.62% versus 12.50%, but B P99 was 186.7 ms versus A 98.6 ms. This supports a controlled single-node rollout with an explicit tail-latency trade-off; it is not a multi-replica production guarantee and its sampled FID is not merged into the canonical precision table.
+
 ## Evidence paths
 
 - Fixed-batch and soak audit: [`06E`](../03_metrics_and_logs/deployment_optimization/06_Service_Stress/06E/)
 - Dynamic batching report: [`06F report`](../03_metrics_and_logs/deployment_optimization/06_Service_Stress/06F/report/)
+- Stage 7 observability evidence: [`07 evidence`](../03_metrics_and_logs/deployment_optimization/07/07_MLOps_Observability/evidence/)
+- Stage 8 hot-update/A-B evidence: [`08 evidence`](../03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence/)
+- Current project manifest: [`deployment_optimization_current_manifest.json`](../03_metrics_and_logs/deployment_optimization/deployment_optimization_current_manifest.json)
+- Script coverage audit: [`SCRIPT_AUDIT.md`](../02_selected_experiments/full_process/deployment_optimization/SCRIPT_AUDIT.md)
 - Normalized operational table: [`service_operational_summary_v08.csv`](../03_metrics_and_logs/deployment_optimization/service_operational_summary_v08.csv)
 - Canonical service and soak figures: [`Stage 6 figures`](../04_visual_assets/stage_figures/06_服务压测/)
 - Latest result-folder figure catalog: [`figure_catalog`](../03_metrics_and_logs/figure_catalog/)

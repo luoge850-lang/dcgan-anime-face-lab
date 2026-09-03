@@ -1,0 +1,4 @@
+target_ratio_b,observed_ratio_b,error_pp,requests,a_requests,b_requests
+0.1,0.12,1.9999999999999991,400,352,48
+0.5,0.525,2.500000000000002,400,190,210
+1.0,1.0,0.0,400,0,400

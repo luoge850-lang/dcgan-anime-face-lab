@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.9 - 2026-09-03
+
+- Added the current Stage 7 observability evidence: monitoring stack validation, controlled alert firing/resolution, 5-second resource samples, alert events, and a Grafana screenshot.
+- Added the current Stage 8 hot-update/A/B evidence: same-PID candidate loading, traffic-split accuracy, version-level P99, sampled quality metrics, and rollback events.
+- Added three readable single-metric Stage 8 SVGs generated from the curated evidence CSVs.
+- Added an experiment coverage audit that separates measured results, source-only scripts, historical manifests, and non-comparable metric protocols.
+- Updated deployment source/result indexes and the README freeze language to v0.9-current-state.
+- Kept the active Kaggle workspace, dataset, checkpoints, ONNX/TensorRT engines, and large service artifacts outside the public Git history.
+
 ## v0.8 - 2026-08-28
 
 - Re-scanned the active `dcgan_lab` evidence boundary and refreshed the interview/GitHub freeze without modifying the active Kaggle source workspace.

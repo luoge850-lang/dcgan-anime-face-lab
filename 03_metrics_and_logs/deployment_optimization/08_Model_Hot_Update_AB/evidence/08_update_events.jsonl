@@ -1,0 +1,6 @@
+{"timestamp": 1788410454.9995153, "action": "candidate_loaded", "version": "B", "elapsed_ms": 26.711384000009275}
+{"timestamp": 1788410455.2575555, "action": "traffic_split_changed", "old_ratio": 0.0, "new_ratio": 0.1, "reason": "gray_0.10"}
+{"timestamp": 1788410457.0429988, "action": "traffic_split_changed", "old_ratio": 0.1, "new_ratio": 0.5, "reason": "gray_0.50"}
+{"timestamp": 1788410459.023186, "action": "traffic_split_changed", "old_ratio": 0.5, "new_ratio": 1.0, "reason": "gray_1.00"}
+{"timestamp": 1788410460.977007, "action": "traffic_split_changed", "old_ratio": 1.0, "new_ratio": 0.0, "reason": "rollback"}
+{"timestamp": 1788410460.97701, "action": "rollback_completed", "active_version": "A"}

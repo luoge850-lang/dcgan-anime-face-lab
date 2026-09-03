@@ -33,3 +33,7 @@ stage,chart_file,metric,source_scope,status
 06_服务压测,38_Soak阶段_RPS.svg,RPS,results/Deployment_Optimization_Results/06_Service_Stress/06E/06D_soak_summary.csv,regenerated
 06_服务压测,39_Soak_GPU显存头尾.svg,GPU memory head-tail,results/Deployment_Optimization_Results/06_Service_Stress/06E/06D_soak_summary.csv,regenerated
 06_服务压测,40_Soak_RSS头尾.svg,service RSS head-tail,results/Deployment_Optimization_Results/06_Service_Stress/06E/06D_soak_summary.csv,regenerated
+07_可观测性,07_Grafana_监控面板.png,monitoring dashboard screenshot,results/Deployment_Optimization_Results/07/07_MLOps_Observability/evidence/grafana_dashboard_screenshot.png,preserved_evidence
+08_热更新_A_B,08_AB_P99.svg,A/B P99 latency,results/Deployment_Optimization_Results/08_Model_Hot_Update_AB/evidence/08_latency_by_version.csv,regenerated
+08_热更新_A_B,08_AB_FID.svg,A/B sampled FID,results/Deployment_Optimization_Results/08_Model_Hot_Update_AB/evidence/08_fid_sample.csv,regenerated
+08_热更新_A_B,08_AB_流量比例.svg,target versus observed B traffic ratio,results/Deployment_Optimization_Results/08_Model_Hot_Update_AB/evidence/08_traffic_split.csv,regenerated

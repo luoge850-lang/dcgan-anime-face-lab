@@ -1,7 +1,7 @@
 ﻿{
     "task":  "Task2_Engine_Benchmark",
     "status":  "complete",
-    "input_root":  "C:\\Users\\32875\\OneDrive\\Desktop\\image_generator\\dcgan_lab\\results\\Deployment_Optimization_Results\\02_Engine_Benchmark",
+    "input_root":  "results/Deployment_Optimization_Results/02_Engine_Benchmark",
     "common_model":  "01A generator_fp32_raw.onnx",
     "benchmark_protocol":  {
                                "precisions":  [

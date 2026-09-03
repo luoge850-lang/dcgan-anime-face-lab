@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$TargetPath = 'C:\Users\32875\OneDrive\Desktop\DCGAN部署优化实验报告.docx'
+    [string]$TargetPath = (Join-Path (Get-Location) 'deployment_optimization_report.docx')
 )
 
 $ErrorActionPreference = 'Stop'

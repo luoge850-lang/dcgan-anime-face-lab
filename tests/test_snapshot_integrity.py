@@ -41,6 +41,10 @@ class SnapshotIntegrityTests(unittest.TestCase):
             "04_visual_assets/stage_figures/05_部署与量化/27_混合精度_FID.svg",
             "04_visual_assets/stage_figures/06_服务压测/32_并发_P99.svg",
             "04_visual_assets/stage_figures/06_服务压测/37_Soak阶段_P99.svg",
+            "04_visual_assets/stage_figures/07_可观测性/07_Grafana_监控面板.png",
+            "04_visual_assets/stage_figures/08_热更新_A_B/08_AB_P99.svg",
+            "04_visual_assets/stage_figures/08_热更新_A_B/08_AB_FID.svg",
+            "04_visual_assets/stage_figures/08_热更新_A_B/08_AB_流量比例.svg",
             "docs/experiment_process.md",
             "docs/baseline_map.md",
             "docs/interview_playbook.md",
@@ -102,14 +106,15 @@ class SnapshotIntegrityTests(unittest.TestCase):
         self.assertTrue(all((ROOT / row["public_snapshot_file"]).exists() for row in audit if row["public_snapshot_file"]))
 
         stage_figures = list((ROOT / "04_visual_assets/stage_figures").rglob("*.svg"))
-        self.assertEqual(len(stage_figures), 34)
+        self.assertEqual(len(stage_figures), 37)
         for path in stage_figures:
             self.assertTrue(ET.parse(path).getroot().tag.endswith("svg"), path)
 
         with (ROOT / "03_metrics_and_logs/stage_figures_map.csv").open(newline="", encoding="utf-8") as handle:
             stage_map = list(csv.DictReader(handle))
-        self.assertEqual(len(stage_map), 34)
-        self.assertTrue(all(row["status"] == "regenerated" for row in stage_map))
+        self.assertEqual(len(stage_map), 38)
+        self.assertEqual(sum(row["status"] == "regenerated" for row in stage_map), 37)
+        self.assertEqual(sum(row["status"] == "preserved_evidence" for row in stage_map), 1)
 
         deployment_figures = list((ROOT / "04_visual_assets/source_figures/deployment_quantization_service").glob("*.svg"))
         self.assertEqual(len(deployment_figures), 26)
@@ -170,6 +175,33 @@ class SnapshotIntegrityTests(unittest.TestCase):
         dynamic_manifest = json.loads((ROOT / "03_metrics_and_logs/deployment_optimization/06_Service_Stress/06F/report/dynamic_batch_manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(dynamic_manifest["execution_status"], "complete")
         self.assertEqual(dynamic_manifest["report_status"], "complete_with_packaging_gaps")
+
+    def test_current_observability_evidence_is_present(self):
+        summary_path = ROOT / "03_metrics_and_logs/deployment_optimization/07/07_MLOps_Observability/evidence/07_validation_summary.json"
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "complete")
+        self.assertEqual(summary["rules_loaded"], 2)
+        self.assertTrue(summary["firing_seen"])
+        self.assertTrue(summary["resolved_seen"])
+        self.assertTrue(summary["queue_alert_is_controlled_simulation"])
+        self.assertTrue((summary_path.parent / "grafana_dashboard_screenshot.png").exists())
+
+    def test_current_hot_update_ab_evidence_is_present(self):
+        evidence = ROOT / "03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence"
+        summary = json.loads((evidence / "08_validation_summary.json").read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "complete")
+        self.assertTrue(summary["criteria"]["same_pid_and_health"])
+        self.assertTrue(summary["criteria"]["zero_downtime"])
+        self.assertTrue(summary["criteria"]["rollback_to_A"])
+        with (evidence / "08_traffic_split.csv").open(newline="", encoding="utf-8") as handle:
+            split = list(csv.DictReader(handle))
+        self.assertEqual(len(split), 3)
+        self.assertLessEqual(max(float(row["error_pp"]) for row in split), 5.0)
+        with (evidence / "08_latency_by_version.csv").open(newline="", encoding="utf-8") as handle:
+            latency = list(csv.DictReader(handle))
+        self.assertEqual({row["version"] for row in latency}, {"A", "B"})
+        b = next(row for row in latency if row["version"] == "B")
+        self.assertAlmostEqual(float(b["p99_ms"]), 186.739214, places=3)
 
 
 if __name__ == "__main__":

@@ -4,9 +4,9 @@
   "operational_status": "pass",
   "generated_at": "2026-08-19T08:51:38.304Z",
   "inputs": {
-    "service_root": "C:\\Users\\32875\\OneDrive\\Desktop\\image_generator\\dcgan_lab\\results\\Deployment_Optimization_Results\\06_Service_Stress",
-    "bc_run": "C:\\Users\\32875\\OneDrive\\Desktop\\image_generator\\dcgan_lab\\results\\Deployment_Optimization_Results\\06_Service_Stress\\06BC\\Run_20260819_063603",
-    "soak_run": "C:\\Users\\32875\\OneDrive\\Desktop\\image_generator\\dcgan_lab\\results\\Deployment_Optimization_Results\\06_Service_Stress\\06D\\Run_Soak_20260819_072959"
+    "service_root": "results/Deployment_Optimization_Results/06_Service_Stress",
+    "bc_run": "results/Deployment_Optimization_Results/06_Service_Stress/06BC/Run_20260819_063603",
+    "soak_run": "results/Deployment_Optimization_Results/06_Service_Stress/06D/Run_Soak_20260819_072959"
   },
   "http_validation": {
     "task": "Task6_06A_HTTP_Service_Validation",

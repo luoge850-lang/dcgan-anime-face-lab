@@ -1,0 +1,10 @@
+route:
+  receiver: dcgan-webhook
+  group_wait: 1s
+  group_interval: 5s
+  repeat_interval: 1h
+receivers:
+- name: dcgan-webhook
+  webhook_configs:
+  - url: http://127.0.0.1:9094/alerts
+    send_resolved: true

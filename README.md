@@ -1,6 +1,6 @@
 # DCGAN Anime-Face Lab
 
-![Status](https://img.shields.io/badge/status-v0.8--current--state-2563eb)
+![Status](https://img.shields.io/badge/status-v0.9--current--state-2563eb)
 ![Framework](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
 ![Runtime](https://img.shields.io/badge/runtime-Kaggle%20GPU-20beff)
 ![Resolution](https://img.shields.io/badge/output-64x64-64748b)
@@ -8,6 +8,8 @@
 > A stage-based AI/ML research and engineering showcase for unconditional 64 × 64 anime-face generation under Kaggle GPU constraints.
 
 This repository is a curated public snapshot of a one-month internship study. It preserves the experiment questions, controls, metrics, sample grids, deployment evidence, and reproducibility boundaries. It is an evidence-backed research archive and engineering case study, not a one-command local training package or an SOTA claim.
+
+For a claim-by-claim review, start with the [experiment coverage audit](docs/experiment_coverage_audit_2026-09-03.md), which separates measured runs, source-only scripts, partial deployment probes, and non-comparable metric protocols.
 
 ## 30-second overview
 
@@ -22,6 +24,7 @@ How far can a conventional PyTorch DCGAN be improved under a constrained single-
 - A SHA-256 data-quality audit and a controlled SDXL replacement side study.
 - An ONNX/TensorRT/precision-comparison workflow with quality-speed trade-off analysis.
 - A staged HTTP stress test, 60-minute soak, and dynamic-batching comparison with P99, throughput, error rate, GPU memory, SM utilization, and process RSS evidence.
+- A monitoring and rollout track: Prometheus/Alertmanager/Grafana observability, controlled alert firing/resolution, zero-downtime hot loading, deterministic A/B routing, and rollback evidence.
 
 ### Headline evidence
 
@@ -35,6 +38,8 @@ How far can a conventional PyTorch DCGAN be improved under a constrained single-
 | Fixed-batch service | 0 failures through concurrency 512; P99 5 → 1,600 ms | A measured capacity range, not a proven physical crash threshold; soft latency knee around 32 |
 | 60-minute soak | 1,226,890 requests; 0 failures; P99 63 ms | Steady-state leak screening at concurrency 16; RSS head-tail +3.32%, GPU-memory head-tail 0% |
 | Dynamic batching | Max observed batch 8; +14.01% RPS at concurrency 32 | 5 ms queue window improves throughput at medium/high concurrency; low concurrency pays queueing overhead |
+| Observability | Health/generate/metrics 200; 2 rules loaded; firing/resolved observed | Monitoring path passed in a Kaggle single-node run; queue alert is a controlled simulation |
+| Hot update + A/B | PID unchanged; B FID 32.0422 vs A 35.5710; 100% success | Single-node zero-downtime load, traffic split and rollback validated; B P99 186.7 ms vs A 98.6 ms |
 
 The historical Legacy FID values, deployment Standard FID values, and CLIP MMD² values are different protocols and must not be sorted as one universal leaderboard.
 
@@ -83,6 +88,8 @@ flowchart TB
     subgraph DEPLOY["Engineering track · selected checkpoint"]
         direction LR
         K["Stage 5<br/>ONNX export<br/>+ engine/precision matrix"] --> L["Stage 6<br/>service stress<br/>+ resource boundary"]
+        L --> M["Stage 7<br/>observability<br/>+ alert path"]
+        M --> N["Stage 8<br/>hot update<br/>+ A/B + rollback"]
     end
 
     P --> C
@@ -99,7 +106,7 @@ flowchart TB
     class C,D,E,F stage;
     class G decision;
     class H,I,J side;
-    class K,L deploy;
+    class K,L,M,N deploy;
 ~~~
 
 Solid arrows represent the main measured path. Dashed arrows mark a separate data scope or an interpretation boundary; they are intentionally not presented as direct architecture comparisons.
@@ -456,6 +463,69 @@ Dynamic-batching figures and raw summaries are kept under [06F dynamic batching 
 
 Evidence: [06E fixed-batch and soak audit](03_metrics_and_logs/deployment_optimization/06_Service_Stress/06E/), [06F dynamic-batching evidence](03_metrics_and_logs/deployment_optimization/06_Service_Stress/06F/), [normalized operational table](03_metrics_and_logs/deployment_optimization/service_operational_summary_v08.csv), [Stage 6 charts](04_visual_assets/stage_figures/06_服务压测/), [deployment report](docs/deployment_optimization.md).
 
+## Stage 7 — Observability and alert validation
+
+### Goal
+
+Add the operational feedback loop around the inference service: health endpoints, Prometheus scraping, Grafana dashboards, Alertmanager routing, resource sampling, and alert recovery.
+
+### Modification and control
+
+The Kaggle notebook starts the service-side monitoring stack and records the same `/health`, `/generate`, and `/metrics` checks used by the serving stages. Two rules were loaded: queue backlog and high P99 latency. Queue depth was deliberately raised to a controlled value to verify the firing and resolved path; it is not evidence of a real production incident.
+
+### Results
+
+| Check | Recorded evidence |
+|---|---:|
+| Health / generate / metrics | HTTP 200 / 200 / 200 |
+| Rules loaded | 2 |
+| Prometheus target | Up |
+| Alert lifecycle | Firing and resolved observed |
+| Resource monitor | 37 samples at 5-second cadence |
+| Dashboard | Grafana screenshot preserved |
+
+### Conclusion and boundary
+
+The monitoring and controlled alert path was validated in the recorded Kaggle run. This proves the instrumentation and recovery workflow, not an external paging integration or a multi-replica production SLO. The screenshot, CSVs, JSON summary, alert events, and one-cell entry point are kept together in the [Stage 7 evidence package](03_metrics_and_logs/deployment_optimization/07/07_MLOps_Observability/evidence/).
+
+![Stage 7 Grafana monitoring dashboard](04_visual_assets/stage_figures/07_可观测性/07_Grafana_监控面板.png)
+
+Source: [07 notebook](02_selected_experiments/full_process/deployment_optimization/07_MLOps_Observability/07_NOTEBOOK_ALL_IN_ONE.py), [07 README](02_selected_experiments/full_process/deployment_optimization/07_MLOps_Observability/README.md), [validation summary](03_metrics_and_logs/deployment_optimization/07/07_MLOps_Observability/evidence/07_validation_summary.json).
+
+## Stage 8 — Hot update, A/B routing, and rollback
+
+### Goal
+
+Validate whether a candidate TensorRT engine can be loaded without restarting the HTTP process, exposed through deterministic traffic splitting, compared on quality and tail latency, and rolled back to the stable version.
+
+### Modification and control
+
+Version A is the PTQ INT8 engine and version B is the QAT INT8 engine. The run keeps one PID, loads B while the service remains available, exercises B at target ratios of 10%, 50%, and 100%, records version-level latency and sampled quality, then sets the ratio back to A.
+
+### Results
+
+| Check | Version A / control | Version B / candidate |
+|---|---:|---:|
+| Sampled Standard FID | 35.5710 | 32.0422 |
+| Blur rate | 12.50% | 11.62% |
+| P99 latency | 98.6 ms | 186.7 ms |
+| Success rate | 100% | 100% |
+| PID | 58 | 58 |
+
+Traffic split error stayed within 2.5 percentage points at the 10%, 50%, and 100% targets. Candidate loading and rollback both returned HTTP 200 without a PID change.
+
+### Conclusion and boundary
+
+The recorded run supports a single-node zero-downtime update and rollback claim. B improved the sampled quality metrics in this run, but its P99 tail was about 1.9× A, so it is not an unconditional production replacement. The quality sample is a separate A/B evaluation instance and must not be merged into the canonical Stage 3/5 FID leaderboard. This is a serving-control experiment, not evidence for a Kubernetes multi-replica rollout.
+
+![Stage 8 A/B P99 latency](04_visual_assets/stage_figures/08_热更新_A_B/08_AB_P99.svg)
+
+![Stage 8 A/B sampled FID](04_visual_assets/stage_figures/08_热更新_A_B/08_AB_FID.svg)
+
+![Stage 8 observed traffic split](04_visual_assets/stage_figures/08_热更新_A_B/08_AB_流量比例.svg)
+
+Evidence: [08 notebook](02_selected_experiments/full_process/deployment_optimization/08_Model_Hot_Update_AB/08_NOTEBOOK_ALL_IN_ONE.py), [08 README](02_selected_experiments/full_process/deployment_optimization/08_Model_Hot_Update_AB/README.md), [validation summary](03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence/08_validation_summary.json), [evidence package](03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence/).
+
 ## Side study — data quality and SDXL replacement
 
 This is a separate data-scope branch, not an additional DCGAN architecture ablation.
@@ -475,7 +545,7 @@ Evidence: [controlled SDXL study](docs/sdxl_controlled_study.md), [reproduction 
 
 ## Frozen showcase Final Recipe
 
-The following is the final recipe of this public v0.8 current-state snapshot. “Final” means the selected archived candidate for explaining the project; it does not mean a final production checkpoint for the still-evolving internship or a universally optimal model.
+The following is the final recipe of this public v0.9 current-state snapshot. “Final” means the selected archived candidate for explaining the project; it does not mean a final production checkpoint for the still-evolving internship or a universally optimal model.
 
 ### Training candidate: 11_G_DiffAug_EMA_20K
 
@@ -529,13 +599,14 @@ For the deployment work, the current graph is treated as a standard ConvTranspos
 
 ### What can be reproduced from this repository
 
-- The public figure rebuild can regenerate the 34 stage-organized single-metric SVGs when the corresponding result root is available.
+- The public figure rebuild can regenerate the 37 stage-organized single-metric SVGs when the corresponding result root is available; the Stage 7 dashboard is preserved as a screenshot.
 - The integrity suite checks metric tables, figure provenance, README targets, and SVG validity.
 - The archived scripts, configuration snapshots, result tables, and checksums allow a reviewer to inspect the experiment decisions.
 
 ~~~bash
 node tools/build_stage_figures.js <path-to-dcgan_lab> <output-figure-directory>
 python -m unittest discover -s tests -v
+python tools/build_current_deployment_figures.py --evidence <snapshot>/03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence --output <snapshot>/04_visual_assets/stage_figures/08_热更新_A_B
 ~~~
 
 ### What cannot be reproduced locally without the original environment
@@ -582,11 +653,12 @@ The next scientifically meaningful additions would be:
 | 02_selected_experiments/ | Selected source scripts organized by experiment stage |
 | 03_metrics_and_logs/ | Curated metrics, manifests, audits, deployment tables, and stage map |
 | 03_metrics_and_logs/figure_catalog/ | Latest full result-folder figure manifest and data inventory |
-| 04_visual_assets/stage_figures/ | Canonical Chinese single-metric charts organized by stage |
+| 04_visual_assets/stage_figures/ | Canonical Chinese single-metric charts and selected evidence screenshots organized by stage |
 | 04_visual_assets/source_figures/ | Preserved source-folder deployment chart archive |
 | 06_model_artifacts/ | Artifact inventory and checksums; large binaries excluded |
 | docs/ | Experiment record, deployment report, protocol, story, and interview notes |
-| tools/build_stage_figures.js | Result-driven public chart rebuild script |
+| tools/build_stage_figures.js | Result-driven core chart rebuild script |
+| tools/build_current_deployment_figures.py | Standard-library Stage 8 chart rebuild script |
 | tests/ | Snapshot integrity tests |
 | 99_source_map/ | Source mapping and freeze boundary |
 
@@ -607,6 +679,6 @@ Further reading: [experiment process](docs/experiment_process.md), [baseline map
 
 ## Freeze status
 
-This README and its stage-organized evidence belong to the public freeze tag v0.8-current-state. It preserves the previous v0.6 evidence freeze and v0.7 presentation release, while adding the newly verified 06E fixed-batch/60-minute-soak evidence, 06F dynamic-batching evidence, seven additional canonical service figures, and the latest result-folder figure catalog. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
+This README and its stage-organized evidence belong to the public v0.9-current-state freeze. It preserves the previous v0.8 evidence freeze and adds the newly verified Stage 7 observability and Stage 8 hot-update/A-B evidence, three separate Stage 8 charts, and an explicit experiment coverage audit. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
 
 Freeze record: [source_map_and_freeze_status.md](99_source_map/source_map_and_freeze_status.md). Changelog: [CHANGELOG.md](CHANGELOG.md).

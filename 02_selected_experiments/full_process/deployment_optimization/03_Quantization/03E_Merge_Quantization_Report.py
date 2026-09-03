@@ -12,6 +12,7 @@ import argparse
 import csv
 import json
 import html
+import os
 import shutil
 import zipfile
 from pathlib import Path
@@ -21,11 +22,13 @@ def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="Merge Task 3 quantization results")
     parser.add_argument(
         "--input-dir",
-        default="C:/Users/32875/OneDrive/Desktop/image_generator/dcgan_lab/results/Deployment_Optimization_Results/03_Quantization/03D_Evaluation",
+        default=None,
+        help="Path to the downloaded 03D evaluation directory; may also be set with DCGAN_03D_INPUT_DIR.",
     )
     parser.add_argument(
         "--output-dir",
-        default="C:/Users/32875/OneDrive/Desktop/image_generator/dcgan_lab/results/Deployment_Optimization_Results/03_Quantization/03E_Report",
+        default=None,
+        help="Output directory; may also be set with DCGAN_03E_OUTPUT_DIR.",
     )
     args, _unknown = parser.parse_known_args(argv)
     return args
@@ -265,8 +268,12 @@ def make_charts(rows, errors, out):
 
 def main(argv=None):
     args = parse_args(argv)
-    input_dir = Path(args.input_dir).expanduser().resolve()
-    output_dir = Path(args.output_dir).expanduser().resolve()
+    input_arg = args.input_dir or os.environ.get("DCGAN_03D_INPUT_DIR")
+    output_arg = args.output_dir or os.environ.get("DCGAN_03E_OUTPUT_DIR")
+    if not input_arg or not output_arg:
+        raise SystemExit("Provide --input-dir and --output-dir, or set DCGAN_03D_INPUT_DIR/DCGAN_03E_OUTPUT_DIR.")
+    input_dir = Path(input_arg).expanduser().resolve()
+    output_dir = Path(output_arg).expanduser().resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     metrics_path = resolve_downloaded_file(input_dir, "fp32_fp16_int8_metrics.csv")
     errors_path = resolve_downloaded_file(input_dir, "quantization_error.csv")

@@ -1,0 +1,71 @@
+{
+  "study": "Deployment_Optimization",
+  "audit_date": "2026-09-03",
+  "status": "complete_with_declared_boundaries",
+  "canonical_audit": "Deployment_Optimization_Final_Audit.md",
+  "script_audit": "../../experiments/Deployment_Optimization/SCRIPT_AUDIT.md",
+  "stages": {
+    "01_onnx_fusion": {
+      "status": "partial",
+      "completed": [
+        "ONNX export and checker",
+        "FX/custom-operator replacement probes",
+        "BN folding numerical equivalence"
+      ],
+      "limitation": "Stable whole-generator fusion speed gate was not established; current Exp11 graph has no real wavelet or dynamic SN node.",
+      "evidence": [
+        "01_ONNX_Fusion/01A_Export/onnx_check (1).json",
+        "01_ONNX_Fusion/01C_BN_Fold/manual_bn_fusion_check.json",
+        "01_ONNX_Fusion/01D_TRT/trt_fusion_manifest.json"
+      ]
+    },
+    "02_engine_benchmark": {
+      "status": "complete",
+      "evidence": "02_Engine_Benchmark/02E_Report/task2_manifest.json"
+    },
+    "03_ptq_baseline": {
+      "status": "complete",
+      "evidence": "03_Quantization/03E_Report/task3_manifest.json"
+    },
+    "04_sensitivity_mixed_precision": {
+      "status": "complete",
+      "selected_strategy": "net.0+net.12 FP16; remaining main path INT8",
+      "evidence": "04_Quantization_Sensitivity/04C/final_confirmation_manifest.json"
+    },
+    "05_qat": {
+      "status": "complete_revised_quality_gate",
+      "limitation": "Global quality improvement is supported; specific hair/eyeliner ROI superiority is not claimed.",
+      "evidence": "05_QAT/05B/qat_evaluation_manifest_revised_acceptance.json"
+    },
+    "06_service_stress": {
+      "status": "operational_complete_with_upper_bound",
+      "max_tested_concurrency": 512,
+      "hard_failure_observed": false,
+      "hard_failure_boundary": ">512",
+      "soak_seconds": 3601.596149486,
+      "soak_failures": 0,
+      "evidence": "06_Service_Stress/06E/06E_manifest.json"
+    },
+    "06f_dynamic_batching": {
+      "status": "complete_with_packaging_gaps",
+      "actual_batches": [2, 4, 8],
+      "soft_knee_fixed_concurrency": 32,
+      "soft_knee_dynamic_concurrency": 64,
+      "evidence": "06_Service_Stress/06F_Dynamic_Batching/report/dynamic_batch_manifest.json"
+    },
+    "07_observability": {
+      "status": "complete",
+      "evidence": "07/07_MLOps_Observability/evidence/07_validation_summary.json"
+    },
+    "08_hot_update_ab": {
+      "status": "complete",
+      "evidence": "08_Model_Hot_Update_AB/evidence/08_validation_summary.json"
+    }
+  },
+  "boundaries": [
+    "The highest successful concurrency is not a physical GPU limit.",
+    "No hard crash was observed in the tested range.",
+    "The 60-minute soak is an operational leak screen, not a mathematical proof of no leak.",
+    "Kaggle single-node results do not establish a multi-replica Kubernetes production guarantee."
+  ]
+}

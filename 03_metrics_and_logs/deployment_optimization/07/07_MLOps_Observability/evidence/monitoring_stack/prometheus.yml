@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+rule_files:
+- /kaggle/working/07_MLOps_Observability_R5/monitoring_stack/rules.yml
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets: ['127.0.0.1:9093']
+scrape_configs:
+- job_name: dcgan
+  static_configs:
+  - targets: ['127.0.0.1:8000']

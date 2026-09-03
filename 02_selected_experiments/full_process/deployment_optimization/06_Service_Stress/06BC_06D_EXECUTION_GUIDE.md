@@ -97,14 +97,14 @@ soak_*_locust.log
 将 Kaggle 下载并解压后的一个完整 run 目录放到本机，例如：
 
 ```text
-C:\Users\32875\OneDrive\Desktop\image_generator\dcgan_lab\results\Deployment_Optimization_Results\06_Service_Stress\Run_20260819_01
+/path/to/dcgan_lab/results/Deployment_Optimization_Results/06_Service_Stress/Run_20260819_01
 ```
 
 然后运行：
 
 ```bash
 python 06D_local_report.py \
-  --run-root C:\Users\32875\OneDrive\Desktop\image_generator\dcgan_lab\results\Deployment_Optimization_Results\06_Service_Stress\Run_20260819_01
+  --run-root /path/to/dcgan_lab/results/Deployment_Optimization_Results/06_Service_Stress/Run_20260819_01
 ```
 
 06D 会生成：
