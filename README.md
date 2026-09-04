@@ -1,6 +1,6 @@
 # DCGAN Anime-Face Lab
 
-![Status](https://img.shields.io/badge/status-v0.9--current--state-2563eb)
+![Status](https://img.shields.io/badge/status-v0.10--handoff--2026--09--04-2563eb)
 ![Framework](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
 ![Runtime](https://img.shields.io/badge/runtime-Kaggle%20GPU-20beff)
 ![Resolution](https://img.shields.io/badge/output-64x64-64748b)
@@ -14,6 +14,8 @@ For a claim-by-claim review, start with the [experiment coverage audit](docs/exp
 For the complete internship archive and engineering narrative, see the [Project Engineering Report](docs/PROJECT_ENGINEERING_REPORT_2026-09-03.md) and the [scanned project inventory](03_metrics_and_logs/project_inventory_2026-09-03.json).
 
 For handoff, start with the [00_HANDOFF entry point](00_HANDOFF/README.md), which gives the reading order, file map, current status, claim boundaries, and safe update procedure.
+
+The current public handoff was re-scanned on 2026-09-04 against the active Kaggle workspace. It includes the latest Stage 7/8 evidence-backed deployment figures while leaving the active experiment source unchanged.
 
 ## 30-second overview
 
@@ -494,6 +496,10 @@ The monitoring and controlled alert path was validated in the recorded Kaggle ru
 
 ![Stage 7 Grafana monitoring dashboard](04_visual_assets/stage_figures/07_可观测性/07_Grafana_监控面板.png)
 
+#### Latest Stage 7 evidence-backed figure
+
+![Stage 7 queue alert lifecycle](04_visual_assets/deployment_delivery/D07_queue_alert_lifecycle.svg)
+
 Source: [07 notebook](02_selected_experiments/full_process/deployment_optimization/07_MLOps_Observability/07_NOTEBOOK_ALL_IN_ONE.py), [07 README](02_selected_experiments/full_process/deployment_optimization/07_MLOps_Observability/README.md), [validation summary](03_metrics_and_logs/deployment_optimization/07/07_MLOps_Observability/evidence/07_validation_summary.json).
 
 ## Stage 8 — Hot update, A/B routing, and rollback
@@ -527,6 +533,14 @@ The recorded run supports a single-node zero-downtime update and rollback claim.
 ![Stage 8 A/B sampled FID](04_visual_assets/stage_figures/08_热更新_A_B/08_AB_FID.svg)
 
 ![Stage 8 observed traffic split](04_visual_assets/stage_figures/08_热更新_A_B/08_AB_流量比例.svg)
+
+#### Latest Stage 8 evidence-backed figures
+
+![Stage 8 A/B traffic split](04_visual_assets/deployment_delivery/D08_ab_traffic_split.svg)
+
+![Stage 8 PTQ versus QAT latency](04_visual_assets/deployment_delivery/D08_ptq_vs_qat_latency.svg)
+
+![Stage 8 PTQ versus QAT sampled FID](04_visual_assets/deployment_delivery/D08_ptq_vs_qat_fid.svg)
 
 Evidence: [08 notebook](02_selected_experiments/full_process/deployment_optimization/08_Model_Hot_Update_AB/08_NOTEBOOK_ALL_IN_ONE.py), [08 README](02_selected_experiments/full_process/deployment_optimization/08_Model_Hot_Update_AB/README.md), [validation summary](03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence/08_validation_summary.json), [evidence package](03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence/).
 
@@ -611,6 +625,7 @@ For the deployment work, the current graph is treated as a standard ConvTranspos
 node tools/build_stage_figures.js <path-to-dcgan_lab> <output-figure-directory>
 python -m unittest discover -s tests -v
 python tools/build_current_deployment_figures.py --evidence <snapshot>/03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence --output <snapshot>/04_visual_assets/stage_figures/08_热更新_A_B
+python tools/generate_deployment_report_figures.py --project-root <snapshot>
 ~~~
 
 ### What cannot be reproduced locally without the original environment
@@ -660,11 +675,13 @@ The next scientifically meaningful additions would be:
 | 03_metrics_and_logs/project_inventory_2026-09-03.json | Full source/public package inventory from the latest scan |
 | 03_metrics_and_logs/figure_catalog/ | Latest full result-folder figure manifest and data inventory |
 | 04_visual_assets/stage_figures/ | Canonical Chinese single-metric charts and selected evidence screenshots organized by stage |
+| 04_visual_assets/deployment_delivery/ | Latest source-backed Stage 7/8 standalone deployment figures |
 | 04_visual_assets/source_figures/ | Preserved source-folder deployment chart archive |
 | 06_model_artifacts/ | Artifact inventory and checksums; large binaries excluded |
 | docs/ | Experiment record, deployment report, protocol, story, and interview notes |
 | tools/build_stage_figures.js | Result-driven core chart rebuild script |
 | tools/build_current_deployment_figures.py | Standard-library Stage 8 chart rebuild script |
+| tools/generate_deployment_report_figures.py | Portable Stage 7/8 SVG/PNG/manifest rebuild script with path overrides |
 | tests/ | Snapshot integrity tests |
 | 99_source_map/ | Source mapping and freeze boundary |
 
@@ -685,6 +702,6 @@ Further reading: [complete engineering report](docs/PROJECT_ENGINEERING_REPORT_2
 
 ## Freeze status
 
-This README and its stage-organized evidence belong to the public v0.9-current-state freeze. It preserves the previous v0.8 evidence freeze and adds the newly verified Stage 7 observability and Stage 8 hot-update/A-B evidence, three separate Stage 8 charts, an explicit experiment coverage audit, and the complete project engineering report. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
+This README and its stage-organized evidence belong to the public v0.10-handoff-2026-09-04 freeze. It preserves the previous v0.9 evidence freeze, updates the active-workspace inventory, adds the latest source-backed Stage 7/8 standalone figures, and includes the final handoff manifest and portable figure generator. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
 
 Freeze record: [source_map_and_freeze_status.md](99_source_map/source_map_and_freeze_status.md). Changelog: [CHANGELOG.md](CHANGELOG.md).

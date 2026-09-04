@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+<title>图3  A/B 灰度发布目标流量比例与实际流量比例对比</title>
+<desc>实际比例来自灰度请求日志，比例误差均小于5个百分点</desc>
+<rect x="0.0" y="0.0" width="1200.0" height="700.0" fill="#FFFFFF" stroke="none" stroke-width="1" opacity="1.0"/>
+<text x="600.0" y="48.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="25px" font-weight="600" text-anchor="middle" fill="#222222" >图3  A/B 灰度发布目标流量比例与实际流量比例对比</text>
+<text x="600.0" y="76.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#666666" >实际比例来自灰度请求日志，比例误差均小于5个百分点</text>
+<line x1="150.0" y1="565.0" x2="1130.0" y2="565.0" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="570.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >0</text>
+<line x1="150.0" y1="486.7" x2="1130.0" y2="486.7" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="491.7" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >20</text>
+<line x1="150.0" y1="408.3" x2="1130.0" y2="408.3" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="413.3" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >40</text>
+<line x1="150.0" y1="330.0" x2="1130.0" y2="330.0" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="335.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >60</text>
+<line x1="150.0" y1="251.7" x2="1130.0" y2="251.7" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="256.7" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >80</text>
+<line x1="150.0" y1="173.3" x2="1130.0" y2="173.3" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="178.3" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >100</text>
+<line x1="150.0" y1="95.0" x2="1130.0" y2="95.0" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="100.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >120</text>
+<line x1="150.0" y1="565.0" x2="1130.0" y2="565.0" stroke="#222222" stroke-width="1.5"/>
+<line x1="150.0" y1="565.0" x2="150.0" y2="95.0" stroke="#222222" stroke-width="1.5"/>
+<text x="640.0" y="665.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="16px" font-weight="400" text-anchor="middle" fill="#222222" >B版本目标流量比例</text>
+<text x="42.0" y="330.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="16px" font-weight="400" text-anchor="middle" fill="#222222" transform="rotate(-90 42 330.0)">流量比例（%）</text>
+<line x1="313.3" y1="565.0" x2="313.3" y2="572.0" stroke="#222222" stroke-width="1"/>
+<text x="313.3" y="596.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="middle" fill="#222222" >10%</text>
+<line x1="640.0" y1="565.0" x2="640.0" y2="572.0" stroke="#222222" stroke-width="1"/>
+<text x="640.0" y="596.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="middle" fill="#222222" >50%</text>
+<line x1="966.7" y1="565.0" x2="966.7" y2="572.0" stroke="#222222" stroke-width="1"/>
+<text x="966.7" y="596.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="middle" fill="#222222" >100%</text>
+<rect x="236.3" y="525.8" width="72.0" height="39.2" fill="#A5A5A5" stroke="none" stroke-width="1" opacity="1.0"/>
+<rect x="318.3" y="518.0" width="72.0" height="47.0" fill="#70AD47" stroke="none" stroke-width="1" opacity="1.0"/>
+<text x="272.3" y="515.8" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#222222" >10.00%</text>
+<text x="354.3" y="508.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#222222" >12.00%</text>
+<text x="313.3" y="476.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#555555" >误差 2.0pp</text>
+<rect x="563.0" y="369.2" width="72.0" height="195.8" fill="#A5A5A5" stroke="none" stroke-width="1" opacity="1.0"/>
+<rect x="645.0" y="359.4" width="72.0" height="205.6" fill="#70AD47" stroke="none" stroke-width="1" opacity="1.0"/>
+<text x="599.0" y="359.2" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#222222" >50.00%</text>
+<text x="681.0" y="349.4" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#222222" >52.50%</text>
+<text x="640.0" y="317.4" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#555555" >误差 2.5pp</text>
+<rect x="889.7" y="173.3" width="72.0" height="391.7" fill="#A5A5A5" stroke="none" stroke-width="1" opacity="1.0"/>
+<rect x="971.7" y="173.3" width="72.0" height="391.7" fill="#70AD47" stroke="none" stroke-width="1" opacity="1.0"/>
+<text x="925.7" y="163.3" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#222222" >100.00%</text>
+<text x="1007.7" y="163.3" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#222222" >100.00%</text>
+<text x="966.7" y="131.3" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#555555" >误差 0.0pp</text>
+<rect x="830.0" y="105.0" width="18.0" height="18.0" fill="#A5A5A5" stroke="none" stroke-width="1" opacity="1.0"/>
+<text x="860.0" y="121.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="start" fill="#222222" >目标比例</text>
+<rect x="980.0" y="105.0" width="18.0" height="18.0" fill="#70AD47" stroke="none" stroke-width="1" opacity="1.0"/>
+<text x="1010.0" y="121.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="start" fill="#222222" >实际比例</text>
+</svg>

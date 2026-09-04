@@ -1,24 +1,30 @@
 {
   "project": "DCGAN Anime-Face Lab",
-  "handoff_release": "v0.9-current-state",
-  "prepared_on": "2026-09-03",
+  "handoff_release": "v0.10-handoff-2026-09-04",
+  "prepared_on": "2026-09-04",
   "source_workspace_label": "dcgan_lab",
-  "public_snapshot_label": "DCGAN_Interview_GitHub_Snapshot_2026-08-04",
+  "public_snapshot_label": "DCGAN_Interview_GitHub_Handoff_2026-09-04",
   "source_scan": {
-    "files": 2864,
-    "bytes": 718513136,
-    "python": 93,
+    "files": 2874,
+    "bytes": 718765967,
+    "python": 94,
     "csv": 297,
-    "json": 129,
-    "png": 2162,
-    "svg": 45,
+    "json": 130,
+    "png": 2166,
+    "jpg": 1,
+    "svg": 49,
     "checkpoints": 8,
     "tensorrt_engines": 7,
     "onnx": 2,
+    "zip": 11,
     "python_ast_parse_errors": 0,
     "json_parse_errors": 0,
     "csv_shape_errors": 0,
-    "csv_data_rows": 47522
+    "csv_data_rows": 47522,
+    "new_since_previous_freeze": [
+      "07_MLOps_Observability/generate_07_report_figures.py",
+      "07_MLOps_Observability and 08_Model_Hot_Update_AB source-backed evidence figures"
+    ]
   },
   "research_tracks": {
     "R01_budget_preprocessing": "measured",
@@ -45,13 +51,22 @@
     "large_logs_included": false,
     "source_only_scripts_are_labelled": true,
     "metric_protocols_are_separated": true,
-    "negative_results_are_preserved": true
+    "negative_results_are_preserved": true,
+    "redundant_png_renders_excluded": true
   },
   "handoff_entry_points": [
     "00_HANDOFF/README.md",
     "00_HANDOFF/file_and_evidence_index.md",
+    "00_HANDOFF/handoff_manifest_2026-09-04.json",
     "docs/PROJECT_ENGINEERING_REPORT_2026-09-03.md",
     "docs/experiment_coverage_audit_2026-09-03.md",
-    "03_metrics_and_logs/project_inventory_2026-09-03.json"
+    "03_metrics_and_logs/project_inventory_2026-09-03.json",
+    "03_metrics_and_logs/deployment_optimization/figure_generation_manifest_2026-09-04.json"
+  ],
+  "latest_public_figures": [
+    "04_visual_assets/deployment_delivery/D07_queue_alert_lifecycle.svg",
+    "04_visual_assets/deployment_delivery/D08_ab_traffic_split.svg",
+    "04_visual_assets/deployment_delivery/D08_ptq_vs_qat_latency.svg",
+    "04_visual_assets/deployment_delivery/D08_ptq_vs_qat_fid.svg"
   ]
 }

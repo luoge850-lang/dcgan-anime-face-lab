@@ -1,17 +1,17 @@
 {
   "project_name": "DCGAN Anime-Face Lab",
-  "release": "v0.9-current-state",
-  "scan_date": "2026-09-03",
+  "release": "v0.10-handoff-2026-09-04",
+  "scan_date": "2026-09-04",
   "source_workspace_label": "dcgan_lab",
   "source_workspace": {
-    "file_count": 2864,
-    "total_bytes": 718513136,
-    "python_files": 93,
-    "json_files": 129,
+    "file_count": 2874,
+    "total_bytes": 718765967,
+    "python_files": 94,
+    "json_files": 130,
     "csv_files": 297,
     "csv_data_rows": 47522,
-    "png_jpg_files": 2163,
-    "svg_files": 45,
+    "png_jpg_files": 2167,
+    "svg_files": 49,
     "checkpoint_files": 8,
     "tensorrt_engine_files": 7,
     "onnx_files": 2,
@@ -29,19 +29,19 @@
     {"alias": "R03_generator_recipe", "source_scripts": 13, "evidence_scope": "capacity, data scale, DiffAugment and EMA"},
     {"alias": "R04_clip_continuation", "source_scripts": 6, "evidence_scope": "CLIP control and weight sweep"},
     {"alias": "R05_sdxl_data_side_study", "source_scripts": 11, "evidence_scope": "SDXL candidate and mixing ratios"},
-    {"alias": "D01_to_D08_deployment", "source_scripts": 30, "evidence_scope": "export, benchmark, quantization, serving and operations"}
+    {"alias": "D01_to_D08_deployment", "source_scripts": 31, "evidence_scope": "export, benchmark, quantization, serving and operations"}
   ],
   "public_package": {
-    "file_count": 657,
-    "total_bytes": 38063497,
-    "python_files": 108,
-    "json_files": 119,
+    "file_count": 660,
+    "total_bytes": 38064463,
+    "python_files": 109,
+    "json_files": 120,
     "csv_files": 205,
-    "svg_files": 86,
+    "svg_files": 90,
     "png_files": 44,
     "files_over_50mb": 0,
     "markdown_local_link_audit": "pass",
-    "snapshot_integrity_tests": "12 passed"
+    "snapshot_integrity_tests": "15 passed"
   },
   "status_policy": {
     "measured": "A corresponding metric, manifest, log, sample, or validation evidence exists.",

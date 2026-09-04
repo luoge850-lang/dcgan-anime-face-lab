@@ -25,6 +25,8 @@ This index maps the active Kaggle workspace to the curated public snapshot. Hist
 | D07 | `experiments/Deployment_Optimization/07_MLOps_Observability/` | `.../07_MLOps_Observability/` | `03_metrics_and_logs/deployment_optimization/07/07_MLOps_Observability/evidence/` |
 | D08 | `experiments/Deployment_Optimization/08_Model_Hot_Update_AB/` | `.../08_Model_Hot_Update_AB/` | `03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence/` |
 
+The latest public Stage 7/8 figure outputs are collected in `04_visual_assets/deployment_delivery/`. Their source hashes and metric scope are recorded in `03_metrics_and_logs/deployment_optimization/figure_generation_manifest_2026-09-04.json`; the portable rebuild entry point is `tools/generate_deployment_report_figures.py`.
+
 ## Evidence reading rules
 
 1. Read the stage README before reading a CSV; it defines the scope and acceptance criteria.
@@ -36,4 +38,3 @@ This index maps the active Kaggle workspace to the curated public snapshot. Hist
 ## Excluded artifact classes
 
 The public snapshot intentionally omits raw images, generated evaluation pools, large checkpoints, ONNX binaries, TensorRT engines, optimizer states, and uncontrolled service logs. Their absence is part of the handoff boundary, not missing documentation.
-

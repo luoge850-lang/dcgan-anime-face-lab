@@ -4,6 +4,8 @@
 
 The repository owner has authorized public visibility. The current public release intentionally excludes the dataset and model weights. Keep the checklist below for future changes and any open-source license decision.
 
+The current handoff package is `DCGAN_Interview_GitHub_Handoff_2026-09-04`, released as `v0.10-handoff-2026-09-04`; the earlier v0.9 state remains historical.
+
 ## Before adding new public artifacts
 
 - [x] Confirm that the project may be shown publicly.
@@ -18,14 +20,14 @@ The repository owner has authorized public visibility. The current public releas
 - Short description: `Resource-constrained DCGAN experiments for 64x64 anime-face generation`
 - Topics: `pytorch`, `dcgan`, `gan`, `generative-models`, `computer-vision`, `reproducible-research`
 - Default branch: `main`
-- First tag: `v0.1-snapshot`
+- Current handoff tag: `v0.10-handoff-2026-09-04`
 - The owner has confirmed that this snapshot may be public; keep datasets, weights, credentials, and unapproved internal material private.
 
 ## Local push after authentication
 
 ```powershell
 gh auth login
-cd "$SNAPSHOT_DIR"
+cd "<path-to-DCGAN_Interview_GitHub_Handoff_2026-09-04>"
 gh auth status
 git switch main
 git pull --ff-only origin main

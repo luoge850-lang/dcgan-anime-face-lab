@@ -9,7 +9,8 @@ This folder is the first place to look when handing the project to a mentor, int
 | Project | DCGAN Anime-Face Lab |
 | Description | Unconditional 64 × 64 anime-face generation and inference engineering study |
 | Runtime | Kaggle GPU; deployment evidence mainly on Tesla T4 |
-| Public release | `v0.9-current-state` |
+| Public release | `v0.10-handoff-2026-09-04` |
+| Freeze date | `2026-09-04` |
 | Current source of truth | Active Kaggle workspace `dcgan_lab` |
 | Public package role | Curated evidence archive, interview showcase, and engineering handoff |
 | Reproduction claim | Inspectable and auditable; not a local one-command retraining release |
@@ -22,6 +23,7 @@ This folder is the first place to look when handing the project to a mentor, int
 4. [File and Evidence Index](file_and_evidence_index.md) — where each script family and result family belongs.
 5. [Deployment Script Audit](../02_selected_experiments/full_process/deployment_optimization/SCRIPT_AUDIT.md) — deployment execution order and outputs.
 6. [Project Inventory](../03_metrics_and_logs/project_inventory_2026-09-03.json) — machine-readable scan of the active workspace and public package.
+7. [Latest deployment figure manifest](../03_metrics_and_logs/deployment_optimization/figure_generation_manifest_2026-09-04.json) — provenance for the standalone Stage 7/8 SVGs.
 
 ## What the project contains
 
@@ -75,6 +77,8 @@ This folder is the first place to look when handing the project to a mentor, int
 4. Add a new commit and tag; do not silently overwrite an earlier metric or freeze.
 5. Update the [coverage audit](../docs/experiment_coverage_audit_2026-09-03.md) and [project inventory](../03_metrics_and_logs/project_inventory_2026-09-03.json) together.
 
+The 2026-09-04 handoff also includes the latest source-backed Stage 7/8 SVGs under `04_visual_assets/deployment_delivery/`. The four PNG renders produced in Kaggle are intentionally omitted because the public package already contains a readable dashboard screenshot and separate SVG charts.
+
 ## Verification
 
 From the repository root:
@@ -84,4 +88,3 @@ python -m unittest discover -s tests -v
 ```
 
 This validates JSON evidence, core metric tables, stage figures, Stage 7/8 packages, the engineering report, and the inventory.
-

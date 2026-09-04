@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+<title>图5  PTQ-INT8 与 QAT-INT8 的 FID 对比</title>
+<desc>FID越低越好；A/B各使用5000张生成图像进行同协议抽样评估</desc>
+<rect x="0.0" y="0.0" width="1200.0" height="700.0" fill="#FFFFFF" stroke="none" stroke-width="1" opacity="1.0"/>
+<text x="600.0" y="48.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="25px" font-weight="600" text-anchor="middle" fill="#222222" >图5  PTQ-INT8 与 QAT-INT8 的 FID 对比</text>
+<text x="600.0" y="76.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#666666" >FID越低越好；A/B各使用5000张生成图像进行同协议抽样评估</text>
+<line x1="150.0" y1="565.0" x2="1130.0" y2="565.0" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="570.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >0</text>
+<line x1="150.0" y1="460.6" x2="1130.0" y2="460.6" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="465.6" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >10</text>
+<line x1="150.0" y1="356.1" x2="1130.0" y2="356.1" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="361.1" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >20</text>
+<line x1="150.0" y1="251.7" x2="1130.0" y2="251.7" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="256.7" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >30</text>
+<line x1="150.0" y1="147.2" x2="1130.0" y2="147.2" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="152.2" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >40</text>
+<line x1="150.0" y1="95.0" x2="1130.0" y2="95.0" stroke="#D9E2F3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="136.0" y="100.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="end" fill="#555555" >45</text>
+<line x1="150.0" y1="565.0" x2="1130.0" y2="565.0" stroke="#222222" stroke-width="1.5"/>
+<line x1="150.0" y1="565.0" x2="150.0" y2="95.0" stroke="#222222" stroke-width="1.5"/>
+<text x="640.0" y="665.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="16px" font-weight="400" text-anchor="middle" fill="#222222" >模型版本</text>
+<text x="42.0" y="330.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="16px" font-weight="400" text-anchor="middle" fill="#222222" transform="rotate(-90 42 330.0)">FID（越低越好）</text>
+<line x1="395.0" y1="565.0" x2="395.0" y2="572.0" stroke="#222222" stroke-width="1"/>
+<text x="395.0" y="596.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="middle" fill="#222222" >PTQ-INT8</text>
+<line x1="885.0" y1="565.0" x2="885.0" y2="572.0" stroke="#222222" stroke-width="1"/>
+<text x="885.0" y="596.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="middle" fill="#222222" >QAT-INT8</text>
+<rect x="335.0" y="193.5" width="120.0" height="371.5" fill="#4472C4" stroke="none" stroke-width="1" opacity="1.0"/>
+<text x="395.0" y="183.5" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#222222" >35.57</text>
+<rect x="825.0" y="230.3" width="120.0" height="334.7" fill="#ED7D31" stroke="none" stroke-width="1" opacity="1.0"/>
+<text x="885.0" y="220.3" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#222222" >32.04</text>
+<text x="600.0" y="632.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="middle" fill="#555555" >同一轮评估：版本A与版本B各抽样5000张图像</text>
+</svg>

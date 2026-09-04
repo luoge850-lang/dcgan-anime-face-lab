@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.10 - 2026-09-04
+
+- Rebased the public handoff on the latest `dcgan_lab` scan: 2,874 source files, 94 Python scripts, 130 JSON files, 49 SVG figures, 8 checkpoints, 7 TensorRT engines, and 2 ONNX files.
+- Added the current source-backed Stage 7/8 deployment figures as four standalone SVGs under `04_visual_assets/deployment_delivery/`.
+- Added a sanitized figure-generation manifest and a portable `tools/generate_deployment_report_figures.py` entry point with CLI path overrides.
+- Replaced the dated 2026-09-03 handoff manifest with the 2026-09-04 manifest and preserved the previous v0.9 state as historical evidence.
+- Excluded redundant PNG renders and the superseded 2026-08-19 deployment audit from the new handoff package; the active Kaggle workspace remains untouched.
+
 ## v0.9 - 2026-09-03
 
 - Added the current Stage 7 observability evidence: monitoring stack validation, controlled alert firing/resolution, 5-second resource samples, alert events, and a Grafana screenshot.

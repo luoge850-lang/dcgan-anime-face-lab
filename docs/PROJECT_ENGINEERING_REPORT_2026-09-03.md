@@ -2,7 +2,7 @@
 
 ## Internship project engineering report
 
-**Release:** `v0.9-current-state`  
+**Release:** `v0.10-handoff-2026-09-04`  
 **Project type:** Kaggle-based generative-model research and inference-engineering study  
 **Primary model:** PyTorch DCGAN for unconditional 64 × 64 RGB anime-face generation  
 **Execution environment:** Kaggle GPU, mainly Tesla T4 for deployment experiments  
@@ -41,8 +41,8 @@ The strongest defensible outcome is not “one magic module improved the GAN.”
 | Layer | Location / identity | Meaning |
 |---|---|---|
 | Active experiment source | `dcgan_lab` | Ongoing Kaggle-oriented workspace; later experiments may still change. |
-| Public package | `DCGAN_Interview_GitHub_Snapshot_2026-08-04` | Curated, public-safe evidence snapshot. |
-| Git release | `v0.9-current-state` | Frozen public state for the currently documented evidence. |
+| Public package | `DCGAN_Interview_GitHub_Handoff_2026-09-04` | Curated, public-safe evidence and deployment handoff package. |
+| Git release | `v0.10-handoff-2026-09-04` | Frozen public state for the currently documented evidence. |
 | Current deployment manifest | `03_metrics_and_logs/deployment_optimization/deployment_optimization_current_manifest.json` | Canonical status for deployment stages. |
 | Claim boundary | `docs/experiment_coverage_audit_2026-09-03.md` | Distinguishes measured, partial, source-only, and non-comparable results. |
 
@@ -50,17 +50,18 @@ The active workspace is much larger than the public package. It contains raw ima
 
 ## 3. Complete workspace inventory
 
-The 2026-09-03 scan found:
+The 2026-09-04 scan found:
 
 | Item | Active workspace |
 |---|---:|
-| Total files | 2,864 |
-| Total size | 718,513,136 bytes, approximately 685 MiB |
-| Python scripts | 93 |
-| JSON files | 129 |
+| Total files | 2,874 |
+| Total size | 718,765,967 bytes, approximately 685 MiB |
+| Python scripts | 94 |
+| JSON files | 130 |
 | CSV files | 297 |
-| PNG/JPG samples and figures | 2,163 |
-| SVG figures | 45 |
+| PNG files | 2,166 |
+| JPG files | 1 |
+| SVG figures | 49 |
 | Checkpoints (`.pth`) | 8 |
 | TensorRT engines | 7 |
 | ONNX files | 2 |
@@ -79,9 +80,9 @@ The 2026-09-03 scan found:
 | Generator strengthening | 13 | G强化实验结果 | Capacity, data scale, DiffAugment and EMA |
 | CLIP study | 6 | CLIP实验结果 | Frozen CLIP continuation and weight sweep |
 | SDXL controlled study | 11 | SDXL_Controlled_Study_Results | Synthetic-data candidate and mixing-ratio study |
-| Deployment optimization | 30 | Deployment_Optimization_Results | Export, engines, quantization, service and operations |
+| Deployment optimization | 31 | Deployment_Optimization_Results | Export, engines, quantization, service and operations |
 
-The public snapshot contains **657 curated files** (about 36 MiB), including selected scripts, normalized tables, reports, samples, stage charts, tests, and small evidence packages. No file larger than 50 MiB is included in the public package.
+The public handoff contains **660 curated files** (about 36 MiB), including selected scripts, normalized tables, reports, samples, stage charts, tests, and small evidence packages. No file larger than 50 MiB is included in the public package. The four latest Stage 7/8 outputs are SVG-only; redundant PNG renders are excluded.
 
 ## 4. Canonical naming and organization
 

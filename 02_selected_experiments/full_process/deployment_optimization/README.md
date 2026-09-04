@@ -21,6 +21,7 @@ Canonical status and evidence index:
 - [`deployment_optimization_current_manifest.json`](../../../03_metrics_and_logs/deployment_optimization/deployment_optimization_current_manifest.json) — current project-level status.
 - [`EXPERIMENT_INDEX.md`](../../../03_metrics_and_logs/deployment_optimization/EXPERIMENT_INDEX.md) — normalized deployment table.
 - [`experiment_coverage_audit_2026-09-03.md`](../../../docs/experiment_coverage_audit_2026-09-03.md) — measured/source-only/partial boundary.
+- [`figure_generation_manifest_2026-09-04.json`](../../../03_metrics_and_logs/deployment_optimization/figure_generation_manifest_2026-09-04.json) — sanitized provenance for the latest Stage 7/8 standalone SVGs.
 
 ## Locked deployment contract
 
@@ -38,6 +39,8 @@ Before running any entry point, lock the checkpoint, matching Generator class, l
 
 The `02E`, `03E`, `06E`, and `06F_dynamic_batch_report.py` files merge existing evidence; they do not represent additional model-training runs. Stages 07 and 08 are single-cell Kaggle entry points and generate their monitoring/rollout configuration at runtime.
 
+The latest public charts can be rebuilt with `python tools/generate_deployment_report_figures.py --project-root <snapshot>`. The script accepts `--results-root` and `--output-dir` overrides, so its path resolution does not depend on a Kaggle or Windows absolute path. It reads the Stage 7/8 evidence CSV/JSON files and writes standalone SVG/PNG outputs plus a manifest; only the four SVGs are included in this handoff to avoid duplicate renders.
+
 ## Stage 07 entry point
 
 `07_MLOps_Observability/07_NOTEBOOK_ALL_IN_ONE.py` starts the service-side monitoring stack, validates `/health`, `/generate`, and `/metrics`, samples GPU/RSS resources, checks two alert rules, and preserves firing/resolved events plus a Grafana screenshot. Queue backlog is deliberately simulated to validate the alert route.
@@ -49,4 +52,3 @@ The `02E`, `03E`, `06E`, and `06F_dynamic_batch_report.py` files merge existing 
 ## Public packaging rule
 
 Keep new Kaggle code and raw outputs in the active `dcgan_lab` workspace. After a stage is genuinely complete, copy only the entry script, a small manifest, normalized CSV/JSON evidence, and readable figures into a new dated public snapshot commit. Do not copy `.engine`, `.onnx`, checkpoints, datasets, or uncontrolled logs.
-

@@ -1,0 +1,42 @@
+{
+  "generated_at_local": "2026-09-04T14:08:46+08:00",
+  "source_scope": "results/Deployment_Optimization_Results/07 and 08 evidence",
+  "note": "Absolute Kaggle/Windows paths from the source manifest were removed for public packaging.",
+  "figures": {
+    "D07_queue_alert_lifecycle.svg": {
+      "source": "07/07_MLOps_Observability/evidence/alert_webhook_events.jsonl",
+      "source_sha256": "92007c0f7dde9b225ae4e0f3f9d654ddb5135ed8cfb99496b346f1930fdd48fd",
+      "metric": "controlled alert lifecycle",
+      "duration_seconds": 10.0,
+      "simulation": true
+    },
+    "D08_ab_traffic_split.svg": {
+      "source": "08_Model_Hot_Update_AB/evidence/08_traffic_split.csv",
+      "source_sha256": "1e275ad6401a9a6df822a2b44fe3a9e8248cd2b20009354ebcdac08b2460537e",
+      "target_ratio_percent": [10.0, 50.0, 100.0],
+      "observed_ratio_percent": [12.0, 52.5, 100.0],
+      "maximum_error_pp": 2.5
+    },
+    "D08_ptq_vs_qat_latency.svg": {
+      "source": "08_Model_Hot_Update_AB/evidence/08_latency_by_version.csv",
+      "source_sha256": "89ac7d023a517ad71db92cf13817d741dbbb4d68a585d9df8f449d9bed6a92f4",
+      "versions": ["PTQ-INT8", "QAT-INT8"],
+      "p99_ms": [98.565632, 186.739214],
+      "threshold_ms": 200
+    },
+    "D08_ptq_vs_qat_fid.svg": {
+      "source": "08_Model_Hot_Update_AB/evidence/08_fid_sample.csv",
+      "source_sha256": "ae037f9c54031e0d80b103f505928ce265b506911824f718d3117d60f04d1f4b",
+      "versions": ["PTQ-INT8", "QAT-INT8"],
+      "fid": [35.5710177, 32.04224304],
+      "sample_count_each": 5000,
+      "lower_is_better": true
+    }
+  },
+  "public_outputs": [
+    "04_visual_assets/deployment_delivery/D07_queue_alert_lifecycle.svg",
+    "04_visual_assets/deployment_delivery/D08_ab_traffic_split.svg",
+    "04_visual_assets/deployment_delivery/D08_ptq_vs_qat_latency.svg",
+    "04_visual_assets/deployment_delivery/D08_ptq_vs_qat_fid.svg"
+  ]
+}
