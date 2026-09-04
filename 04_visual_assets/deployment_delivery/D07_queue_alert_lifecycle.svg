@@ -1,16 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
-<title>图2  队列积压告警触发与恢复记录</title>
-<desc>受控模拟：队列深度=60，告警阈值&gt;50，规则持续时间=30秒；事件日志跨度约10秒</desc>
+<title>图2  队列积压告警触发、发送与恢复证据</title>
+<desc>证据链：规则配置 → 受控模拟 → Alertmanager → 本地 Webhook → firing / resolved</desc>
 <rect x="0.0" y="0.0" width="1200.0" height="700.0" fill="#FFFFFF" stroke="none" stroke-width="1" opacity="1.0"/>
-<text x="600.0" y="48.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="25px" font-weight="600" text-anchor="middle" fill="#222222" >图2  队列积压告警触发与恢复记录</text>
-<text x="600.0" y="76.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#666666" >受控模拟：队列深度=60，告警阈值&gt;50，规则持续时间=30秒；事件日志跨度约10秒</text>
-<line x1="150.0" y1="330.0" x2="1130.0" y2="330.0" stroke="#8FAADC" stroke-width="10"/>
-<circle cx="150.0" cy="330.0" r="12.0" fill="#C00000" stroke="none" stroke-width="1"/>
-<circle cx="1130.0" cy="330.0" r="12.0" fill="#70AD47" stroke="none" stroke-width="1"/>
-<text x="150.0" y="288.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="18px" font-weight="600" text-anchor="middle" fill="#C00000" >firing：告警触发</text>
-<text x="1130.0" y="288.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="18px" font-weight="600" text-anchor="middle" fill="#70AD47" >resolved：告警恢复</text>
-<text x="150.0" y="372.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="middle" fill="#555555" >08:33:15 UTC</text>
-<text x="1130.0" y="372.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="middle" fill="#555555" >08:33:25 UTC</text>
-<text x="600.0" y="336.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="19px" font-weight="600" text-anchor="middle" fill="#222222" >DCGANQueueBacklog</text>
-<text x="600.0" y="632.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="400" text-anchor="middle" fill="#555555" >实际记录持续约 10 秒；状态由 firing 变为 resolved</text>
+<text x="600.0" y="48.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="25px" font-weight="600" text-anchor="middle" fill="#222222" >图2  队列积压告警触发、发送与恢复证据</text>
+<text x="600.0" y="76.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="14px" font-weight="400" text-anchor="middle" fill="#666666" >证据链：规则配置 → 受控模拟 → Alertmanager → 本地 Webhook → firing / resolved</text>
+<rect x="35.0" y="128.0" width="190.0" height="132.0" fill="#EAF2F8" stroke="#9EADBA" stroke-width="1.2" opacity="1.0"/>
+<text x="130.0" y="155.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="600" text-anchor="middle" fill="#222222" >1. 规则配置</text>
+<text x="130.0" y="185.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="12px" font-weight="400" text-anchor="middle" fill="#444444"><tspan x="130.0" dy="0px">已加载 2 条规则</tspan><tspan x="130.0" dy="18px">DCGANQueueBacklog</tspan><tspan x="130.0" dy="18px">队列 &gt; 50；for 30s</tspan></text>
+<rect x="270.0" y="128.0" width="190.0" height="132.0" fill="#FFF2CC" stroke="#9EADBA" stroke-width="1.2" opacity="1.0"/>
+<text x="365.0" y="155.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="600" text-anchor="middle" fill="#222222" >2. 受控模拟</text>
+<text x="365.0" y="185.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="12px" font-weight="400" text-anchor="middle" fill="#444444"><tspan x="365.0" dy="0px">queue_depth = 60</tspan><tspan x="365.0" dy="18px">超过阈值 50</tspan><tspan x="365.0" dy="18px">记录标注：非真实故障</tspan></text>
+<rect x="505.0" y="128.0" width="190.0" height="132.0" fill="#EDE7F6" stroke="#9EADBA" stroke-width="1.2" opacity="1.0"/>
+<text x="600.0" y="155.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="600" text-anchor="middle" fill="#222222" >3. Alertmanager</text>
+<text x="600.0" y="185.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="12px" font-weight="400" text-anchor="middle" fill="#444444"><tspan x="600.0" dy="0px">receiver = dcgan-webhook</tspan><tspan x="600.0" dy="18px">路由配置已加载</tspan><tspan x="600.0" dy="18px">send_resolved = true</tspan></text>
+<rect x="740.0" y="128.0" width="190.0" height="132.0" fill="#FCE4D6" stroke="#9EADBA" stroke-width="1.2" opacity="1.0"/>
+<text x="835.0" y="155.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="600" text-anchor="middle" fill="#222222" >4. 通知发送</text>
+<text x="835.0" y="185.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="12px" font-weight="400" text-anchor="middle" fill="#444444"><tspan x="835.0" dy="0px">HTTP POST</tspan><tspan x="835.0" dy="18px">127.0.0.1:9094/alerts</tspan><tspan x="835.0" dy="18px">本地 Webhook（非邮箱）</tspan></text>
+<rect x="975.0" y="128.0" width="190.0" height="132.0" fill="#E2F0D9" stroke="#9EADBA" stroke-width="1.2" opacity="1.0"/>
+<text x="1070.0" y="155.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="600" text-anchor="middle" fill="#222222" >5. 接收证据</text>
+<text x="1070.0" y="185.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="12px" font-weight="400" text-anchor="middle" fill="#444444"><tspan x="1070.0" dy="0px">firing + resolved</tspan><tspan x="1070.0" dy="18px">JSONL 各1条</tspan><tspan x="1070.0" dy="18px">闭环记录可复核</tspan></text>
+<line x1="225.0" y1="194.0" x2="259.0" y2="194.0" stroke="#7F8C8D" stroke-width="2"/>
+<polygon points="259.0,188.0 270.0,194.0 259.0,200.0" fill="#7F8C8D"/>
+<line x1="460.0" y1="194.0" x2="494.0" y2="194.0" stroke="#7F8C8D" stroke-width="2"/>
+<polygon points="494.0,188.0 505.0,194.0 494.0,200.0" fill="#7F8C8D"/>
+<line x1="695.0" y1="194.0" x2="729.0" y2="194.0" stroke="#7F8C8D" stroke-width="2"/>
+<polygon points="729.0,188.0 740.0,194.0 729.0,200.0" fill="#7F8C8D"/>
+<line x1="930.0" y1="194.0" x2="964.0" y2="194.0" stroke="#7F8C8D" stroke-width="2"/>
+<polygon points="964.0,188.0 975.0,194.0 964.0,200.0" fill="#7F8C8D"/>
+<text x="600.0" y="315.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="17px" font-weight="600" text-anchor="middle" fill="#222222" >实际 Webhook 事件时间线（来自 alert_webhook_events.jsonl）</text>
+<line x1="220.0" y1="405.0" x2="980.0" y2="405.0" stroke="#8FAADC" stroke-width="8"/>
+<circle cx="220.0" cy="405.0" r="11.0" fill="#C00000" stroke="none" stroke-width="1"/>
+<circle cx="980.0" cy="405.0" r="11.0" fill="#70AD47" stroke="none" stroke-width="1"/>
+<text x="220.0" y="375.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="600" text-anchor="middle" fill="#C00000" >firing：告警触发</text>
+<text x="980.0" y="375.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="600" text-anchor="middle" fill="#70AD47" >resolved：告警恢复</text>
+<text x="220.0" y="437.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="11px" font-weight="400" text-anchor="middle" fill="#555555" >2026-09-02 08:33:15.374 UTC</text>
+<text x="980.0" y="437.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="11px" font-weight="400" text-anchor="middle" fill="#555555" >2026-09-02 08:33:25.374 UTC</text>
+<text x="600.0" y="410.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="15px" font-weight="600" text-anchor="middle" fill="#222222" >DCGANQueueBacklog · 事件跨度约 10 秒</text>
+<text x="600.0" y="530.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="13px" font-weight="400" text-anchor="middle" fill="#555555" >规则条件要求持续 30s；本次事件记录约 10 秒，二者是不同时间概念</text>
+<text x="600.0" y="570.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="13px" font-weight="400" text-anchor="middle" fill="#333333" >结论：Alertmanager 已将受控队列告警发送到本地 Webhook，并记录触发与恢复；本实验未配置外部邮箱。</text>
+<text x="600.0" y="602.0" font-family="Microsoft YaHei, SimHei, Arial, sans-serif" font-size="11px" font-weight="400" text-anchor="middle" fill="#777777" >数据来源：rules.yml、alertmanager.yml、07_validation_summary.json、alert_webhook_events.jsonl</text>
 </svg>
