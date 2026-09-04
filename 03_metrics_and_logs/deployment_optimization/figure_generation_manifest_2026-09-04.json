@@ -1,18 +1,32 @@
 {
-  "generated_at_local": "2026-09-04T14:08:46+08:00",
+  "generated_at_local": "2026-09-04T14:18:18+08:00",
   "source_scope": "results/Deployment_Optimization_Results/07 and 08 evidence",
+  "generator_source_sha256": "ff90e2153e575a5d52ed16fcd94159c074f7ae5785f34a62aeb7ff81053362c8",
   "note": "Absolute Kaggle/Windows paths from the source manifest were removed for public packaging.",
   "figures": {
     "D07_queue_alert_lifecycle.svg": {
-      "source": "07/07_MLOps_Observability/evidence/alert_webhook_events.jsonl",
-      "source_sha256": "92007c0f7dde9b225ae4e0f3f9d654ddb5135ed8cfb99496b346f1930fdd48fd",
-      "metric": "controlled alert lifecycle",
+      "source_files": {
+        "alert_webhook_events.jsonl": "92007c0f7dde9b225ae4e0f3f9d654ddb5135ed8cfb99496b346f1930fdd48fd",
+        "rules.yml": "0798e9a569217b80b85afcd3aee12758add6832233dd38f65be3d145c8946152",
+        "alertmanager.yml": "f5fe50ecf9490f950030c984b022820e33b07cc9b502ff6ffdef1ae562944c48",
+        "07_validation_summary.json": "cf251ab135778663c401dceb4138c1fd60e3fde83c75e70ffc64d76d2d14b373"
+      },
+      "output_sha256": "d4b15805e3a3666a614340b70daf599cbc7e6739a064ca4859d142451107df1e",
+      "rule_names": ["DCGANQueueBacklog", "DCGANHighP99Latency"],
+      "rules_loaded": 2,
+      "threshold": 50,
+      "for_rule": "30s",
+      "queue_depth_simulated": 60,
+      "simulation": true,
+      "receiver": "dcgan-webhook",
       "duration_seconds": 10.0,
-      "simulation": true
+      "firing_received": true,
+      "resolved_received": true
     },
     "D08_ab_traffic_split.svg": {
       "source": "08_Model_Hot_Update_AB/evidence/08_traffic_split.csv",
       "source_sha256": "1e275ad6401a9a6df822a2b44fe3a9e8248cd2b20009354ebcdac08b2460537e",
+      "output_sha256": "e748bb87d16dd19dd23e2eaf3fb75fb79b054fb8002ee9c6c06b5290715d574e",
       "target_ratio_percent": [10.0, 50.0, 100.0],
       "observed_ratio_percent": [12.0, 52.5, 100.0],
       "maximum_error_pp": 2.5
@@ -20,6 +34,7 @@
     "D08_ptq_vs_qat_latency.svg": {
       "source": "08_Model_Hot_Update_AB/evidence/08_latency_by_version.csv",
       "source_sha256": "89ac7d023a517ad71db92cf13817d741dbbb4d68a585d9df8f449d9bed6a92f4",
+      "output_sha256": "38e339413e0d0a168297c848785cca316f276bf2f8602e325462661a8726d9bd",
       "versions": ["PTQ-INT8", "QAT-INT8"],
       "p99_ms": [98.565632, 186.739214],
       "threshold_ms": 200
@@ -27,6 +42,7 @@
     "D08_ptq_vs_qat_fid.svg": {
       "source": "08_Model_Hot_Update_AB/evidence/08_fid_sample.csv",
       "source_sha256": "ae037f9c54031e0d80b103f505928ce265b506911824f718d3117d60f04d1f4b",
+      "output_sha256": "fb487c66a3ff3ef277769350a63bb3327a0af7bafc89a1e611e195c30d9627ce",
       "versions": ["PTQ-INT8", "QAT-INT8"],
       "fid": [35.5710177, 32.04224304],
       "sample_count_each": 5000,
