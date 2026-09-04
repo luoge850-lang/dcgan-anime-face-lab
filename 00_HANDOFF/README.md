@@ -9,7 +9,7 @@ This folder is the first place to look when handing the project to a mentor, int
 | Project | DCGAN Anime-Face Lab |
 | Description | Unconditional 64 × 64 anime-face generation and inference engineering study |
 | Runtime | Kaggle GPU; deployment evidence mainly on Tesla T4 |
-| Public release | `v0.10.1-handoff-2026-09-04` |
+| Public release | `v0.10.2-handoff-2026-09-04` |
 | Freeze date | `2026-09-04` |
 | Current source of truth | Active Kaggle workspace `dcgan_lab` |
 | Public package role | Curated evidence archive, interview showcase, and engineering handoff |
