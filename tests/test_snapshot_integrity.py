@@ -237,7 +237,7 @@ class SnapshotIntegrityTests(unittest.TestCase):
         self.assertTrue((handoff / "README.md").exists())
         self.assertTrue((handoff / "file_and_evidence_index.md").exists())
         manifest = json.loads((handoff / "handoff_manifest_2026-09-04.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["handoff_release"], "v0.10-handoff-2026-09-04")
+        self.assertEqual(manifest["handoff_release"], "v0.10.1-handoff-2026-09-04")
         self.assertEqual(len(manifest["handoff_entry_points"]), 7)
         self.assertTrue((ROOT / "README.md").read_text(encoding="utf-8").find("00_HANDOFF/README.md") >= 0)
 
