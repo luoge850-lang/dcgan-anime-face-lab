@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.1 - 2026-09-04
+
+- Added `tests/__init__.py` and an explicit `-t .` discovery root so the documented unittest command works on the bundled Python runtime as well as older Python versions.
+- Kept v0.10 as an immutable predecessor tag; this patch release is the current handoff freeze.
+
 ## v0.10 - 2026-09-04
 
 - Rebased the public handoff on the latest `dcgan_lab` scan: 2,874 source files, 94 Python scripts, 130 JSON files, 49 SVG figures, 8 checkpoints, 7 TensorRT engines, and 2 ONNX files.
