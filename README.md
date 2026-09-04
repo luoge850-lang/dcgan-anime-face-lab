@@ -1,6 +1,6 @@
 # DCGAN Anime-Face Lab
 
-![Status](https://img.shields.io/badge/status-v0.10--handoff--2026--09--04-2563eb)
+![Status](https://img.shields.io/badge/status-v0.10.1--handoff--2026--09--04-2563eb)
 ![Framework](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
 ![Runtime](https://img.shields.io/badge/runtime-Kaggle%20GPU-20beff)
 ![Resolution](https://img.shields.io/badge/output-64x64-64748b)
@@ -623,7 +623,7 @@ For the deployment work, the current graph is treated as a standard ConvTranspos
 
 ~~~bash
 node tools/build_stage_figures.js <path-to-dcgan_lab> <output-figure-directory>
-python -m unittest discover -s tests -v
+python -m unittest discover -s tests -t . -v
 python tools/build_current_deployment_figures.py --evidence <snapshot>/03_metrics_and_logs/deployment_optimization/08_Model_Hot_Update_AB/evidence --output <snapshot>/04_visual_assets/stage_figures/08_热更新_A_B
 python tools/generate_deployment_report_figures.py --project-root <snapshot>
 ~~~
@@ -702,6 +702,6 @@ Further reading: [complete engineering report](docs/PROJECT_ENGINEERING_REPORT_2
 
 ## Freeze status
 
-This README and its stage-organized evidence belong to the public v0.10-handoff-2026-09-04 freeze. It preserves the previous v0.9 evidence freeze, updates the active-workspace inventory, adds the latest source-backed Stage 7/8 standalone figures, and includes the final handoff manifest and portable figure generator. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
+This README and its stage-organized evidence belong to the public v0.10.1-handoff-2026-09-04 freeze. It preserves the previous v0.9 and v0.10 evidence freezes, updates the active-workspace inventory, adds the latest source-backed Stage 7/8 standalone figures, and includes the final handoff manifest, portable figure generator, and standard test-package marker. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
 
 Freeze record: [source_map_and_freeze_status.md](99_source_map/source_map_and_freeze_status.md). Changelog: [CHANGELOG.md](CHANGELOG.md).
