@@ -1,9 +1,15 @@
 # Changelog
 
+## v0.10.2 - 2026-09-04
+
+- Promoted the later 14:18 source-backed deployment figure refresh to the current immutable handoff tag.
+- Preserved v0.10.1 as historical instead of moving its existing tag.
+
 ## v0.10.1 - 2026-09-04
 
 - Added `tests/__init__.py` and an explicit `-t .` discovery root so the documented unittest command works on the bundled Python runtime as well as older Python versions.
 - Kept v0.10 as an immutable predecessor tag; this patch release is the current handoff freeze.
+- Refreshed the Stage 7/8 SVG package from the later 14:18 source generation, including the expanded alert-chain diagram and updated generator hash.
 
 ## v0.10 - 2026-09-04
 
