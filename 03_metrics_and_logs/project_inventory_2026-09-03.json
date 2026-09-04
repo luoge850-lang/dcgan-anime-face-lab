@@ -1,6 +1,6 @@
 {
   "project_name": "DCGAN Anime-Face Lab",
-  "release": "v0.10-handoff-2026-09-04",
+  "release": "v0.10.1-handoff-2026-09-04",
   "scan_date": "2026-09-04",
   "source_workspace_label": "dcgan_lab",
   "source_workspace": {
@@ -32,9 +32,9 @@
     {"alias": "D01_to_D08_deployment", "source_scripts": 31, "evidence_scope": "export, benchmark, quantization, serving and operations"}
   ],
   "public_package": {
-    "file_count": 660,
-    "total_bytes": 38064463,
-    "python_files": 109,
+    "file_count": 661,
+    "total_bytes": 38064903,
+    "python_files": 110,
     "json_files": 120,
     "csv_files": 205,
     "svg_files": 90,
