@@ -1,6 +1,6 @@
 # DCGAN Anime-Face Lab
 
-![Status](https://img.shields.io/badge/status-v0.10.1--handoff--2026--09--04-2563eb)
+![Status](https://img.shields.io/badge/status-v0.10.2--handoff--2026--09--04-2563eb)
 ![Framework](https://img.shields.io/badge/framework-PyTorch-ee4c2c)
 ![Runtime](https://img.shields.io/badge/runtime-Kaggle%20GPU-20beff)
 ![Resolution](https://img.shields.io/badge/output-64x64-64748b)
@@ -702,6 +702,6 @@ Further reading: [complete engineering report](docs/PROJECT_ENGINEERING_REPORT_2
 
 ## Freeze status
 
-This README and its stage-organized evidence belong to the public v0.10.1-handoff-2026-09-04 freeze. It preserves the previous v0.9 and v0.10 evidence freezes, updates the active-workspace inventory, adds the latest source-backed Stage 7/8 standalone figures, and includes the final handoff manifest, portable figure generator, and standard test-package marker. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
+This README and its stage-organized evidence belong to the public v0.10.2-handoff-2026-09-04 freeze. It preserves the previous v0.9, v0.10, and v0.10.1 evidence freezes, updates the active-workspace inventory, adds the latest source-backed Stage 7/8 standalone figures, and includes the final handoff manifest, portable figure generator, and standard test-package marker. The active Kaggle workspace remains the source of truth for later internship experiments. New work should be added as a new commit or tag rather than rewriting the frozen release.
 
 Freeze record: [source_map_and_freeze_status.md](99_source_map/source_map_and_freeze_status.md). Changelog: [CHANGELOG.md](CHANGELOG.md).
