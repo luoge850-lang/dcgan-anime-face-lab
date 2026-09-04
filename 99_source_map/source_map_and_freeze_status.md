@@ -2,7 +2,7 @@
 
 Freeze date: 2026-09-04
 
-Freeze release: v0.10-handoff-2026-09-04
+Freeze release: v0.10.1-handoff-2026-09-04
 
 Previous evidence freeze: v0.9-current-state
 
