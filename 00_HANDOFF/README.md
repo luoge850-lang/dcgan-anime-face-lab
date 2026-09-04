@@ -9,7 +9,7 @@ This folder is the first place to look when handing the project to a mentor, int
 | Project | DCGAN Anime-Face Lab |
 | Description | Unconditional 64 × 64 anime-face generation and inference engineering study |
 | Runtime | Kaggle GPU; deployment evidence mainly on Tesla T4 |
-| Public release | `v0.10-handoff-2026-09-04` |
+| Public release | `v0.10.1-handoff-2026-09-04` |
 | Freeze date | `2026-09-04` |
 | Current source of truth | Active Kaggle workspace `dcgan_lab` |
 | Public package role | Curated evidence archive, interview showcase, and engineering handoff |
@@ -84,7 +84,7 @@ The 2026-09-04 handoff also includes the latest source-backed Stage 7/8 SVGs und
 From the repository root:
 
 ```bash
-python -m unittest discover -s tests -v
+python -m unittest discover -s tests -t . -v
 ```
 
 This validates JSON evidence, core metric tables, stage figures, Stage 7/8 packages, the engineering report, and the inventory.
