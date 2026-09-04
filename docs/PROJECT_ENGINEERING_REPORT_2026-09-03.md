@@ -2,7 +2,7 @@
 
 ## Internship project engineering report
 
-**Release:** `v0.10.1-handoff-2026-09-04`  
+**Release:** `v0.10.2-handoff-2026-09-04`  
 **Project type:** Kaggle-based generative-model research and inference-engineering study  
 **Primary model:** PyTorch DCGAN for unconditional 64 × 64 RGB anime-face generation  
 **Execution environment:** Kaggle GPU, mainly Tesla T4 for deployment experiments  
@@ -42,7 +42,7 @@ The strongest defensible outcome is not “one magic module improved the GAN.”
 |---|---|---|
 | Active experiment source | `dcgan_lab` | Ongoing Kaggle-oriented workspace; later experiments may still change. |
 | Public package | `DCGAN_Interview_GitHub_Handoff_2026-09-04` | Curated, public-safe evidence and deployment handoff package. |
-| Git release | `v0.10.1-handoff-2026-09-04` | Frozen public state for the currently documented evidence. |
+| Git release | `v0.10.2-handoff-2026-09-04` | Frozen public state for the currently documented evidence. |
 | Current deployment manifest | `03_metrics_and_logs/deployment_optimization/deployment_optimization_current_manifest.json` | Canonical status for deployment stages. |
 | Claim boundary | `docs/experiment_coverage_audit_2026-09-03.md` | Distinguishes measured, partial, source-only, and non-comparable results. |
 
@@ -55,7 +55,7 @@ The 2026-09-04 scan found:
 | Item | Active workspace |
 |---|---:|
 | Total files | 2,874 |
-| Total size | 718,765,967 bytes, approximately 685 MiB |
+| Total size | 718,874,101 bytes, approximately 685 MiB |
 | Python scripts | 94 |
 | JSON files | 130 |
 | CSV files | 297 |
