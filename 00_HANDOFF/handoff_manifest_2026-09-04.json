@@ -1,6 +1,6 @@
 {
   "project": "DCGAN Anime-Face Lab",
-  "handoff_release": "v0.10-handoff-2026-09-04",
+  "handoff_release": "v0.10.1-handoff-2026-09-04",
   "prepared_on": "2026-09-04",
   "source_workspace_label": "dcgan_lab",
   "public_snapshot_label": "DCGAN_Interview_GitHub_Handoff_2026-09-04",
