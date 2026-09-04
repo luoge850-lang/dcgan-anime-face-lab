@@ -2,7 +2,7 @@
 
 ## Internship project engineering report
 
-**Release:** `v0.10-handoff-2026-09-04`  
+**Release:** `v0.10.1-handoff-2026-09-04`  
 **Project type:** Kaggle-based generative-model research and inference-engineering study  
 **Primary model:** PyTorch DCGAN for unconditional 64 × 64 RGB anime-face generation  
 **Execution environment:** Kaggle GPU, mainly Tesla T4 for deployment experiments  
@@ -42,7 +42,7 @@ The strongest defensible outcome is not “one magic module improved the GAN.”
 |---|---|---|
 | Active experiment source | `dcgan_lab` | Ongoing Kaggle-oriented workspace; later experiments may still change. |
 | Public package | `DCGAN_Interview_GitHub_Handoff_2026-09-04` | Curated, public-safe evidence and deployment handoff package. |
-| Git release | `v0.10-handoff-2026-09-04` | Frozen public state for the currently documented evidence. |
+| Git release | `v0.10.1-handoff-2026-09-04` | Frozen public state for the currently documented evidence. |
 | Current deployment manifest | `03_metrics_and_logs/deployment_optimization/deployment_optimization_current_manifest.json` | Canonical status for deployment stages. |
 | Claim boundary | `docs/experiment_coverage_audit_2026-09-03.md` | Distinguishes measured, partial, source-only, and non-comparable results. |
 
@@ -82,7 +82,7 @@ The 2026-09-04 scan found:
 | SDXL controlled study | 11 | SDXL_Controlled_Study_Results | Synthetic-data candidate and mixing-ratio study |
 | Deployment optimization | 31 | Deployment_Optimization_Results | Export, engines, quantization, service and operations |
 
-The public handoff contains **660 curated files** (about 36 MiB), including selected scripts, normalized tables, reports, samples, stage charts, tests, and small evidence packages. No file larger than 50 MiB is included in the public package. The four latest Stage 7/8 outputs are SVG-only; redundant PNG renders are excluded.
+The public handoff contains **661 curated files** (about 36 MiB), including selected scripts, normalized tables, reports, samples, stage charts, tests, and small evidence packages. No file larger than 50 MiB is included in the public package. The four latest Stage 7/8 outputs are SVG-only; redundant PNG renders are excluded.
 
 ## 4. Canonical naming and organization
 
