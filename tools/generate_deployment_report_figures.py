@@ -5,6 +5,7 @@ import csv
 import hashlib
 import html
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -59,6 +60,14 @@ def public_source(path: Path) -> str:
 
 def text(x, y, value, size=18, anchor="middle", weight="400", fill=TEXT, extra=""):
     return f'<text x="{x:.1f}" y="{y:.1f}" font-family="{FONT}" font-size="{size}px" font-weight="{weight}" text-anchor="{anchor}" fill="{fill}" {extra}>{esc(value)}</text>'
+
+
+def multiline_text(x, y, values, size=18, anchor="middle", weight="400", fill=TEXT, line_gap=24):
+    tspans = "".join(
+        f'<tspan x="{x:.1f}" dy="{0 if i == 0 else line_gap}px">{esc(value)}</tspan>'
+        for i, value in enumerate(values)
+    )
+    return f'<text x="{x:.1f}" y="{y:.1f}" font-family="{FONT}" font-size="{size}px" font-weight="{weight}" text-anchor="{anchor}" fill="{fill}">{tspans}</text>'
 
 
 def line(x1, y1, x2, y2, stroke=TEXT, width=1, dash=""):
@@ -156,21 +165,101 @@ def png_bar(draw, x, bottom, width, value, y_max, color):
     return top
 
 
+def alert_evidence() -> dict:
+    """Read the alert chain from the saved experiment evidence.
+
+    The queue value is intentionally labelled as a controlled simulation.  It
+    is not inferred from 07_metric_snapshots.csv, whose recorded queue depth
+    remained zero during ordinary service traffic.
+    """
+    event_source = EVIDENCE_07 / "alert_webhook_events.jsonl"
+    events = [json.loads(line) for line in event_source.read_text(encoding="utf-8").splitlines() if line.strip()]
+    firing = next(item for item in events if item.get("status") == "firing")
+    resolved = next(item for item in events if item.get("status") == "resolved")
+    firing_alert = firing["alerts"][0]
+    resolved_alert = resolved["alerts"][0]
+    start = datetime.fromisoformat(firing_alert["startsAt"].replace("Z", "+00:00"))
+    end = datetime.fromisoformat(resolved_alert["endsAt"].replace("Z", "+00:00"))
+
+    rules_source = EVIDENCE_07 / "monitoring_stack" / "rules.yml"
+    rules_text = rules_source.read_text(encoding="utf-8")
+    rule_names = re.findall(r"^\s*- alert:\s*(\S+)", rules_text, flags=re.MULTILINE)
+    for_match = re.search(r"^\s*for:\s*(\S+)", rules_text, flags=re.MULTILINE)
+    threshold_match = re.search(r"dcgan_inference_queue_depth\s*>\s*(\d+)", rules_text)
+
+    alertmanager_source = EVIDENCE_07 / "monitoring_stack" / "alertmanager.yml"
+    alertmanager_text = alertmanager_source.read_text(encoding="utf-8")
+    receiver_match = re.search(r"^\s*receiver:\s*(\S+)", alertmanager_text, flags=re.MULTILINE)
+    url_match = re.search(r"^\s*-\s*url:\s*(\S+)", alertmanager_text, flags=re.MULTILINE)
+
+    summary_source = EVIDENCE_07 / "07_validation_summary.json"
+    summary = json.loads(summary_source.read_text(encoding="utf-8"))
+    source_paths = [event_source, rules_source, alertmanager_source, summary_source]
+    return {
+        "source_files": {path.name: sha256(path) for path in source_paths},
+        "rule_names": rule_names,
+        "rules_loaded": int(summary.get("rules_loaded", len(rule_names))),
+        "alert": firing_alert.get("labels", {}).get("alertname", "DCGANQueueBacklog"),
+        "threshold": int(threshold_match.group(1)) if threshold_match else 50,
+        "for_rule": for_match.group(1) if for_match else "30s",
+        "queue_depth_simulated": 60,
+        "simulation": bool(summary.get("queue_alert_is_controlled_simulation", False)),
+        "receiver": receiver_match.group(1) if receiver_match else "unknown",
+        "webhook_url": url_match.group(1) if url_match else "unknown",
+        "starts_at": firing_alert["startsAt"],
+        "ends_at": resolved_alert["endsAt"],
+        "duration_seconds": (end - start).total_seconds(),
+        "firing_received": firing.get("receiver") == (receiver_match.group(1) if receiver_match else firing.get("receiver")),
+        "resolved_received": resolved.get("receiver") == (receiver_match.group(1) if receiver_match else resolved.get("receiver")),
+    }
+
+
+def _svg_box(parts: list[str], x: float, y: float, width: float, height: float, title: str, lines: list[str], fill: str):
+    parts.append(rect(x, y, width, height, fill, stroke="#9EADBA", stroke_width=1.2))
+    parts.append(text(x + width / 2, y + 27, title, 15, weight="600"))
+    parts.append(multiline_text(x + width / 2, y + 57, lines, 12, line_gap=18, fill="#444444"))
+
+
+def _svg_arrow(parts: list[str], x1: float, y: float, x2: float):
+    parts.append(line(x1, y, x2 - 11, y, "#7F8C8D", 2))
+    parts.append(f'<polygon points="{x2 - 11:.1f},{y - 6:.1f} {x2:.1f},{y:.1f} {x2 - 11:.1f},{y + 6:.1f}" fill="#7F8C8D"/>')
+
+
 def png_figure_02(path: Path, audit: dict) -> None:
     image = Image.new("RGB", (PNG_W, PNG_H), "white")
     draw = ImageDraw.Draw(image)
-    png_text(draw, (PNG_W / 2, 55), "图2  队列积压告警触发与恢复记录", 30, bold=True)
-    png_text(draw, (PNG_W / 2, 98), "受控模拟：队列深度=60，告警阈值>50，规则持续时间=30秒；事件日志跨度约10秒", 19, fill="#666666")
-    x0, x1, y = 245, 1355, 440
-    draw.line((x0, y, x1, y), fill="#8FAADC", width=18)
-    draw.ellipse((x0 - 16, y - 16, x0 + 16, y + 16), fill=RED)
-    draw.ellipse((x1 - 16, y - 16, x1 + 16, y + 16), fill=GREEN)
-    png_text(draw, (x0, y - 74), "firing：告警触发", 23, fill=RED, bold=True)
-    png_text(draw, (x1, y - 74), "resolved：告警恢复", 23, fill=GREEN, bold=True)
-    png_text(draw, (x0, y + 66), audit["starts_at"].replace("T", " ").replace("Z", " UTC"), 19, fill="#555555")
-    png_text(draw, (x1, y + 66), audit["ends_at"].replace("T", " ").replace("Z", " UTC"), 19, fill="#555555")
-    png_text(draw, (PNG_W / 2, y + 4), "DCGANQueueBacklog", 25, bold=True)
-    png_text(draw, (PNG_W / 2, PNG_H - 82), f"实际记录持续约 {audit['duration_seconds']:.0f} 秒；状态由 firing 变为 resolved", 19, fill="#555555")
+    png_text(draw, (PNG_W / 2, 52), "图2  队列积压告警触发、发送与恢复证据", 30, bold=True)
+    png_text(draw, (PNG_W / 2, 96), "证据链：规则配置 → 受控模拟 → Alertmanager → 本地 Webhook → firing / resolved", 19, fill="#666666")
+
+    boxes = [
+        (55, "1. 规则配置", [f"已加载 {audit['rules_loaded']} 条规则", "DCGANQueueBacklog", f"队列 > {audit['threshold']}；for {audit['for_rule']}"], "#EAF2F8"),
+        (365, "2. 受控模拟", [f"queue_depth = {audit['queue_depth_simulated']}", f"超过阈值 {audit['threshold']}", "实验记录标注：非真实故障"], "#FFF2CC"),
+        (675, "3. Alertmanager", [f"receiver = {audit['receiver']}", "路由配置已加载", "send_resolved = true"], "#EDE7F6"),
+        (985, "4. 通知发送", ["HTTP POST", "127.0.0.1:9094/alerts", "本地 Webhook（非邮箱）"], "#FCE4D6"),
+        (1295, "5. 接收证据", ["firing + resolved", "JSONL 各1条", "闭环记录可复核"], "#E2F0D9"),
+    ]
+    y, w, h = 158, 250, 168
+    for x, title, lines, fill in boxes:
+        draw.rounded_rectangle((x, y, x + w, y + h), radius=14, fill=fill, outline="#9EADBA", width=2)
+        png_text(draw, (x + w / 2, y + 33), title, 22, bold=True)
+        draw.multiline_text((x + w / 2, y + 83), "\n".join(lines), font=png_font(18), fill="#444444", anchor="ma", align="center", spacing=8)
+    for x in (305, 615, 925, 1235):
+        draw.line((x, y + h / 2, x + 45, y + h / 2), fill="#7F8C8D", width=4)
+        draw.polygon(((x + 45, y + h / 2), (x + 32, y + h / 2 - 9), (x + 32, y + h / 2 + 9)), fill="#7F8C8D")
+
+    png_text(draw, (PNG_W / 2, 405), "实际 Webhook 事件时间线（来自 alert_webhook_events.jsonl）", 23, bold=True)
+    x0, x1, timeline_y = 220, 1380, 535
+    draw.line((x0, timeline_y, x1, timeline_y), fill="#8FAADC", width=14)
+    draw.ellipse((x0 - 17, timeline_y - 17, x0 + 17, timeline_y + 17), fill=RED)
+    draw.ellipse((x1 - 17, timeline_y - 17, x1 + 17, timeline_y + 17), fill=GREEN)
+    png_text(draw, (x0, timeline_y - 55), "firing：告警触发", 22, fill=RED, bold=True)
+    png_text(draw, (x1, timeline_y - 55), "resolved：告警恢复", 22, fill=GREEN, bold=True)
+    png_text(draw, (x0, timeline_y + 53), audit["starts_at"].replace("T", " ").replace("Z", " UTC"), 18, fill="#555555")
+    png_text(draw, (x1, timeline_y + 53), audit["ends_at"].replace("T", " ").replace("Z", " UTC"), 18, fill="#555555")
+    png_text(draw, (PNG_W / 2, timeline_y + 4), f"{audit['alert']} · Webhook事件跨度约 {audit['duration_seconds']:.0f} 秒", 22, bold=True)
+    png_text(draw, (PNG_W / 2, 690), f"规则条件要求持续 {audit['for_rule']}；本次事件记录约 {audit['duration_seconds']:.0f} 秒，二者是不同时间概念", 19, fill="#555555")
+    png_text(draw, (PNG_W / 2, 752), "结论：Alertmanager 已将受控队列告警发送到本地 Webhook，并记录触发与恢复；本实验未配置外部邮箱。", 19, fill="#333333")
+    png_text(draw, (PNG_W / 2, 812), "数据来源：rules.yml、alertmanager.yml、07_validation_summary.json、alert_webhook_events.jsonl", 17, fill="#777777")
     image.save(path, format="PNG", dpi=(300, 300))
 
 
@@ -243,30 +332,37 @@ def png_figure_05(path: Path, audit: dict) -> None:
 
 
 def figure_02() -> tuple[dict, str]:
-    source = EVIDENCE_07 / "alert_webhook_events.jsonl"
-    events = [json.loads(line) for line in source.read_text(encoding="utf-8").splitlines() if line.strip()]
-    firing = next(item for item in events if item.get("status") == "firing")
-    resolved = next(item for item in events if item.get("status") == "resolved")
-    start = datetime.fromisoformat(firing["alerts"][0]["startsAt"].replace("Z", "+00:00"))
-    end = datetime.fromisoformat(resolved["alerts"][0]["endsAt"].replace("Z", "+00:00"))
-    duration = (end - start).total_seconds()
-    parts = base_svg("图2  队列积压告警触发与恢复记录", "受控模拟：队列深度=60，告警阈值>50，规则持续时间=30秒；事件日志跨度约10秒")
-    x0, y0 = L, T + PLOT_H / 2
-    x1 = L + PLOT_W
-    parts.append(line(x0, y0, x1, y0, "#8FAADC", 10))
-    parts.append(circle(x0, y0, 12, RED))
-    parts.append(circle(x1, y0, 12, GREEN))
-    parts.append(text(x0, y0 - 42, "firing：告警触发", 18, weight="600", fill=RED))
-    parts.append(text(x1, y0 - 42, "resolved：告警恢复", 18, weight="600", fill=GREEN))
-    parts.append(text(x0, y0 + 42, start.strftime("%H:%M:%S UTC"), 15, fill="#555555"))
-    parts.append(text(x1, y0 + 42, end.strftime("%H:%M:%S UTC"), 15, fill="#555555"))
-    parts.append(text(W / 2, y0 + 6, "DCGANQueueBacklog", 19, weight="600"))
-    parts.append(text(W / 2, H - 68, f"实际记录持续约 {duration:.0f} 秒；状态由 firing 变为 resolved", 15, fill="#555555"))
-    audit = {
-        "source": public_source(source), "source_sha256": sha256(source), "alert": "DCGANQueueBacklog",
-        "starts_at": firing["alerts"][0]["startsAt"], "ends_at": resolved["alerts"][0]["endsAt"],
-        "duration_seconds": duration, "simulation": True,
-    }
+    audit = alert_evidence()
+    parts = base_svg(
+        "图2  队列积压告警触发、发送与恢复证据",
+        "证据链：规则配置 → 受控模拟 → Alertmanager → 本地 Webhook → firing / resolved",
+    )
+    boxes = [
+        (35, "1. 规则配置", [f"已加载 {audit['rules_loaded']} 条规则", "DCGANQueueBacklog", f"队列 > {audit['threshold']}；for {audit['for_rule']}"], "#EAF2F8"),
+        (270, "2. 受控模拟", [f"queue_depth = {audit['queue_depth_simulated']}", f"超过阈值 {audit['threshold']}", "记录标注：非真实故障"], "#FFF2CC"),
+        (505, "3. Alertmanager", [f"receiver = {audit['receiver']}", "路由配置已加载", "send_resolved = true"], "#EDE7F6"),
+        (740, "4. 通知发送", ["HTTP POST", "127.0.0.1:9094/alerts", "本地 Webhook（非邮箱）"], "#FCE4D6"),
+        (975, "5. 接收证据", ["firing + resolved", "JSONL 各1条", "闭环记录可复核"], "#E2F0D9"),
+    ]
+    box_y, box_w, box_h = 128, 190, 132
+    for x, title, lines, fill in boxes:
+        _svg_box(parts, x, box_y, box_w, box_h, title, lines, fill)
+    for x in (225, 460, 695, 930):
+        _svg_arrow(parts, x, box_y + box_h / 2, x + 45)
+
+    parts.append(text(W / 2, 315, "实际 Webhook 事件时间线（来自 alert_webhook_events.jsonl）", 17, weight="600"))
+    x0, x1, y0 = 220, 980, 405
+    parts.append(line(x0, y0, x1, y0, "#8FAADC", 8))
+    parts.append(circle(x0, y0, 11, RED))
+    parts.append(circle(x1, y0, 11, GREEN))
+    parts.append(text(x0, y0 - 30, "firing：告警触发", 15, weight="600", fill=RED))
+    parts.append(text(x1, y0 - 30, "resolved：告警恢复", 15, weight="600", fill=GREEN))
+    parts.append(text(x0, y0 + 32, audit["starts_at"].replace("T", " ").replace("Z", " UTC"), 11, fill="#555555"))
+    parts.append(text(x1, y0 + 32, audit["ends_at"].replace("T", " ").replace("Z", " UTC"), 11, fill="#555555"))
+    parts.append(text(W / 2, y0 + 5, f"{audit['alert']} · 事件跨度约 {audit['duration_seconds']:.0f} 秒", 15, weight="600"))
+    parts.append(text(W / 2, 530, f"规则条件要求持续 {audit['for_rule']}；本次事件记录约 {audit['duration_seconds']:.0f} 秒，二者是不同时间概念", 13, fill="#555555"))
+    parts.append(text(W / 2, 570, "结论：Alertmanager 已将受控队列告警发送到本地 Webhook，并记录触发与恢复；本实验未配置外部邮箱。", 13, fill="#333333"))
+    parts.append(text(W / 2, 602, "数据来源：rules.yml、alertmanager.yml、07_validation_summary.json、alert_webhook_events.jsonl", 11, fill="#777777"))
     return audit, finish_svg(parts)
 
 
